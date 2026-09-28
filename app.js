@@ -435,6 +435,18 @@ const DOM = {
   btnModeMaieutics: document.getElementById('btn-mode-maieutics'),
   quickBtnToggleMaieutics: document.getElementById('quick-btn-toggle-maieutics'),
   agoraModeIndicatorText: document.getElementById('agora-mode-indicator-text'),
+
+  // Conexão Gemini Gratuito (Google AI Studio)
+  geminiConnectionBar: document.getElementById('gemini-connection-bar'),
+  geminiStatusDot: document.getElementById('gemini-status-dot'),
+  geminiStatusLabel: document.getElementById('gemini-status-label'),
+  btnToggleGeminiInput: document.getElementById('btn-toggle-gemini-input'),
+  geminiBtnLabel: document.getElementById('gemini-btn-label'),
+  geminiQuickConfigPanel: document.getElementById('gemini-quick-config-panel'),
+  btnCloseGeminiPanel: document.getElementById('btn-close-gemini-panel'),
+  geminiKeyQuickInput: document.getElementById('gemini-key-quick-input'),
+  btnSaveGeminiKey: document.getElementById('btn-save-gemini-key'),
+  geminiFeedbackMsg: document.getElementById('gemini-feedback-msg'),
   
   // Pomodoro
   pomoDisplay: document.getElementById('pomo-display'),
@@ -516,6 +528,45 @@ const DOM = {
 };
 
 // ==========================================
+// 3.8. GESTÃO DA API GEMINI GRATUITO
+// ==========================================
+function getActiveApiKey() {
+  return localStorage.getItem('logossophia_gemini_api_key') || AppState.currentUser?.apiKey || '';
+}
+
+function updateGeminiStatusUI() {
+  const key = getActiveApiKey();
+  const isConnected = !!(key && (key.startsWith('AIza') || key.length > 20));
+
+  if (DOM.geminiStatusDot) {
+    if (isConnected) {
+      DOM.geminiStatusDot.className = 'w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.7)]';
+    } else {
+      DOM.geminiStatusDot.className = 'w-2 h-2 rounded-full bg-amber-400 animate-pulse';
+    }
+  }
+
+  if (DOM.geminiStatusLabel) {
+    if (isConnected) {
+      DOM.geminiStatusLabel.innerHTML = '✨ Google Gemini: <span class="text-emerald-400 font-semibold">Ativo & Conectado (Gratuito)</span>';
+    } else {
+      DOM.geminiStatusLabel.innerHTML = '✨ Google Gemini: <span class="text-amber-400 font-semibold">Chave Gratuita Necessária</span>';
+    }
+  }
+
+  if (DOM.geminiBtnLabel) {
+    DOM.geminiBtnLabel.textContent = isConnected ? '⚙️ Alterar Chave' : '🔑 Conectar Gemini Gratuito';
+  }
+
+  if (DOM.geminiKeyQuickInput && key) {
+    DOM.geminiKeyQuickInput.value = key;
+  }
+  if (DOM.settingApiKey && key) {
+    DOM.settingApiKey.value = key;
+  }
+}
+
+// ==========================================
 // 4. MOTOR DE MAIÊUTICA SOCRÁTICA (ÁGORA)
 // ==========================================
 class SocraticEngine {
@@ -583,12 +634,27 @@ class SocraticEngine {
         };
       }
 
-      // 3. Explicação Didática de Conceitos / "Não entendi" / Dúvidas
-      if (text.includes("não entendi") || text.includes("nao entendi") || text.includes("como funciona") || text.includes("o que significa") || text.includes("me explique") || text.includes("me explica") || text.includes("não sei") || text.includes("difícil")) {
+      // 3. Explicação Didática de Conceitos / "Não entendi" / Dúvidas / Entender
+      if (text.includes("não entendi") || text.includes("nao entendi") || text.includes("como funciona") || text.includes("o que significa") || text.includes("me explique") || text.includes("me explica") || text.includes("entender") || text.includes("por que") || text.includes("não sei") || text.includes("difícil")) {
         const queryTerm = userKeywords[0] || docKeywords[0] || "o ponto em exame";
+        const relatedTerm = docKeywords[1] || "os fundamentos da obra";
         return {
           type: 'expository_clarification',
-          reply: `### 📖 Esclarecimento Didático: *${queryTerm}*\n\nNão se preocupe: este é exatamente o momento de consolidar o entendimento.\n\n**O que o texto estabelece:**\nO ponto central em torno de **${queryTerm}** funciona como um elo lógico. O autor não propõe uma opinião isolada, mas conecta este elemento aos princípios gerais de *${docTitle}*.\n\n**Em termos práticos:**\nImagine isso como uma cadeia de causa e efeito: se a premissa inicial for verdadeira, a aplicação de ${queryTerm} determina o desfecho do problema.\n\nFicou mais claro? Sinta-se livre para perguntar qualquer outro detalhe do texto!`,
+          reply: `### 📖 Desconstrução Conceitual: *${queryTerm}*
+
+Para compreendermos verdadeiramente sem simplificações rasas, vamos desconstruir o conceito passo a passo:
+
+**1. A Premissa Inicial (Ponto de Partida):**
+O autor estabelece que **${queryTerm}** não surge isoladamente, mas funciona como a causa geradora que condiciona toda a tese de *${docTitle}*. Se esta premissa for ignorada, as conclusões posteriores parecem arbitrárias.
+
+**2. Analogia Prática para Fixação:**
+Pense nisso como o funcionamento das engrenagens de um relógio: **${queryTerm}** é a mola mestra que transmite força. Quando ela se move, aciona necessariamente a engrenagem secundária (*${relatedTerm}*). Sem a mola mestra, os ponteiros (o desfecho do problema) simplesmente não se movem.
+
+**3. Desdobramentos & Expansão de Raciocínio:**
+- O texto demonstra que a relação entre premissa e conclusão obedece a uma lógica de necessidade interna.
+- Ao aplicarmos essa noção a casos concretos, percebemos que o autor resolve o conflito central demonstrando que a coerência dedutiva supera intuições superficiais.
+
+*Ficou clara essa desconstrução ou gostaria de examinar outro exemplo prático antes de testarmos seu domínio na Maiêutica?*`,
           allowFlashcard: true
         };
       }
@@ -999,40 +1065,43 @@ function generateLocalDocOverview(text, fileName) {
 }
 
 async function generateDocOverview(text, fileName, apiKey) {
-  const userApiKey = apiKey || AppState.currentUser?.apiKey;
-  const prompt = `Você é a Ágora, mestra e tutora da plataforma LOGOSSOPHIA. O estudante acabou de carregar o documento "${fileName}".
-Forneça imediatamente um APANHADO GERAL didático, claro, profundo e estruturado do texto para que o estudante compreenda a matéria antes de ser sabatinado.
+  const userApiKey = apiKey || getActiveApiKey();
+  const prompt = `Você é a Ágora, a inteligência artificial central do Logo Sophia, um ambiente de aprendizado e gestão de conhecimento baseado em notebooks. Sua missão principal NÃO é resumir os textos do usuário, mas atuar como uma parceira socrática de estudo, tutoria e expansão de ideias. Quando o usuário pedir para entender um conceito, desconstrua-o passo a passo, use analogias, exemplos práticos e aprofunde o raciocínio. Evite respostas rasas ou puramente condensadas, a menos que solicitado explicitamente.
 
-Estruture rigorosamente sua resposta com:
-### 📜 Apanhado Geral: ${fileName}
+O usuário acabou de carregar o documento "${fileName}".
+Apresente um panorama didático e profundo para expansão de conhecimento e aprendizado do texto:
 
-**1. Tese Central & Escopo Geral**
-(Explique qual é a ideia central, o propósito do autor e o problema fundamental tratado)
+Estruture sua resposta rigorosamente com:
+### 📜 Panorama Didático: ${fileName}
 
-**2. 🔑 Conceitos-Chave & Pilares Fundamentais**
-(Destaque de 3 a 5 pontos centrais do texto com explicação clara e didática de cada um)
+**1. Tese Central & Escopo Epistêmico**
+(Desconstrua o problema fundamental, o objetivo da investigação e o contexto da obra)
 
-**3. 💡 Principais Conclusões & Desdobramentos**
-(O que o autor conclui ou defende como resolução do problema)
+**2. 🔑 Pilares Conceituais & Desconstrução Passo a Passo**
+(Isole de 3 a 5 conceitos basilares; para cada um, apresente uma explicação passo a passo, uma analogia prática e sua função no argumento)
 
-**4. 🧭 Orientações para o Estudo**
-(Instrua o estudante a tirar dúvidas e fazer perguntas agora enquanto aprende, e sugira ativar o Modo Maiêutica quando estiver pronto para ser sabatinado)
+**3. 💡 Implicações Práticas & Conclusões**
+(O desfecho do raciocínio e seu impacto no campo de estudo)
 
-Texto do documento em exame:
+**4. 🧭 Roteiro para Investigação Dialética**
+(Sugira pontos controversos para o usuário aprofundar perguntas no Modo Aprender ou testar seu domínio no Modo Maiêutica)
+
+Texto em exame:
 """
-${text ? text.substring(0, 14000) : "Documento indexado."}
+${text ? text.substring(0, 15000) : "Documento indexado no Scriptorium."}
 """`;
 
-  if (userApiKey && (userApiKey.startsWith('AIza') || userApiKey.startsWith('sk-'))) {
-    try {
-      if (userApiKey.startsWith('AIza')) {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${userApiKey}`;
+  if (userApiKey && (userApiKey.startsWith('AIza') || !userApiKey.startsWith('sk-'))) {
+    const models = ['gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-1.5-flash-latest'];
+    for (const model of models) {
+      try {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${userApiKey}`;
         const resp = await fetch(url, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             contents: [{ role: 'user', parts: [{ text: prompt }] }],
-            generationConfig: { maxOutputTokens: 1000, temperature: 0.4 }
+            generationConfig: { maxOutputTokens: 2048, temperature: 0.65 }
           })
         });
         if (resp.ok) {
@@ -1040,34 +1109,51 @@ ${text ? text.substring(0, 14000) : "Documento indexado."}
           const rep = data.candidates?.[0]?.content?.parts?.[0]?.text;
           if (rep && rep.trim().length > 50) return rep;
         }
-      } else if (userApiKey.startsWith('sk-')) {
-        const url = 'https://api.openai.com/v1/chat/completions';
-        const resp = await fetch(url, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${userApiKey}`
-          },
-          body: JSON.stringify({
-            model: 'gpt-4o-mini',
-            messages: [
-              { role: 'system', content: 'Você é a Ágora, mestra, tutora e inteligência pedagógica da plataforma LOGOSSOPHIA.' },
-              { role: 'user', content: prompt }
-            ],
-            max_tokens: 1000,
-            temperature: 0.4
-          })
-        });
-        if (resp.ok) {
-          const data = await resp.json();
-          const rep = data.choices?.[0]?.message?.content;
-          if (rep && rep.trim().length > 50) return rep;
-        }
+      } catch (e) {
+        console.warn(`Tentativa com ${model} falhou:`, e);
+      }
+    }
+  } else if (userApiKey && userApiKey.startsWith('sk-')) {
+    try {
+      const url = 'https://api.openai.com/v1/chat/completions';
+      const resp = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${userApiKey}`
+        },
+        body: JSON.stringify({
+          model: 'gpt-4o-mini',
+          messages: [
+            { role: 'system', content: 'Você é a Ágora, a inteligência artificial central do Logo Sophia.' },
+            { role: 'user', content: prompt }
+          ],
+          max_tokens: 2048,
+          temperature: 0.65
+        })
+      });
+      if (resp.ok) {
+        const data = await resp.json();
+        const rep = data.choices?.[0]?.message?.content;
+        if (rep && rep.trim().length > 50) return rep;
       }
     } catch (e) {
-      console.warn("Falha na chamada da API para o apanhado geral, utilizando síntese local:", e);
+      console.warn("OpenAI overview falhou:", e);
     }
   }
+
+  // Tenta proxy serverless /api/gemini se disponível
+  try {
+    const resp = await fetch('/api/gemini', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt: prompt, apiKey: userApiKey, mode: 'expository' })
+    });
+    if (resp.ok) {
+      const data = await resp.json();
+      if (data.reply) return data.reply;
+    }
+  } catch (_) {}
 
   // Fallback local enriquecido
   return generateLocalDocOverview(text, fileName);
@@ -1100,10 +1186,10 @@ function showAgoraTyping() {
   typingDiv.id = 'agora-typing-indicator';
   typingDiv.className = 'message-agora p-3.5 rounded-lg text-xs flex items-center space-x-2.5 text-neutral-300 animate-pulse';
   const label = AppState.learningMode === 'expository' 
-    ? 'Ágora está elaborando sua explicação didática...' 
-    : 'Ágora está examinando sua premissa dialética...';
+    ? 'Ágora está desconstruindo os conceitos com Gemini...' 
+    : 'Ágora está formulando a sabatina dialética com Gemini...';
   typingDiv.innerHTML = `
-    <span class="text-sm">🏛️</span>
+    <span class="text-sm">✨</span>
     <span class="font-mono text-[11px] text-neutral-400">${label}</span>
   `;
   DOM.chatMessages.appendChild(typingDiv);
@@ -1114,69 +1200,111 @@ function showAgoraTyping() {
 async function callExternalAI(userInput, apiKey) {
   const context = AppState.uploadedText || (KNOWLEDGE_BASE[AppState.currentDiscipline] ? KNOWLEDGE_BASE[AppState.currentDiscipline].text : '');
   const mode = AppState.learningMode || 'expository';
+  const effectiveApiKey = apiKey || getActiveApiKey();
+
+  const agoraCorePersona = `Você é a Ágora, a inteligência artificial central do Logo Sophia, um ambiente de aprendizado e gestão de conhecimento baseado em notebooks. Sua missão principal NÃO é resumir os textos do usuário, mas atuar como uma parceira socrática de estudo, tutoria e expansão de ideias. Quando o usuário pedir para entender um conceito, desconstrua-o passo a passo, use analogias, exemplos práticos e aprofunde o raciocínio. Evite respostas rasas ou puramente condensadas, a menos que solicitado explicitamente.`;
 
   let systemPrompt = '';
   if (mode === 'expository') {
-    systemPrompt = `Você é a Ágora, mestra, tutora e inteligência pedagógica da plataforma LOGOSSOPHIA.
-Seu modo atual é: MODO EXPOSITIVO & DIDÁTICO (Aprender & Explicar).
+    systemPrompt = `${agoraCorePersona}
 
-DIRETRIZES FUNDAMENTAIS:
-1. Responda DIRETAMENTE, com clareza, erudição e profundidade pedagógica às dúvidas e solicitações do estudante.
-2. Explique conceitos difíceis, forneça resumos estruturados, análises de parágrafos e sínteses sempre que solicitado. NUNCA se recuse a responder nem diga que não entrega respostas prontas.
-3. Baseie-se estritamente no texto em exame fornecido abaixo. Esclareça passagens obscuras, cite trechos do documento e formule analogias didáticas claras.
-4. Tom: generoso, paciente, acadêmico, encorajador e intelectualmente estimulante.
-5. No final da explicação, você pode convidar o estudante a tirar mais dúvidas ou, quando se sentir seguro do domínio do conteúdo, alternar para o Modo Maiêutica para ser sabatinado.
+DIRETRIZES DE TUTORIA & DESCONSTRUÇÃO (Modo Aprender & Explicar):
+1. DESCONSTRUÇÃO PASSO A PASSO: Isole as partes componentes do conceito, mostre como elas se conectam e qual a cadeia lógica que sustenta a ideia.
+2. ANALOGIAS E EXEMPLOS PRÁTICOS: Sempre que um conceito for abstrato ou técnico, traga uma analogia intuitiva e um exemplo prático do mundo real.
+3. EXPANSÃO DE IDEIAS: Não se limite a respostas rasas ou puramente condensadas. Aprofunde o raciocínio, mostre as causas fundamentais e as implicações práticas.
+4. REFERÊNCIA AO TEXTO NO SCRIPTORIUM: Conecte a explicação aos trechos e termos do texto em exame fornecido abaixo.
+5. Tom: generoso, paciente, intelectualmente estimulante, elegante e acadêmico.
 
-Texto em exame:
+Texto em exame no Scriptorium:
 """
-${context ? context.substring(0, 12000) : "Diálogo sobre os fundamentos do conhecimento e virtude."}
+${context ? context.substring(0, 15000) : "Diálogo sobre os fundamentos do conhecimento e virtude."}
 """`;
   } else {
-    systemPrompt = `Você é a Ágora, examinadora dialética e socrática da plataforma LOGOSSOPHIA.
-Seu modo atual é: MODO MAIÊUTICA & SABATINA (Refinar & Testar Retenção).
+    systemPrompt = `${agoraCorePersona}
 
-DIRETRIZES FUNDAMENTAIS:
-1. O estudante já aprendeu o conteúdo inicial e agora deseja refinar seu domínio através do exame dialético e da sabatina.
-2. Desafie as premissas do estudante com perguntas incisivas (elenchos), aponte contradições e teste a coerência lógica e a retenção do texto.
-3. Não entregue conclusões prontas de imediato: guie o estudante a provar suas afirmações com base nos axiomas do documento.
-4. Faça uma ou duas perguntas pontiagudas por turno para manter o raciocínio focado.
-5. Se o estudante demonstrar dúvida genuína ou erro conceitual grave, dê uma pista orientadora precisa antes de prosseguir no interrogatório.
-6. Tom: sóbrio, instigante, acadêmico, rigoroso e respeitoso.
+DIRETRIZES DE SABATINA SOCRÁTICA (Modo Maiêutica):
+1. O usuário já compreendeu o conteúdo inicial e agora deseja refinar seu domínio e testar sua retenção através do exame dialético.
+2. Interrogue os fundamentos do raciocínio do usuário, aponte potenciais contradições e desafie as conclusões para aguçar o pensamento crítico.
+3. Não entregue respostas prontas passivamente: guie o usuário a articular a demonstração a partir das premissas.
+4. Faça uma ou no máximo duas perguntas afiadas por turno para manter o foco dialético.
+5. Tom: sóbrio, instigante, acadêmico, rigoroso e respeitoso.
 
-Texto em exame:
+Texto em exame no Scriptorium:
 """
-${context ? context.substring(0, 12000) : "Diálogo sobre os fundamentos do conhecimento e virtude."}
+${context ? context.substring(0, 15000) : "Diálogo sobre os fundamentos do conhecimento e virtude."}
 """`;
   }
 
-  if (apiKey.startsWith('AIza')) {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-    const resp = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [
-          { role: 'user', parts: [{ text: `${systemPrompt}\n\nEstudante formula: "${userInput}"` }] }
-        ],
-        generationConfig: { maxOutputTokens: 1000, temperature: mode === 'expository' ? 0.4 : 0.7 }
-      })
-    });
-    if (!resp.ok) {
-      const errBody = await resp.text();
-      throw new Error(`Gemini API HTTP ${resp.status}: ${errBody}`);
+  // 1. Tenta API do Google Gemini Gratuito (Direto via Google AI Studio)
+  if (!effectiveApiKey || effectiveApiKey.startsWith('AIza') || !effectiveApiKey.startsWith('sk-')) {
+    if (effectiveApiKey) {
+      const models = ['gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-1.5-flash-latest'];
+      let lastError = null;
+
+      for (const model of models) {
+        try {
+          const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${effectiveApiKey}`;
+          const resp = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [
+                {
+                  role: 'user',
+                  parts: [{ text: `${systemPrompt}\n\nInterlocutor formula:\n"${userInput}"` }]
+                }
+              ],
+              generationConfig: {
+                maxOutputTokens: 2048,
+                temperature: 0.65
+              }
+            })
+          });
+
+          if (resp.ok) {
+            const data = await resp.json();
+            const replyText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+            if (replyText) {
+              return { reply: replyText, allowFlashcard: true };
+            }
+          }
+          const errText = await resp.text();
+          lastError = new Error(`Gemini (${model}) HTTP ${resp.status}: ${errText}`);
+        } catch (err) {
+          lastError = err;
+        }
+      }
+      if (lastError) console.warn("Chamada direta ao Gemini falhou, tentando proxy:", lastError);
     }
-    const data = await resp.json();
-    const replyText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-    if (replyText) {
-      return { reply: replyText, allowFlashcard: true };
-    }
-  } else if (apiKey.startsWith('sk-')) {
+
+    // 2. Tenta proxy serverless /api/gemini se estiver no Vercel
+    try {
+      const resp = await fetch('/api/gemini', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt: `${systemPrompt}\n\nInterlocutor formula:\n"${userInput}"`,
+          apiKey: effectiveApiKey,
+          mode: mode
+        })
+      });
+      if (resp.ok) {
+        const data = await resp.json();
+        if (data.reply) {
+          return { reply: data.reply, allowFlashcard: true };
+        }
+      }
+    } catch (_) {}
+  }
+
+  // 3. Fallback para OpenAI caso o usuário tenha fornecido chave sk-
+  if (effectiveApiKey && effectiveApiKey.startsWith('sk-')) {
     const url = 'https://api.openai.com/v1/chat/completions';
     const resp = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
+        'Authorization': `Bearer ${effectiveApiKey}`
       },
       body: JSON.stringify({
         model: 'gpt-4o-mini',
@@ -1184,21 +1312,20 @@ ${context ? context.substring(0, 12000) : "Diálogo sobre os fundamentos do conh
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userInput }
         ],
-        max_tokens: 1000,
-        temperature: mode === 'expository' ? 0.4 : 0.7
+        max_tokens: 2048,
+        temperature: 0.65
       })
     });
-    if (!resp.ok) {
-      throw new Error(`OpenAI API HTTP ${resp.status}`);
-    }
-    const data = await resp.json();
-    const replyText = data.choices?.[0]?.message?.content;
-    if (replyText) {
-      return { reply: replyText, allowFlashcard: true };
+    if (resp.ok) {
+      const data = await resp.json();
+      const replyText = data.choices?.[0]?.message?.content;
+      if (replyText) {
+        return { reply: replyText, allowFlashcard: true };
+      }
     }
   }
 
-  throw new Error("Chave de API não compatível com Gemini (AIza...) ou OpenAI (sk-...)");
+  throw new Error("Chave do Google Gemini não encontrada ou inválida. Conecte sua chave gratuita do Google AI Studio no topo da Ágora.");
 }
 
 // ==========================================
@@ -2139,6 +2266,94 @@ document.addEventListener('DOMContentLoaded', () => {
   // Inicializa o modo expositivo (Aprender & Explicar)
   setLearningMode('expository', false);
 
+  // ==========================================
+  // EVENTOS DE CONEXÃO DO GEMINI GRATUITO
+  // ==========================================
+  updateGeminiStatusUI();
+
+  if (DOM.btnToggleGeminiInput) {
+    DOM.btnToggleGeminiInput.addEventListener('click', () => {
+      if (DOM.geminiQuickConfigPanel) {
+        DOM.geminiQuickConfigPanel.classList.toggle('hidden');
+        if (!DOM.geminiQuickConfigPanel.classList.contains('hidden') && DOM.geminiKeyQuickInput) {
+          DOM.geminiKeyQuickInput.focus();
+        }
+      }
+    });
+  }
+
+  if (DOM.btnCloseGeminiPanel) {
+    DOM.btnCloseGeminiPanel.addEventListener('click', () => {
+      if (DOM.geminiQuickConfigPanel) {
+        DOM.geminiQuickConfigPanel.classList.add('hidden');
+      }
+    });
+  }
+
+  if (DOM.btnSaveGeminiKey) {
+    DOM.btnSaveGeminiKey.addEventListener('click', async () => {
+      const inputKey = DOM.geminiKeyQuickInput ? DOM.geminiKeyQuickInput.value.trim() : '';
+      if (!inputKey) {
+        alert("Por favor, cole sua chave do Google Gemini (iniciada por AIzaSy...).");
+        return;
+      }
+
+      DOM.btnSaveGeminiKey.textContent = "Validando...";
+      DOM.btnSaveGeminiKey.disabled = true;
+
+      try {
+        // Validação rápida chamando a API do Gemini
+        const testResp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${inputKey}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contents: [{ parts: [{ text: "oi" }] }] })
+        });
+
+        if (!testResp.ok) {
+          const errData = await testResp.json();
+          throw new Error(errData.error?.message || "Chave recusada pelo Google");
+        }
+
+        // Salva globalmente e no perfil atual
+        localStorage.setItem('logossophia_gemini_api_key', inputKey);
+        if (AppState.currentUser) {
+          AppState.currentUser.apiKey = inputKey;
+          AppState.currentUser.aiMode = 'gemini_free';
+          const accounts = getStoredAccounts();
+          if (accounts[AppState.currentUser.id]) {
+            accounts[AppState.currentUser.id].apiKey = inputKey;
+            accounts[AppState.currentUser.id].aiMode = 'gemini_free';
+            saveStoredAccounts(accounts);
+          }
+        }
+
+        updateGeminiStatusUI();
+        if (DOM.geminiQuickConfigPanel) DOM.geminiQuickConfigPanel.classList.add('hidden');
+        alert("✨ Google Gemini Gratuito conectado com sucesso! O modelo Gemini Flash está ativo para tutoria socrática e explicações profundas.");
+
+        // Se houver um documento ativo, regenera o panorama com Gemini
+        if (AppState.uploadedText && AppState.uploadedFileName) {
+          const typingElem = showAgoraTyping();
+          try {
+            const overview = await generateDocOverview(AppState.uploadedText, AppState.uploadedFileName, inputKey);
+            if (typingElem && typingElem.parentNode) typingElem.remove();
+            appendAgoraMessage(overview, { allowFlashcard: true, showMaieuticsCta: true });
+          } catch (_) {
+            if (typingElem && typingElem.parentNode) typingElem.remove();
+          }
+        }
+      } catch (err) {
+        alert(`Erro ao validar a chave com o Google: ${err.message}.\nCertifique-se de ter copiado a chave completa em aistudio.google.com.`);
+      } finally {
+        if (DOM.btnSaveGeminiKey) {
+          DOM.btnSaveGeminiKey.textContent = "Ativar Gemini";
+          DOM.btnSaveGeminiKey.disabled = false;
+        }
+      }
+    });
+  }
+
+
 
   // Seletor de Disciplina / Origem
   DOM.disciplineSelector.addEventListener('change', (e) => {
@@ -2333,30 +2548,57 @@ document.addEventListener('DOMContentLoaded', () => {
     const typingElem = showAgoraTyping();
 
     try {
-      const userApiKey = AppState.currentUser?.apiKey;
-      const aiMode = AppState.currentUser?.aiMode;
+      const activeKey = getActiveApiKey();
+      let replyData = null;
 
-      let replyData;
-      if (userApiKey && (aiMode === 'custom-api' || userApiKey.startsWith('AIza') || userApiKey.startsWith('sk-'))) {
-        replyData = await callExternalAI(userText, userApiKey);
+      if (activeKey && (activeKey.startsWith('AIza') || activeKey.startsWith('sk-') || activeKey.length > 20)) {
+        replyData = await callExternalAI(userText, activeKey);
       } else {
-        await new Promise(r => setTimeout(r, 600));
+        // Tenta proxy serverless /api/gemini se estiver rodando no Vercel com variável de ambiente
+        try {
+          const resp = await fetch('/api/gemini', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt: userText, mode: AppState.learningMode })
+          });
+          if (resp.ok) {
+            const data = await resp.json();
+            if (data.reply) {
+              replyData = { reply: data.reply, allowFlashcard: true };
+            }
+          }
+        } catch (_) {}
+      }
+
+      if (!replyData) {
+        // Fallback para motor analítico local caso não haja chave ainda
+        await new Promise(r => setTimeout(r, 500));
         const contextText = AppState.uploadedText || (KNOWLEDGE_BASE[AppState.currentDiscipline] ? KNOWLEDGE_BASE[AppState.currentDiscipline].text || '' : '');
         replyData = SocraticEngine.evaluateInput(userText, AppState.currentDiscipline, contextText);
+
+        // Se o usuário ainda não conectou a chave gratuita do Gemini, abre o painel retrátil gentilmente
+        if (!localStorage.getItem('logossophia_gemini_api_key')) {
+          if (DOM.geminiQuickConfigPanel) {
+            DOM.geminiQuickConfigPanel.classList.remove('hidden');
+          }
+        }
       }
 
       if (typingElem && typingElem.parentNode) {
         typingElem.remove();
       }
-      appendAgoraMessage(replyData.reply, replyData.allowFlashcard !== false);
+      appendAgoraMessage(replyData.reply, { allowFlashcard: replyData.allowFlashcard !== false });
     } catch (err) {
-      console.warn("Processando resposta via SocraticEngine local:", err);
+      console.warn("Erro ao chamar IA, utilizando motor analítico:", err);
       if (typingElem && typingElem.parentNode) {
         typingElem.remove();
       }
       const contextText = AppState.uploadedText || '';
       const fallback = SocraticEngine.evaluateInput(userText, AppState.currentDiscipline, contextText);
-      appendAgoraMessage(fallback.reply, true);
+      appendAgoraMessage(
+        `⚠️ *Aviso de Conexão:* Não foi possível contatar a API do Gemini (${err.message}).\n\nRespondendo com o motor local:\n\n${fallback.reply}`,
+        { allowFlashcard: true }
+      );
     }
   }
 

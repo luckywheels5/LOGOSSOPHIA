@@ -1090,6 +1090,43 @@
               </div>
             </div>
 
+            <!-- STATUS & CONEXÃO DO GOOGLE GEMINI GRATUITO -->
+            <div id="gemini-connection-bar" class="px-3 sm:px-4 py-2 bg-[#090909] border-b border-cardBorder flex flex-wrap items-center justify-between gap-2 text-[11px] font-mono select-none">
+              <div class="flex items-center space-x-2">
+                <span id="gemini-status-dot" class="w-2 h-2 rounded-full bg-amber-400"></span>
+                <span id="gemini-status-label" class="text-neutral-300 font-medium">✨ Google Gemini: <span class="text-amber-400">Chave Gratuita Necessária</span></span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <button id="btn-toggle-gemini-input" type="button" class="px-2.5 py-0.5 rounded bg-amber-950/40 border border-amber-500/40 hover:border-amber-400 text-amber-300 hover:text-white transition flex items-center space-x-1 text-[10px]">
+                  <span>🔑</span>
+                  <span id="gemini-btn-label">Conectar Gemini Gratuito</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- PAINEL RETRÁTIL DE ATIVAÇÃO RÁPIDA DO GEMINI -->
+            <div id="gemini-quick-config-panel" class="hidden px-4 py-3 bg-[#111111] border-b border-cardBorder text-xs space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="font-cinzel text-xs font-semibold text-amber-300">Conectar Google Gemini 2.0 / 1.5 Flash (Gratuito)</span>
+                <button id="btn-close-gemini-panel" type="button" class="text-neutral-500 hover:text-white text-xs px-1">✕</button>
+              </div>
+              <p class="text-[11px] text-neutral-300 leading-relaxed font-sans">
+                A Google oferece o modelo Gemini Flash 100% gratuito através do Google AI Studio para tutoria socrática e geração de conhecimento.
+              </p>
+              <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 pt-1">
+                <input type="password" id="gemini-key-quick-input" placeholder="Cole sua chave de API do Google AI Studio (AIzaSy...)" 
+                  class="flex-1 bg-[#090909] border border-cardBorder focus:border-amber-400 focus:outline-none rounded px-3 py-1.5 text-xs text-white font-mono">
+                <button id="btn-save-gemini-key" type="button" class="px-3.5 py-1.5 bg-amber-500 hover:bg-amber-400 text-black font-semibold rounded text-xs transition shrink-0">
+                  Ativar Gemini
+                </button>
+                <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" 
+                  class="px-2.5 py-1.5 rounded border border-neutral-700 bg-neutral-900 hover:bg-neutral-800 text-amber-300 hover:text-white text-[11px] font-mono text-center flex items-center justify-center space-x-1 shrink-0" title="Abrir Google AI Studio para gerar chave">
+                  <span>Pegar Chave ↗</span>
+                </a>
+              </div>
+              <div id="gemini-feedback-msg" class="text-[10px] font-mono text-neutral-400 hidden pt-0.5"></div>
+            </div>
+
             <div id="chat-messages" class="flex-1 p-5 overflow-y-auto space-y-4 font-sans text-sm bg-cardInner">
               <!-- Mensagens renderizadas via app.js -->
             </div>
@@ -1394,17 +1431,21 @@
           </div>
 
           <div>
-            <label class="block text-textSecondary text-[11px] mb-1">Modo Operacional da Ágora:</label>
+            <label class="block text-textSecondary text-[11px] mb-1">Inteligência Artificial da Ágora:</label>
             <select id="setting-ai-mode" class="w-full bg-cardInner border border-cardBorder rounded p-2 text-white text-xs focus:border-neutral-500 cursor-pointer">
-              <option value="socratic_rigorous" selected>Ágora Dialética Integrada (Maiêutica Rigorosa)</option>
-              <option value="socratic_gentle">Ágora Pedagógica (Maiêutica Adaptativa BNCC)</option>
-              <option value="custom-api">Chave de API Própria (Gemini / OpenAI API)</option>
+              <option value="gemini_free" selected>✨ Google Gemini Gratuito (Google AI Studio - Recomendado)</option>
+              <option value="openai">OpenAI API (GPT-4o Mini)</option>
+              <option value="socratic_rigorous">Motor Local Offline (Sem IA Externa)</option>
             </select>
           </div>
 
-          <div id="api-key-container" class="hidden">
-            <label class="block text-textSecondary text-[11px] mb-1">Chave de API:</label>
-            <input type="password" id="setting-api-key" placeholder="Insira sua chave de API..." class="w-full bg-cardInner border border-cardBorder rounded p-2 text-white font-mono text-xs focus:border-neutral-500">
+          <div id="api-key-container">
+            <div class="flex items-center justify-between mb-1">
+              <label class="block text-textSecondary text-[11px]">Chave de API do Gemini (Gratuita):</label>
+              <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="text-[11px] text-amber-400 hover:underline">Pegar Chave no Google AI Studio ↗</a>
+            </div>
+            <input type="password" id="setting-api-key" placeholder="Cole sua chave de API (AIzaSy...)" class="w-full bg-cardInner border border-cardBorder rounded p-2 text-white font-mono text-xs focus:border-neutral-500">
+            <span class="text-[10px] text-neutral-400 mt-1 block">O Google Gemini 2.0 / 1.5 Flash é 100% gratuito através do Google AI Studio para tutoria e estudo.</span>
           </div>
         </div>
 
