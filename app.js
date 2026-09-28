@@ -334,7 +334,9 @@ const AppState = {
   pomoIsRunning: false,
   flashcards: [],
   currentCardIndex: 0,
-  selectedTextForAgora: ""
+  selectedTextForAgora: "",
+  uploadedText: "",
+  uploadedFileName: ""
 };
 
 // ==========================================
@@ -450,55 +452,113 @@ const DOM = {
 // 4. MOTOR DE MAIÊUTICA SOCRÁTICA (ÁGORA)
 // ==========================================
 class SocraticEngine {
-  static evaluateInput(userInput, discipline) {
-    const text = userInput.trim().toLowerCase();
+  static STOP_WORDS = new Set([
+    'a', 'o', 'as', 'os', 'um', 'uma', 'uns', 'umas', 'de', 'da', 'do', 'das', 'dos',
+    'em', 'no', 'na', 'nos', 'nas', 'por', 'pelo', 'pela', 'pelos', 'pelas', 'para',
+    'pra', 'com', 'sem', 'sob', 'sobre', 'que', 'se', 'mas', 'ou', 'e', 'ao', 'aos',
+    'este', 'esta', 'estes', 'estas', 'esse', 'essa', 'esses', 'essas', 'aquele', 'aquela',
+    'isso', 'isto', 'aquilo', 'seu', 'sua', 'seus', 'suas', 'meu', 'minha', 'dele', 'dela',
+    'como', 'quando', 'onde', 'quem', 'qual', 'quais', 'muito', 'mais', 'menos', 'também',
+    'ja', 'já', 'só', 'mesmo', 'mesma', 'assim', 'então', 'entao', 'era', 'são', 'sao',
+    'foi', 'ser', 'ter', 'estar', 'tem', 'havia', 'pode', 'podem', 'deve', 'devem', 'pelo'
+  ]);
+
+  static extractSignificantWords(text, limit = 6) {
+    if (!text || typeof text !== 'string') return [];
+    const words = text
+      .toLowerCase()
+      .replace(/[^\p{L}\s]/gu, ' ')
+      .split(/\s+/)
+      .filter(w => w.length > 3 && !SocraticEngine.STOP_WORDS.has(w));
+    
+    const freq = {};
+    words.forEach(w => { freq[w] = (freq[w] || 0) + 1; });
+    return Object.keys(freq).sort((a, b) => freq[b] - freq[a]).slice(0, limit);
+  }
+
+  static getInitialDocGreeting(fileName, rawText) {
+    const keywords = SocraticEngine.extractSignificantWords(rawText, 4);
+    const keywordsStr = keywords.length > 0 ? keywords.slice(0, 3).join(', ') : 'suas teses fundamentais';
+    return `Material **"${fileName}"** carregado e indexado no Scriptorium da Ágora.\n\nIdentifico que o texto articula noções em torno de: *${keywordsStr}*.\n\nQual é a proposição central que você extrai da leitura inicial? Formule com suas palavras para iniciarmos o exame maiêutico.`;
+  }
+
+  static evaluateInput(userInput, discipline, contextText = '') {
+    const raw = userInput.trim();
+    const text = raw.toLowerCase();
+
+    // Contexto textual (seja de upload ou de disciplina da base)
+    const effectiveContext = contextText || (KNOWLEDGE_BASE[discipline] ? KNOWLEDGE_BASE[discipline].text || '' : '');
+    const docKeywords = SocraticEngine.extractSignificantWords(effectiveContext, 6);
+    const userKeywords = SocraticEngine.extractSignificantWords(raw, 5);
 
     // 1. Recusa Socrática de Resumo Passivo
-    if (text.includes("resumo") || text.includes("resuma") || text.includes("sintetize")) {
+    if (text.includes("resumo") || text.includes("resuma") || text.includes("sintetize") || text.includes("faça um resumo") || text.includes("me explica tudo") || text.includes("o que diz ai")) {
+      const topConcept = docKeywords[0] ? `a respeito de *${docKeywords[0]}*` : "apresentada pelo autor";
       return {
         type: 'refusal_summary',
-        reply: `Ágora recusa o atalho do resumo passivo. A memorização mecânica não produz entendimento.
-
-Volte ao primeiro parágrafo do texto em exame: qual sentença desafia mais diretamente a sua intuição inicial? Formule-a em uma linha.`
+        reply: `Ágora recusa o atalho do resumo passivo. A memorização mecânica da síntese alheia não produz entendimento real.\n\nRetorne ao primeiro parágrafo do texto em exame: qual sentença estabelece a premissa indispensável ${topConcept}? Formule-a em uma única linha.`
       };
     }
 
     // 2. Recusa de Resposta Pronta
-    if (text.includes("qual a resposta") || text.includes("me dê a resposta") || text.includes("qual é a resposta") || text.includes("me diga a resposta")) {
+    if (text.includes("qual a resposta") || text.includes("me dê a resposta") || text.includes("qual é a resposta") || text.includes("me diga a resposta") || text.includes("resolva para mim") || text.includes("resolva isso")) {
       return {
         type: 'refusal_answer',
-        reply: `Entregar a resposta pronta privaria você do próprio ato de pensar.
-
-Demos um passo atrás: para resolver esse ponto, qual premissa evidente o autor estabelece na abertura do texto?`
+        reply: `Entregar a resposta pronta privaria você do próprio ato de pensar.\n\nDemos um passo atrás na cadeia dedutiva: qual axioma ou dado inicial o autor estabelece como inquestionável para fundamentar a conclusão?`
       };
     }
 
     // 3. Deteção de Aporia / Não Saber
-    if (text === "não sei" || text === "nao sei" || text.includes("não entendi nada") || text.includes("nao faço ideia")) {
+    if (text === "não sei" || text === "nao sei" || text.includes("não entendi nada") || text.includes("nao faço ideia") || text.includes("estou perdido") || text.includes("muito difícil")) {
+      const focalConcept = docKeywords[0] || "o elemento principal";
       return {
         type: 'breakdown',
-        reply: `A aporia — o reconhecimento humilde do não saber — é o ponto exato onde a verdadeira sabedoria tem início.
-
-Isolemos apenas a primeira sentença do documento: quem é o sujeito que executa a ação principal? Diga-me apenas essa palavra.`
+        reply: `A aporia — o reconhecimento humilde do não saber — é o ponto exato onde a verdadeira sabedoria tem início.\n\nIsolemos apenas a primeira sentença do documento: qual é a relação que o autor propõe entre *${focalConcept}* e a realidade observada? Diga-me apenas este ponto.`
       };
     }
 
-    // 4. Exame Dialético para Textos de Upload e Outras Disciplinas
-    if (discipline === 'upload') {
+    // 4. Saudações ou Perguntas sobre o Conteúdo do Arquivo
+    if (text === "oi" || text === "olá" || text === "ola" || text.includes("do que se trata") || text.includes("qual o tema") || text.includes("sobre o que") || text.includes("você leu") || text.includes("o que tem no arquivo") || text.includes("começar")) {
+      if (docKeywords.length > 0) {
+        return {
+          type: 'overview_maieutics',
+          reply: `O documento submetido investiga premissas estruturadas em torno de: **${docKeywords.slice(0, 3).join(', ')}**.\n\nPara que o estudo seja ativo: a partir da leitura do primeiro parágrafo no Scriptorium, qual parece ser a hipótese central ou o conflito que o autor pretende solucionar?`,
+          allowFlashcard: true
+        };
+      } else {
+        return {
+          type: 'greeting',
+          reply: `Estou pronta para examinar o documento convosco. Aponte a primeira proposição que chamou sua atenção no texto para iniciarmos o diálogo socrático.`
+        };
+      }
+    }
+
+    // 5. Se estivermos com Material de Upload Próprio ou Texto Específico
+    if (discipline === 'upload' || (effectiveContext && effectiveContext.length > 50 && discipline !== 'upload' && !KNOWLEDGE_BASE[discipline])) {
+      const studentConcept = userKeywords[0] || (userKeywords[1] || "essa sua conclusão");
+      const docConcept = docKeywords[0] || (docKeywords[1] || "a tese central");
+
+      const dialeticalFrames = [
+        `Ao postular que *${studentConcept}* governa essa questão: você não estaria presumindo como provado aquilo que o texto justamente tenta demonstrar? Que contraexemplo o próprio documento poderia suscitar contra essa sua visão?`,
+        `Essa formulação toca em um aspecto crucial. Porém, examine a consequência: se adotarmos que *${studentConcept}* é verdadeiro, o que acontece com a proposição referente a *${docConcept}*? Ambas podem coexistir sem contradição lógica?`,
+        `Sob o método do *elenchos*: você identifica essa premissa como uma causa fundamental ou como mero efeito secundário descrito pelo texto? Onde está a evidência interna no documento que sustenta sua colocação?`,
+        `Instigante provocação dialética. Para aprofundarmos: que distinção conceitual o autor estabelece entre *${studentConcept}* e o restante do argumento? Isole um parágrafo que confirme a sua leitura.`
+      ];
+
+      const frameIndex = Math.abs(raw.length + (userKeywords.length * 3)) % dialeticalFrames.length;
       return {
-        type: 'maieutics_upload',
-        reply: `Examinando sua colocação à luz do material carregado: se essa sua conclusão for tomada como premissa verdadeira, de que modo ela afeta a tese central defendida pelo autor? Há algum ponto cego desconsiderado?`,
+        type: 'maieutics_dynamic_upload',
+        reply: dialeticalFrames[frameIndex],
         allowFlashcard: true
       };
     }
 
+    // 6. Disciplinas do Saber (Base Curricular Superior)
     if (discipline === 'philosophy') {
       if (text.includes("egoísta") || text.includes("sempre má") || text.includes("ilusão")) {
         return {
           type: 'elenchos',
-          reply: `Ao afirmar que a natureza humana busca unicamente o proveito próprio na invisibilidade, você não está confundindo o *comportamento empírico da maioria* com a *essência da virtude*?
-
-Se o justo deixasse de agir com justiça ao vestir o anel, ele seria verdadeiramente justo ou apenas prudente diante da punição?`
+          reply: `Ao afirmar que a natureza humana busca unicamente o proveito próprio na invisibilidade, você não está confundindo o *comportamento empírico da maioria* com a *essência da virtude*?\n\nSe o justo deixasse de agir com justiça ao vestir o anel, ele seria verdadeiramente justo ou apenas prudente diante da punição?`
         };
       }
       return {
@@ -635,6 +695,106 @@ Se o justo deixasse de agir com justiça ao vestir o anel, ele seria verdadeiram
       allowFlashcard: true
     };
   }
+}
+
+// ==========================================
+// 4.5. EXTRAÇÃO DE PDF & INTEGRAÇÃO DE IA (ÁGORA)
+// ==========================================
+async function extractTextFromPDF(arrayBuffer) {
+  if (!window.pdfjsLib) {
+    throw new Error("pdfjsLib não disponível");
+  }
+  const loadingTask = window.pdfjsLib.getDocument({ data: arrayBuffer });
+  const pdf = await loadingTask.promise;
+  let fullText = '';
+  const maxPages = Math.min(pdf.numPages, 30);
+  for (let i = 1; i <= maxPages; i++) {
+    const page = await pdf.getPage(i);
+    const textContent = await page.getTextContent();
+    const pageText = textContent.items.map(item => item.str).join(' ');
+    if (pageText.trim().length > 0) {
+      fullText += pageText + '\n\n';
+    }
+  }
+  return fullText.trim();
+}
+
+function showAgoraTyping() {
+  const typingDiv = document.createElement('div');
+  typingDiv.id = 'agora-typing-indicator';
+  typingDiv.className = 'message-agora p-3.5 rounded-lg text-xs flex items-center space-x-2.5 text-neutral-300 animate-pulse';
+  typingDiv.innerHTML = `
+    <span class="text-sm">🏛️</span>
+    <span class="font-mono text-[11px] text-neutral-400">Ágora está examinando sua premissa dialética...</span>
+  `;
+  DOM.chatMessages.appendChild(typingDiv);
+  DOM.chatMessages.scrollTop = DOM.chatMessages.scrollHeight;
+  return typingDiv;
+}
+
+async function callExternalAI(userInput, apiKey) {
+  const context = AppState.uploadedText || (KNOWLEDGE_BASE[AppState.currentDiscipline] ? KNOWLEDGE_BASE[AppState.currentDiscipline].text : '');
+  const systemPrompt = `Você é a Ágora, a inteligência socrática e dialética da plataforma LOGOSSOPHIA.
+Seu método é a maiêutica socrática estrita:
+1. NUNCA entregue a resposta pronta ou faça resumos passivos.
+2. Desafie as premissas do estudante com perguntas afiadas (elenchos) e aponte contradições.
+3. Use o texto de estudo fornecido abaixo como referência de fundamentação.
+4. Faça uma única pergunta incisiva por vez para manter o diálogo focado e reflexivo.
+5. Tom: sóbrio, instigante, acadêmico, cortês.
+Texto em exame:
+"""
+${context ? context.substring(0, 8000) : "Diálogo sobre os fundamentos do conhecimento e virtude."}
+"""`;
+
+  if (apiKey.startsWith('AIza')) {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [
+          { role: 'user', parts: [{ text: `${systemPrompt}\n\nEstudante formula: "${userInput}"` }] }
+        ],
+        generationConfig: { maxOutputTokens: 350, temperature: 0.7 }
+      })
+    });
+    if (!resp.ok) {
+      const errBody = await resp.text();
+      throw new Error(`Gemini API HTTP ${resp.status}: ${errBody}`);
+    }
+    const data = await resp.json();
+    const replyText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (replyText) {
+      return { reply: replyText, allowFlashcard: true };
+    }
+  } else if (apiKey.startsWith('sk-')) {
+    const url = 'https://api.openai.com/v1/chat/completions';
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: userInput }
+        ],
+        max_tokens: 350
+      })
+    });
+    if (!resp.ok) {
+      throw new Error(`OpenAI API HTTP ${resp.status}`);
+    }
+    const data = await resp.json();
+    const replyText = data.choices?.[0]?.message?.content;
+    if (replyText) {
+      return { reply: replyText, allowFlashcard: true };
+    }
+  }
+
+  throw new Error("Chave de API não compatível com Gemini (AIza...) ou OpenAI (sk-...)");
 }
 
 // ==========================================
@@ -1287,20 +1447,57 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  function processUploadedFile(file) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const content = e.target.result;
-      renderTextToScriptorium(file.name, file.type ? file.type.split('/')[1].toUpperCase() : 'DOCUMENTO', content);
-      appendAgoraMessage(`Material "${file.name}" carregado com sucesso no Scriptorium. Qual é a proposição central que você extrai dessa leitura inicial? Diga-me com suas palavras para iniciarmos o exame dialético.`);
-    };
+  async function processUploadedFile(file) {
+    if (!file) return;
 
-    if (file.name.endsWith('.pdf')) {
-      // Para demonstração instantânea com PDF
-      renderTextToScriptorium(file.name, 'PDF', `O documento ${file.name} foi indexado com sucesso no Scriptorium da Ágora.\n\nEste tratado contém as premissas e argumentos submetidos pelo estudante para exame socrático aprofundado.\n\nSelecione qualquer trecho ou responda à Ágora no painel ao lado.`);
-      appendAgoraMessage(`PDF "${file.name}" carregado no Scriptorium. Aponte a primeira tese ou axioma que o autor postula para começarmos o exame.`);
-    } else {
-      reader.readAsText(file);
+    const fileName = file.name;
+    const isPdf = fileName.toLowerCase().endsWith('.pdf') || (file.type && file.type.includes('pdf'));
+
+    DOM.docTitle.textContent = `Processando ${fileName}...`;
+    DOM.agoraStatusSubtitle.textContent = 'Indexando no Scriptorium...';
+
+    try {
+      let extractedText = '';
+
+      if (isPdf) {
+        if (window.pdfjsLib) {
+          try {
+            const arrayBuffer = await file.arrayBuffer();
+            extractedText = await extractTextFromPDF(arrayBuffer);
+          } catch (pdfErr) {
+            console.warn("Extração via PDF.js encontrou restrição ou texto protegido:", pdfErr);
+          }
+        }
+        if (!extractedText || extractedText.trim().length < 20) {
+          extractedText = `Tratado submetido: "${fileName}".\n\nEste documento em formato PDF foi indexado pelo Scriptorium para o ciclo de estudos dialéticos.\n\nO leitor e a Ágora agora podem interagir com os conceitos e questionamentos suscitados a partir deste texto.`;
+        }
+      } else {
+        extractedText = await file.text();
+      }
+
+      if (!extractedText || extractedText.trim().length === 0) {
+        extractedText = `Documento vazio ou sem caracteres legíveis identificados em "${fileName}".`;
+      }
+
+      AppState.currentDiscipline = 'upload';
+      AppState.uploadedFileName = fileName;
+      AppState.uploadedText = extractedText;
+
+      const badgeType = isPdf ? 'PDF' : (fileName.split('.').pop() || 'DOC').toUpperCase();
+      renderTextToScriptorium(fileName, badgeType, extractedText);
+
+      updateHeaderBreadcrumb('Universal', '📁', fileName);
+      syncSidebarSelection('upload');
+      if (DOM.disciplineSelector) DOM.disciplineSelector.value = 'upload';
+      DOM.agoraStatusSubtitle.textContent = `Ágora • ${fileName.length > 20 ? fileName.substring(0, 17) + '...' : fileName}`;
+
+      DOM.chatMessages.innerHTML = '';
+      const initialGreeting = SocraticEngine.getInitialDocGreeting(fileName, extractedText);
+      appendAgoraMessage(initialGreeting);
+
+    } catch (err) {
+      console.error("Erro ao processar arquivo:", err);
+      alert(`Erro ao ler o arquivo "${fileName}".`);
     }
   }
 
@@ -1312,8 +1509,18 @@ document.addEventListener('DOMContentLoaded', () => {
         alert("Cole algum texto antes de submeter ao Scriptorium.");
         return;
       }
+      AppState.currentDiscipline = 'upload';
+      AppState.uploadedFileName = "Texto Pessoal / Notas de Estudo";
+      AppState.uploadedText = text;
+
       renderTextToScriptorium("Texto Pessoal / Notas de Estudo", "NOTAS", text);
-      appendAgoraMessage("Texto pessoal carregado no Scriptorium. Qual é a premissa fundamental que você identifica logo nas primeiras linhas? Diga-me com suas palavras para iniciarmos o exame.");
+      updateHeaderBreadcrumb('Universal', '✍️', 'Texto Pessoal / Notas');
+      syncSidebarSelection('upload');
+      if (DOM.disciplineSelector) DOM.disciplineSelector.value = 'upload';
+
+      DOM.chatMessages.innerHTML = '';
+      const initialGreeting = SocraticEngine.getInitialDocGreeting("Texto Pessoal", text);
+      appendAgoraMessage(initialGreeting);
     });
   }
 
@@ -1325,19 +1532,58 @@ document.addEventListener('DOMContentLoaded', () => {
     DOM.btnTriggerUpload.addEventListener('click', showUploadZone);
   }
 
-  // Chat Submission
-  DOM.chatForm.addEventListener('submit', (e) => {
-    e.preventDefault();
+  // Função centralizada para processar mensagens da Ágora
+  async function handleChatSubmit() {
     const userText = DOM.chatInput.value.trim();
     if (!userText) return;
 
     appendUserMessage(userText);
     DOM.chatInput.value = '';
 
-    setTimeout(() => {
-      const evaluation = SocraticEngine.evaluateInput(userText, AppState.currentDiscipline);
-      appendAgoraMessage(evaluation.reply, evaluation.allowFlashcard);
-    }, 600);
+    const typingElem = showAgoraTyping();
+
+    try {
+      const userApiKey = AppState.currentUser?.apiKey;
+      const aiMode = AppState.currentUser?.aiMode;
+
+      let replyData;
+      if (userApiKey && (aiMode === 'custom-api' || userApiKey.startsWith('AIza') || userApiKey.startsWith('sk-'))) {
+        replyData = await callExternalAI(userText, userApiKey);
+      } else {
+        await new Promise(r => setTimeout(r, 600));
+        const contextText = AppState.uploadedText || (KNOWLEDGE_BASE[AppState.currentDiscipline] ? KNOWLEDGE_BASE[AppState.currentDiscipline].text || '' : '');
+        replyData = SocraticEngine.evaluateInput(userText, AppState.currentDiscipline, contextText);
+      }
+
+      if (typingElem && typingElem.parentNode) {
+        typingElem.remove();
+      }
+      appendAgoraMessage(replyData.reply, replyData.allowFlashcard !== false);
+    } catch (err) {
+      console.warn("Processando resposta via SocraticEngine local:", err);
+      if (typingElem && typingElem.parentNode) {
+        typingElem.remove();
+      }
+      const contextText = AppState.uploadedText || '';
+      const fallback = SocraticEngine.evaluateInput(userText, AppState.currentDiscipline, contextText);
+      appendAgoraMessage(fallback.reply, true);
+    }
+  }
+
+  // Tecla Enter no chat envia imediatamente (Shift+Enter insere quebra de linha)
+  if (DOM.chatInput) {
+    DOM.chatInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        handleChatSubmit();
+      }
+    });
+  }
+
+  // Chat Submission por Formulário ou Clique no Botão de Envio
+  DOM.chatForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    handleChatSubmit();
   });
 
   // Quick Prompt Chips

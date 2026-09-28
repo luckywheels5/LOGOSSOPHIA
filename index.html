@@ -39,6 +39,13 @@
       }
     }
   </script>
+  <!-- PDF.js para extração e renderização autêntica de documentos PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>
+    if (window.pdfjsLib) {
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    }
+  </script>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body class="bg-appBg text-textPrimary min-h-screen font-sans antialiased selection:bg-neutral-700 selection:text-white">
