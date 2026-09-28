@@ -447,6 +447,8 @@ const DOM = {
   geminiKeyQuickInput: document.getElementById('gemini-key-quick-input'),
   btnSaveGeminiKey: document.getElementById('btn-save-gemini-key'),
   geminiFeedbackMsg: document.getElementById('gemini-feedback-msg'),
+  btnTestGeminiApi: document.getElementById('btn-test-gemini-api'),
+  quickBtnTestApi: document.getElementById('quick-btn-test-api'),
   
   // Pomodoro
   pomoDisplay: document.getElementById('pomo-display'),
@@ -563,6 +565,147 @@ function updateGeminiStatusUI() {
   }
   if (DOM.settingApiKey && key) {
     DOM.settingApiKey.value = key;
+  }
+}
+
+async function testGeminiConnection(keyToTest = null) {
+  const key = keyToTest || getActiveApiKey();
+  const feedbackElem = DOM.geminiFeedbackMsg || document.getElementById('gemini-feedback-msg');
+
+  const startTime = Date.now();
+  const typing = showAgoraTyping();
+  if (typing) {
+    const lbl = typing.querySelector('.text-neutral-400');
+    if (lbl) lbl.textContent = 'Enviando teste de conexão para o Google Gemini...';
+  }
+
+  // 1. Se nenhuma chave local foi encontrada, verifica se há chave no servidor Vercel (/api/gemini)
+  if (!key) {
+    try {
+      const serverResp = await fetch('/api/gemini', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: "Responda apenas: 'API Gemini conectada via servidor!'." })
+      });
+      if (serverResp.ok) {
+        const sData = await serverResp.json();
+        const elapsed = Date.now() - startTime;
+        if (typing && typing.parentNode) typing.remove();
+
+        if (sData.reply) {
+          updateGeminiStatusUI();
+          appendAgoraMessage(
+            `✅ **Diagnóstico da API: Conexão Bem-Sucedida!**\n\n- **Ambiente:** Servidor Cloud (Vercel / Serverless)\n- **Modelo Operacional:** \`${sData.model || 'gemini-2.0-flash'}\`\n- **Tempo de Resposta:** \`${elapsed}ms\`\n- **Retorno da IA:** *"${sData.reply.trim()}"*\n- **Status:** A Ágora está 100% pronta para tutoria socrática e expansão de ideias!`,
+            { allowFlashcard: false, badge: 'API Operacional' }
+          );
+          if (feedbackElem) {
+            feedbackElem.innerHTML = `<span class="text-emerald-400 font-semibold">✅ Conectado via Servidor (${elapsed}ms)</span>`;
+            feedbackElem.classList.remove('hidden');
+          }
+          return true;
+        }
+      }
+    } catch (_) {}
+
+    if (typing && typing.parentNode) typing.remove();
+
+    const msg = "⚠️ Nenhuma chave de API detectada. Conecte sua chave gratuita do Google AI Studio para testar a IA.";
+    if (feedbackElem) {
+      feedbackElem.innerHTML = `<span class="text-amber-400 font-semibold">${msg}</span>`;
+      feedbackElem.classList.remove('hidden');
+    }
+    appendAgoraMessage(
+      `🧪 **Diagnóstico de Conexão da API Gemini:**\n\n- **Status:** ⚠️ Nenhuma chave de API configurada no momento.\n- **Como Ativar a IA Gratuita (Leva menos de 1 minuto):**\n  1. Acesse o [Google AI Studio](https://aistudio.google.com/app/apikey) (gratuito com qualquer conta Google, sem cartão de crédito).\n  2. Clique em **"Create API key"** e copie a chave iniciada por \`AIzaSy...\`.\n  3. Clique no botão **"Conectar Gemini Gratuito"** no topo da Ágora, cole a chave e clique em **Ativar Gemini**.\n\n*A Ágora passará a usar imediatamente o modelo Gemini 2.0 / 1.5 Flash para desconstruir qualquer conceito passo a passo.*`,
+      { allowFlashcard: false, badge: 'Diagnóstico de API' }
+    );
+    if (DOM.geminiQuickConfigPanel) DOM.geminiQuickConfigPanel.classList.remove('hidden');
+    return false;
+  }
+
+  // 2. Se há chave fornecida, testa os modelos diretamente com fallback de proxy
+  try {
+    const models = ['gemini-2.0-flash', 'gemini-1.5-flash'];
+    let workingModel = null;
+    let replySample = null;
+    let lastErr = null;
+
+    for (const model of models) {
+      try {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`;
+        const resp = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ role: 'user', parts: [{ text: "Responda apenas: 'API Gemini conectada e operacional!'." }] }],
+            generationConfig: { maxOutputTokens: 60, temperature: 0.2 }
+          })
+        });
+
+        if (resp.ok) {
+          const data = await resp.json();
+          replySample = data.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (replySample) {
+            workingModel = model;
+            break;
+          }
+        } else {
+          const errData = await resp.json().catch(() => ({}));
+          lastErr = errData.error?.message || `HTTP ${resp.status}`;
+        }
+      } catch (err) {
+        lastErr = err.message;
+      }
+    }
+
+    // Se a chamada direta falhou por rede/CORS, tenta via proxy /api/gemini com a chave informada
+    if (!workingModel) {
+      try {
+        const proxyResp = await fetch('/api/gemini', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            prompt: "Responda apenas: 'API Gemini conectada e operacional!'",
+            apiKey: key
+          })
+        });
+        if (proxyResp.ok) {
+          const proxyData = await proxyResp.json();
+          if (proxyData.reply) {
+            workingModel = `${proxyData.model || 'gemini-2.0-flash'} (Proxy)`;
+            replySample = proxyData.reply;
+          }
+        }
+      } catch (_) {}
+    }
+
+    const elapsed = Date.now() - startTime;
+    if (typing && typing.parentNode) typing.remove();
+
+    if (workingModel) {
+      updateGeminiStatusUI();
+      appendAgoraMessage(
+        `✅ **Diagnóstico da API: Conexão Bem-Sucedida!**\n\n- **Modelo Operacional:** \`${workingModel}\` (Google Gemini Gratuito)\n- **Tempo de Resposta:** \`${elapsed}ms\`\n- **Retorno da IA:** *"${replySample.trim()}"*\n- **Status:** A Ágora está 100% pronta para tutoria socrática, desconstrução passo a passo e expansão de ideias!`,
+        { allowFlashcard: false, badge: 'API Operacional' }
+      );
+      if (feedbackElem) {
+        feedbackElem.innerHTML = `<span class="text-emerald-400 font-semibold">✅ Conectado com sucesso (${workingModel} • ${elapsed}ms)</span>`;
+        feedbackElem.classList.remove('hidden');
+      }
+      return true;
+    } else {
+      throw new Error(lastErr || "O Google não respondeu com sucesso nos modelos testados.");
+    }
+  } catch (e) {
+    if (typing && typing.parentNode) typing.remove();
+    appendAgoraMessage(
+      `❌ **Diagnóstico da API: Falha na Conexão**\n\n- **Mensagem do Google:** \`${e.message}\`\n- **Causa Provável:** Chave de API inválida, incompleta ou bloqueada no Google AI Studio.\n- **Solução:** Obtenha uma chave gratuita nova em [aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey) e cole no campo de configuração.`,
+      { allowFlashcard: false, badge: 'Falha na API' }
+    );
+    if (feedbackElem) {
+      feedbackElem.innerHTML = `<span class="text-red-400 font-semibold">❌ Falha: ${e.message}</span>`;
+      feedbackElem.classList.remove('hidden');
+    }
+    return false;
   }
 }
 
@@ -2270,6 +2413,18 @@ document.addEventListener('DOMContentLoaded', () => {
   // EVENTOS DE CONEXÃO DO GEMINI GRATUITO
   // ==========================================
   updateGeminiStatusUI();
+
+  if (DOM.btnTestGeminiApi) {
+    DOM.btnTestGeminiApi.addEventListener('click', () => {
+      testGeminiConnection();
+    });
+  }
+
+  if (DOM.quickBtnTestApi) {
+    DOM.quickBtnTestApi.addEventListener('click', () => {
+      testGeminiConnection();
+    });
+  }
 
   if (DOM.btnToggleGeminiInput) {
     DOM.btnToggleGeminiInput.addEventListener('click', () => {

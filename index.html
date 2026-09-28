@@ -1096,8 +1096,12 @@
                 <span id="gemini-status-dot" class="w-2 h-2 rounded-full bg-amber-400"></span>
                 <span id="gemini-status-label" class="text-neutral-300 font-medium">✨ Google Gemini: <span class="text-amber-400">Chave Gratuita Necessária</span></span>
               </div>
-              <div class="flex items-center space-x-2">
-                <button id="btn-toggle-gemini-input" type="button" class="px-2.5 py-0.5 rounded bg-amber-950/40 border border-amber-500/40 hover:border-amber-400 text-amber-300 hover:text-white transition flex items-center space-x-1 text-[10px]">
+              <div class="flex items-center space-x-1.5">
+                <button id="btn-test-gemini-api" type="button" class="px-2 py-0.5 rounded bg-neutral-900 border border-neutral-700 hover:border-neutral-500 text-neutral-300 hover:text-white transition flex items-center space-x-1 text-[10px]" title="Testar se a API do Gemini está respondendo">
+                  <span>🧪</span>
+                  <span>Testar API</span>
+                </button>
+                <button id="btn-toggle-gemini-input" type="button" class="px-2.5 py-0.5 rounded bg-amber-950/40 border border-amber-500/40 hover:border-amber-400 text-amber-300 hover:text-white transition flex items-center space-x-1 text-[10px]" title="Configurar chave do Google Gemini (Google AI Studio)">
                   <span>🔑</span>
                   <span id="gemini-btn-label">Conectar Gemini Gratuito</span>
                 </button>
@@ -1133,6 +1137,10 @@
 
             <div class="px-4 py-2 bg-[#0b0b0b] border-t border-cardBorder flex items-center space-x-2 overflow-x-auto text-[11px] font-mono text-textSecondary">
               <span class="text-textMuted uppercase whitespace-nowrap">Ações:</span>
+              <button id="quick-btn-test-api" type="button" class="px-2.5 py-1 bg-cardBg border border-cardBorder hover:border-neutral-500 rounded text-neutral-300 hover:text-white whitespace-nowrap transition flex items-center space-x-1" title="Testar se a API do Gemini está conectada">
+                <span>🧪</span>
+                <span>Testar API</span>
+              </button>
               <button class="quick-prompt-btn px-2.5 py-1 bg-cardBg border border-cardBorder hover:border-neutral-500 rounded text-neutral-300 hover:text-white whitespace-nowrap transition" data-text="Faça um apanhado geral deste documento, explicando a tese central e os pontos fundamentais.">
                 "📜 Apanhado Geral"
               </button>
