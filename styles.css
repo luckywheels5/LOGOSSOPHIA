@@ -163,6 +163,22 @@
   animation: fadeInScale 0.15s ease-out forwards;
 }
 
+/* Animação Suave entre Camadas (Landing Page e App) */
+@keyframes fadeInLayer {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeInLayer 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
 /* ==========================================================================
    TEMA DIURNO / MODO CLARO (ESTÉTICA PERGAMINHO CLÁSSICO)
    ========================================================================== */
@@ -255,6 +271,12 @@ html:not(.dark) .text-\[\#D6D6D6\] {
 }
 
 /* Containers com fundos escuros fixos no HTML */
+html:not(.dark) .bg-\[\#050505\],
+html:not(.dark) .bg-\[\#050505\]\/95,
+html:not(.dark) .bg-\[\#070707\],
+html:not(.dark) .bg-\[\#080808\],
+html:not(.dark) .bg-\[\#0b0b0b\],
+html:not(.dark) .bg-\[\#0e0e0e\],
 html:not(.dark) .bg-\[\#121212\],
 html:not(.dark) .bg-\[\#141414\],
 html:not(.dark) .bg-\[\#161616\],

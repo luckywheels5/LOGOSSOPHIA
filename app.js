@@ -1041,6 +1041,7 @@ function loadUserAccount(userId, skipDisciplineReload = false) {
   const user = accounts[userId] || accounts['usr-erudito-01'];
   AppState.currentUserId = user.id;
   AppState.currentUser = user;
+  localStorage.setItem('logossophia_active_user', user.id);
 
   // Atualiza Sidebar User Card
   if (DOM.userAvatar) DOM.userAvatar.textContent = user.avatar || '🏛️';
@@ -1487,6 +1488,46 @@ function createFlashcardFromAgora(synthesisText) {
 }
 
 // ==========================================
+// 8.5. CAMADAS DE ACESSO: PÁGINA PÚBLICA & APP PRINCIPAL
+// ==========================================
+function checkAuthStatus() {
+  const isAuth = localStorage.getItem('logossophia_authenticated') === 'true';
+  const landingLayer = document.getElementById('landing-layer');
+  const appLayer = document.getElementById('app-layer');
+
+  if (isAuth) {
+    if (landingLayer) landingLayer.classList.add('hidden');
+    if (appLayer) {
+      appLayer.classList.remove('hidden');
+      appLayer.classList.add('animate-fadeIn');
+    }
+  } else {
+    if (appLayer) appLayer.classList.add('hidden');
+    if (landingLayer) {
+      landingLayer.classList.remove('hidden');
+      landingLayer.classList.add('animate-fadeIn');
+    }
+  }
+}
+
+function loginUser(userId = 'usr-erudito-01') {
+  localStorage.setItem('logossophia_authenticated', 'true');
+  loadUserAccount(userId);
+  checkAuthStatus();
+  switchMainView('dashboard');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function logoutUser() {
+  localStorage.setItem('logossophia_authenticated', 'false');
+  if (AppState.pomoIsRunning) {
+    resetPomodoro();
+  }
+  checkAuthStatus();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ==========================================
 // 9. INICIALIZAÇÃO & EVENTOS
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
@@ -1495,7 +1536,11 @@ document.addEventListener('DOMContentLoaded', () => {
   applyTheme(savedTheme);
 
   // Inicia carregando o perfil do estudante ativo e suas preferências do banco
-  loadUserAccount('usr-erudito-01');
+  const savedUserId = localStorage.getItem('logossophia_active_user') || 'usr-erudito-01';
+  loadUserAccount(savedUserId);
+
+  // Verifica status de autenticação (Página Pública vs App Principal)
+  checkAuthStatus();
 
   // Requisito: Ao entrar no site, a primeira coisa que o usuário vê são as estatísticas de estudo
   switchMainView('dashboard');
@@ -2044,4 +2089,112 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
+
+  // ==========================================
+  // EVENTOS DA PÁGINA PÚBLICA (LANDING PAGE)
+  // ==========================================
+  // Alternador de Abas de Autenticação na Landing (Entrar vs Criar Conta)
+  const tabLandingLogin = document.getElementById('btn-landing-tab-login');
+  const tabLandingRegister = document.getElementById('btn-landing-tab-register');
+  const panelLandingLogin = document.getElementById('landing-panel-login');
+  const panelLandingRegister = document.getElementById('landing-panel-register');
+
+  if (tabLandingLogin && tabLandingRegister) {
+    tabLandingLogin.addEventListener('click', () => {
+      tabLandingLogin.classList.add('text-white', 'border-b-2', 'border-amber-400', 'font-semibold');
+      tabLandingLogin.classList.remove('text-textMuted');
+      tabLandingRegister.classList.remove('text-white', 'border-b-2', 'border-amber-400', 'font-semibold');
+      tabLandingRegister.classList.add('text-textMuted');
+      if (panelLandingLogin) panelLandingLogin.classList.remove('hidden');
+      if (panelLandingRegister) panelLandingRegister.classList.add('hidden');
+    });
+
+    tabLandingRegister.addEventListener('click', () => {
+      tabLandingRegister.classList.add('text-white', 'border-b-2', 'border-amber-400', 'font-semibold');
+      tabLandingRegister.classList.remove('text-textMuted');
+      tabLandingLogin.classList.remove('text-white', 'border-b-2', 'border-amber-400', 'font-semibold');
+      tabLandingLogin.classList.add('text-textMuted');
+      if (panelLandingRegister) panelLandingRegister.classList.remove('hidden');
+      if (panelLandingLogin) panelLandingLogin.classList.add('hidden');
+    });
+  }
+
+  // Acesso Rápido de 1-Clique na Landing Page
+  document.querySelectorAll('.landing-quick-login').forEach(card => {
+    card.addEventListener('click', () => {
+      const uid = card.dataset.userId;
+      if (uid) loginUser(uid);
+    });
+  });
+
+  // Formulário de Login na Landing Page
+  const formLandingLogin = document.getElementById('landing-form-login');
+  if (formLandingLogin) {
+    formLandingLogin.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const emailInput = document.getElementById('landing-login-email');
+      const email = emailInput ? emailInput.value.trim().toLowerCase() : '';
+      const accounts = getStoredAccounts();
+      const matched = Object.values(accounts).find(u => u.email.toLowerCase() === email);
+      if (matched) {
+        loginUser(matched.id);
+      } else {
+        loginUser('usr-erudito-01');
+      }
+    });
+  }
+
+  // Formulário de Criação de Conta na Landing Page
+  const formLandingRegister = document.getElementById('landing-form-register');
+  if (formLandingRegister) {
+    formLandingRegister.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('reg-name')?.value.trim() || 'Novo Estudante';
+      const email = document.getElementById('reg-email')?.value.trim() || 'estudante@logossophia.org';
+      const inst = document.getElementById('reg-institution')?.value.trim() || 'Universidade Clássica';
+      const course = document.getElementById('reg-course')?.value.trim() || 'Estudos Acadêmicos';
+      const goal = document.getElementById('reg-goal')?.value.trim() || 'Erudição & Raciocínio Profundo';
+
+      const newId = 'usr-' + Date.now();
+      const accounts = getStoredAccounts();
+      accounts[newId] = {
+        id: newId,
+        name: name,
+        email: email,
+        avatar: '🏛️',
+        institution: inst,
+        course: course,
+        goal: goal,
+        defaultCycle: 'superior',
+        activeDiscipline: 'law',
+        streakDays: 1,
+        totalHours: 0,
+        theme: localStorage.getItem('logossophia_theme') || 'dark',
+        pomoMin: 25,
+        aiMode: 'socratic_rigorous',
+        apiKey: '',
+        flashcards: [],
+        sessions: []
+      };
+      saveStoredAccounts(accounts);
+      alert(`Conta criada com sucesso! Bem-vindo ao Logossophia, ${name}.`);
+      loginUser(newId);
+    });
+  }
+
+  // Botão Sair / Desconectar no Header do App Principal
+  const btnHeaderLogout = document.getElementById('btn-header-logout');
+  if (btnHeaderLogout) {
+    btnHeaderLogout.addEventListener('click', () => {
+      if (confirm("Deseja sair da sua cela de estudo e retornar à página pública?")) {
+        logoutUser();
+      }
+    });
+  }
+
+  // Alternador de Tema na Landing Page
+  const btnLandingTheme = document.getElementById('btn-landing-theme');
+  if (btnLandingTheme) {
+    btnLandingTheme.addEventListener('click', toggleTheme);
+  }
 });

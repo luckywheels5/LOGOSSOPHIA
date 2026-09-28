@@ -52,8 +52,364 @@
 </head>
 <body class="bg-appBg text-textPrimary min-h-screen font-sans antialiased selection:bg-neutral-700 selection:text-white">
 
-  <!-- LAYOUT PRINCIPAL: SIDEBAR NA ESQUERDA + CONTEÚDO PRINCIPAL NA DIREITA -->
-  <div class="flex min-h-screen">
+  <!-- ========================================================================= -->
+  <!-- CAMADA 1: PÁGINA PÚBLICA / INSTITUCIONAL (LANDING PAGE)                   -->
+  <!-- ========================================================================= -->
+  <div id="landing-layer" class="min-h-screen flex flex-col bg-appBg text-textPrimary">
+    
+    <!-- HEADER PÚBLICO INSTITUCIONAL -->
+    <header class="w-full bg-[#050505]/95 backdrop-blur border-b border-cardBorder py-4 px-4 sm:px-8 md:px-12 flex items-center justify-between sticky top-0 z-40 select-none">
+      <div class="flex items-center space-x-3 cursor-pointer" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+        <div class="w-9 h-9 flex items-center justify-center text-white shrink-0">
+          <svg class="w-8 h-8" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M43 32 L40 24 L48 27 L50 28 L52 27 L60 24 L57 32 Z" fill="#1C1C1C" />
+            <circle cx="45" cy="35" r="4.5" stroke="currentColor" fill="#141414" />
+            <circle cx="55" cy="35" r="4.5" stroke="currentColor" fill="#141414" />
+            <circle cx="45" cy="35" r="1.5" fill="currentColor" />
+            <circle cx="55" cy="35" r="1.5" fill="currentColor" />
+            <polygon points="50,38 48,42 52,42" fill="currentColor" />
+            <path d="M41 35 C32 30, 20 23, 14 26 C13 32, 22 40, 31 43 C22 45, 18 52, 26 53 C33 53, 38 48, 42 46" />
+            <path d="M59 35 C68 30, 80 23, 86 26 C87 32, 78 40, 69 43 C78 45, 82 52, 74 53 C67 53, 62 48, 58 46" />
+            <line x1="38" y1="52" x2="62" y2="52" stroke-width="2.5" />
+            <rect x="36" y="50" width="28" height="3" rx="1" fill="#222222" />
+            <path d="M40 53 C40 63, 48 64, 49 67 C48 70, 40 71, 40 81" />
+            <path d="M60 53 C60 63, 52 64, 51 67 C52 70, 60 71, 60 81" />
+            <polygon points="43,56 57,56 50,65" fill="#333333" stroke="none" />
+            <polygon points="42,80 58,80 55,73 45,73" fill="currentColor" stroke="none" />
+            <line x1="38" y1="82" x2="62" y2="82" stroke-width="2.5" />
+            <rect x="36" y="81" width="28" height="3" rx="1" fill="#222222" />
+          </svg>
+        </div>
+        <div>
+          <span class="font-cinzel text-lg sm:text-xl font-bold tracking-[0.2em] text-white block leading-none">LOGOSSOPHIA</span>
+          <span class="text-[9px] font-mono text-textMuted uppercase tracking-widest block mt-0.5">Socratic Study Sanctuary</span>
+        </div>
+      </div>
+
+      <!-- Links de Navegação da Landing -->
+      <nav class="hidden md:flex items-center space-x-8 text-xs font-mono text-textSecondary">
+        <a href="#landing-manifesto" class="hover:text-white transition">Manifesto</a>
+        <a href="#landing-recursos" class="hover:text-white transition">Recursos</a>
+        <a href="#landing-auth" class="hover:text-white transition">Acesso</a>
+      </nav>
+
+      <!-- Ações no Topo da Landing -->
+      <div class="flex items-center space-x-3">
+        <button id="btn-landing-theme" class="text-textSecondary hover:text-white p-2 border border-cardBorder bg-[#0b0b0b] hover:bg-neutral-900 rounded-full transition shadow-sm flex items-center justify-center w-8 h-8" title="Alternar Modo Claro / Noturno">
+          <span class="text-xs">☀️</span>
+        </button>
+        <a href="#landing-auth" id="btn-landing-login-nav" class="px-4 py-2 border border-cardBorder hover:border-neutral-500 rounded-full font-mono text-xs text-neutral-300 hover:text-white transition">
+          Entrar
+        </a>
+        <a href="#landing-auth" id="btn-landing-register-nav" class="px-5 py-2 bg-[#0b0b0b] hover:bg-[#14120c] border border-amber-600/50 hover:border-amber-400 text-amber-200 hover:text-white rounded-full font-mono font-semibold text-xs transition shadow-[0_0_15px_-3px_rgba(212,175,55,0.25)] flex items-center space-x-1.5">
+          <span>Criar Conta</span>
+          <span>→</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="px-6 md:px-12 py-20 md:py-28 max-w-5xl mx-auto text-center flex flex-col items-center space-y-7 relative">
+      <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full border border-cardBorder bg-[#0b0b0b] text-textSecondary text-[11px] font-mono shadow-sm">
+        <span class="text-amber-400">✨</span>
+        <span class="tracking-wide">MODERN MEDIEVAL • FOCO PROFUNDO & ERUDIÇÃO</span>
+      </div>
+
+      <h1 class="font-cinzel text-3xl sm:text-5xl md:text-6xl font-bold text-white tracking-wide leading-tight max-w-4xl">
+        O Santuário Digital para o Estudo Ativo e a Concentração Absoluta
+      </h1>
+
+      <p class="font-sans text-sm sm:text-base md:text-lg text-textSecondary max-w-3xl leading-relaxed">
+        Em uma era de superficialidade e feeds efêmeros, o Logossophia recupera a disciplina dos mosteiros medievais e o rigor dialético da maiêutica socrática para transformar o estudo em uma busca profunda e autônoma pela verdade.
+      </p>
+
+      <div class="flex flex-wrap items-center justify-center gap-4 pt-2">
+        <a href="#landing-auth" class="px-8 py-3.5 bg-[#0e0e0e] hover:bg-[#16140f] border border-amber-500/60 hover:border-amber-400 text-amber-100 hover:text-white rounded-full font-mono font-semibold text-xs sm:text-sm tracking-wide transition shadow-[0_0_25px_-5px_rgba(212,175,55,0.35)] flex items-center space-x-2">
+          <span>ENTRAR NO SANTUÁRIO DE ESTUDO</span>
+          <span>→</span>
+        </a>
+        <a href="#landing-manifesto" class="px-6 py-3.5 border border-cardBorder hover:border-neutral-500 bg-[#0b0b0b] hover:bg-neutral-900 text-textSecondary hover:text-white rounded-full font-mono text-xs sm:text-sm tracking-wide transition">
+          Ler o Manifesto Monástico ↓
+        </a>
+      </div>
+
+      <!-- Métricas / Badges Canônicas -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full pt-12 border-t border-cardBorder/60 max-w-4xl">
+        <div class="p-4 bg-[#0b0b0b] border border-cardBorder rounded-xl text-center space-y-1">
+          <div class="font-mono text-xl sm:text-2xl font-bold text-white">0</div>
+          <div class="text-[11px] font-mono text-textMuted uppercase">Distrações Externas</div>
+        </div>
+        <div class="p-4 bg-[#0b0b0b] border border-cardBorder rounded-xl text-center space-y-1">
+          <div class="font-mono text-xl sm:text-2xl font-bold text-amber-300">25m</div>
+          <div class="text-[11px] font-mono text-textMuted uppercase">Blocos de Foco</div>
+        </div>
+        <div class="p-4 bg-[#0b0b0b] border border-cardBorder rounded-xl text-center space-y-1">
+          <div class="font-mono text-xl sm:text-2xl font-bold text-white">100%</div>
+          <div class="text-[11px] font-mono text-textMuted uppercase">Maiêutica Socrática</div>
+        </div>
+        <div class="p-4 bg-[#0b0b0b] border border-cardBorder rounded-xl text-center space-y-1">
+          <div class="font-mono text-xl sm:text-2xl font-bold text-emerald-400">SM-2</div>
+          <div class="text-[11px] font-mono text-textMuted uppercase">Repetição Espaçada</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEÇÃO 1: QUEM SOMOS / MANIFESTO (PROPÓSITO) -->
+    <section id="landing-manifesto" class="py-20 px-6 md:px-12 border-t border-cardBorder bg-[#080808]">
+      <div class="max-w-5xl mx-auto space-y-12">
+        <div class="text-center space-y-2">
+          <span class="text-[10px] font-mono uppercase tracking-[0.25em] text-amber-400">PROPÓSITO & FILOSOFIA</span>
+          <h2 class="font-cinzel text-2xl sm:text-4xl font-bold text-white tracking-wider">MANIFESTO: A REVOLUÇÃO DO FOCO PROFUNDO</h2>
+          <p class="text-textSecondary text-xs sm:text-sm font-sans max-w-2xl mx-auto leading-relaxed">
+            Uma resposta filosófica e prática contra a fragmentação cognitiva, o imediatismo digital e o declínio da erudição na vida acadêmica.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Coluna 1 -->
+          <div class="bg-[#0b0b0b] border border-cardBorder rounded-xl p-6 sm:p-7 space-y-3 relative">
+            <span class="text-2xl block">⚡</span>
+            <h3 class="font-cinzel text-base font-bold text-white tracking-wide">A Fragmentação da Mente</h3>
+            <p class="text-xs text-textSecondary font-sans leading-relaxed">
+              O ecossistema digital contemporâneo foi arquitetado para fragmentar a atenção humana em fatias de poucos segundos. Notificações incessantes, resumos simplificados e respostas prontas privaram o estudante da capacidade de enfrentar a densidade de um tratado ou de um problema complexo.
+            </p>
+          </div>
+
+          <!-- Coluna 2 -->
+          <div class="bg-[#0b0b0b] border border-cardBorder rounded-xl p-6 sm:p-7 space-y-3 relative">
+            <span class="text-2xl block">🕯️</span>
+            <h3 class="font-cinzel text-base font-bold text-white tracking-wide">A Cela Monástica da Atenção</h3>
+            <p class="text-xs text-textSecondary font-sans leading-relaxed">
+              Nos mosteiros clássicos, o estudo era tratado como um rito sagrado. Copistas e pensadores passavam horas debruçados sobre códices em silêncio absoluto. O Logossophia recria essa atmosfera com seus <em>Blocos de Foco</em> e o <em>Modo de Imersão</em>, isolando a mente de qualquer estímulo concorrente.
+            </p>
+          </div>
+
+          <!-- Coluna 3 -->
+          <div class="bg-[#0b0b0b] border border-cardBorder rounded-xl p-6 sm:p-7 space-y-3 relative">
+            <span class="text-2xl block">🏛️</span>
+            <h3 class="font-cinzel text-base font-bold text-white tracking-wide">A Maiêutica contra a Passividade</h3>
+            <p class="text-xs text-textSecondary font-sans leading-relaxed">
+              O saber não nasce de respostas prontas entregues passivamente. A verdadeira erudição decorre do atrito dialético. A Ágora opera sob a estrita maiêutica socrática: ela questiona seus axiomas, desmonta contradições lógicas e guia o parto autônomo das suas próprias conclusões.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEÇÃO 2: RECURSOS (FERRAMENTAS DO LOGOSSOPHIA) -->
+    <section id="landing-recursos" class="py-20 px-6 md:px-12 border-t border-cardBorder bg-[#050505]">
+      <div class="max-w-5xl mx-auto space-y-12">
+        <div class="text-center space-y-2">
+          <span class="text-[10px] font-mono uppercase tracking-[0.25em] text-amber-400">ARQUITETURA DA PLATAFORMA</span>
+          <h2 class="font-cinzel text-2xl sm:text-4xl font-bold text-white tracking-wider">FERRAMENTAS DA ERUDIÇÃO</h2>
+          <p class="text-textSecondary text-xs sm:text-sm font-sans max-w-2xl mx-auto leading-relaxed">
+            Quatro instrumentos integrados para transformar esforço disperso em maestria acadêmica e intelectual duradoura.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Card 1: Blocos de Foco & Modo Imersão -->
+          <div class="bg-[#0b0b0b] border border-cardBorder rounded-xl p-7 space-y-4 hover:border-neutral-500 transition group">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 rounded-lg bg-[#0e0e0e] border border-cardBorder flex items-center justify-center text-xl text-amber-400">⏳</div>
+              <div>
+                <h3 class="font-cinzel text-base font-bold text-white group-hover:text-amber-200 transition">Blocos de Foco & Modo de Imersão</h3>
+                <span class="text-[10px] font-mono text-textMuted uppercase">Pomodoro Monástico • 432Hz</span>
+              </div>
+            </div>
+            <p class="text-xs text-textSecondary font-sans leading-relaxed">
+              Temporizador circular de alta precisão com estrutura modular: Blocos de Foco (25m), Pausa Curta (5m) e Pausa Longa (15m). Ao iniciar, a interface ativa o modo cela de estudo, esmaecendo elementos secundários e emitindo um carrilhão harmônico tibetano ao término.
+            </p>
+          </div>
+
+          <!-- Card 2: Ágora Dialética & Scriptorium -->
+          <div class="bg-[#0b0b0b] border border-cardBorder rounded-xl p-7 space-y-4 hover:border-neutral-500 transition group">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 rounded-lg bg-[#0e0e0e] border border-cardBorder flex items-center justify-center text-xl text-amber-400">🏛️</div>
+              <div>
+                <h3 class="font-cinzel text-base font-bold text-white group-hover:text-amber-200 transition">Ágora Dialética & Scriptorium</h3>
+                <span class="text-[10px] font-mono text-textMuted uppercase">Leitor Canônico • Maiêutica Socrática</span>
+              </div>
+            </div>
+            <p class="text-xs text-textSecondary font-sans leading-relaxed">
+              Leia obras capitulares ou carregue seus próprios PDFs, artigos e tratados. Selecione qualquer sentença para interrogar a Ágora imediatamente. A inteligência atua pelo método do <em>elenchos</em>, recusando resumos pré-fabricados e exigindo fundamentação lógica.
+            </p>
+          </div>
+
+          <!-- Card 3: Tabularium & Flashcards 3D -->
+          <div class="bg-[#0b0b0b] border border-cardBorder rounded-xl p-7 space-y-4 hover:border-neutral-500 transition group">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 rounded-lg bg-[#0e0e0e] border border-cardBorder flex items-center justify-center text-xl text-amber-400">📝</div>
+              <div>
+                <h3 class="font-cinzel text-base font-bold text-white group-hover:text-amber-200 transition">Tabularium & Flashcards 3D</h3>
+                <span class="text-[10px] font-mono text-textMuted uppercase">Repetição Espaçada • Fixação Ativa</span>
+              </div>
+            </div>
+            <p class="text-xs text-textSecondary font-sans leading-relaxed">
+              Cristalize passagens do Scriptorium ou sínteses da Ágora diretamente em cartões tridimensionais de memorização. O sistema agenda revisões baseadas na curva do esquecimento de Ebbinghaus para que o conhecimento nunca se esvaia.
+            </p>
+          </div>
+
+          <!-- Card 4: Matrizes Curriculares Universais -->
+          <div class="bg-[#0b0b0b] border border-cardBorder rounded-xl p-7 space-y-4 hover:border-neutral-500 transition group">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 rounded-lg bg-[#0e0e0e] border border-cardBorder flex items-center justify-center text-xl text-amber-400">📜</div>
+              <div>
+                <h3 class="font-cinzel text-base font-bold text-white group-hover:text-amber-200 transition">Matrizes Curriculares Universais</h3>
+                <span class="text-[10px] font-mono text-textMuted uppercase">Graduação Universitária • BNCC / ENEM</span>
+              </div>
+            </div>
+            <p class="text-xs text-textSecondary font-sans leading-relaxed">
+              Transite com fluidez entre ciclos de estudo: Direito, Medicina, Computação, Filosofia, Economia, Exatas e Teologia, ou prepare-se para o ENEM com módulos de Redação Argumentativa, Biologia Evolutiva, Mecânica Clássica e Sintaxe.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEÇÃO 3: ACESSO & AUTENTICAÇÃO -->
+    <section id="landing-auth" class="py-20 px-6 md:px-12 border-t border-cardBorder bg-[#080808]">
+      <div class="max-w-md mx-auto space-y-6">
+        <div class="text-center space-y-2">
+          <span class="text-[10px] font-mono uppercase tracking-[0.25em] text-amber-400">PORTAL DE ACESSO</span>
+          <h2 class="font-cinzel text-2xl sm:text-3xl font-bold text-white tracking-wider">ENTRAR NO SANTUÁRIO</h2>
+          <p class="text-xs text-textSecondary font-sans">
+            Acesse seu espaço de estudo privado, livre de distrações e preservando todos os seus blocos de foco.
+          </p>
+        </div>
+
+        <!-- Card de Autenticação na Landing -->
+        <div class="bg-[#0b0b0b] border border-cardBorder rounded-xl p-6 shadow-2xl space-y-5">
+          <!-- Abas de Entrada: Entrar vs Criar Conta -->
+          <div class="flex border-b border-cardBorder text-xs font-mono">
+            <button id="btn-landing-tab-login" class="flex-1 py-2 text-center text-white border-b-2 border-amber-400 font-semibold transition">
+              Entrar
+            </button>
+            <button id="btn-landing-tab-register" class="flex-1 py-2 text-center text-textMuted hover:text-white transition">
+              Criar Conta
+            </button>
+          </div>
+
+          <!-- PAINEL 1: ENTRAR (LOGIN & ACESSO RÁPIDO) -->
+          <div id="landing-panel-login" class="space-y-4">
+            <!-- Acesso Rápido de Estudante -->
+            <div class="space-y-2">
+              <span class="text-[10px] font-mono uppercase text-textMuted tracking-wider block">Acesso Rápido de Estudante:</span>
+              
+              <div class="landing-quick-login p-2.5 bg-[#0e0e0e] border border-cardBorder hover:border-neutral-500 rounded-lg flex items-center justify-between cursor-pointer transition group" data-user-id="usr-erudito-01">
+                <div class="flex items-center space-x-2.5">
+                  <span class="text-lg">🏛️</span>
+                  <div>
+                    <div class="text-xs font-semibold text-white group-hover:text-amber-200 transition">Lucas Almeida</div>
+                    <div class="text-[10px] font-mono text-textMuted">Direito • USP (Ensino Superior)</div>
+                  </div>
+                </div>
+                <span class="text-[10px] font-mono text-neutral-400 group-hover:text-white bg-[#050505] px-2 py-0.5 rounded border border-neutral-800">Entrar →</span>
+              </div>
+
+              <div class="landing-quick-login p-2.5 bg-[#0e0e0e] border border-cardBorder hover:border-neutral-500 rounded-lg flex items-center justify-between cursor-pointer transition group" data-user-id="usr-vestibulanda-02">
+                <div class="flex items-center space-x-2.5">
+                  <span class="text-lg">✍️</span>
+                  <div>
+                    <div class="text-xs font-semibold text-white group-hover:text-amber-200 transition">Beatriz Silveira</div>
+                    <div class="text-[10px] font-mono text-textMuted">3º Ano Médio • Sto. Agostinho (ENEM)</div>
+                  </div>
+                </div>
+                <span class="text-[10px] font-mono text-neutral-400 group-hover:text-white bg-[#050505] px-2 py-0.5 rounded border border-neutral-800">Entrar →</span>
+              </div>
+
+              <div class="landing-quick-login p-2.5 bg-[#0e0e0e] border border-cardBorder hover:border-neutral-500 rounded-lg flex items-center justify-between cursor-pointer transition group" data-user-id="usr-medico-03">
+                <div class="flex items-center space-x-2.5">
+                  <span class="text-lg">🩺</span>
+                  <div>
+                    <div class="text-xs font-semibold text-white group-hover:text-amber-200 transition">Dr. André Valério</div>
+                    <div class="text-[10px] font-mono text-textMuted">Medicina • UFRJ (Internato Clínico)</div>
+                  </div>
+                </div>
+                <span class="text-[10px] font-mono text-neutral-400 group-hover:text-white bg-[#050505] px-2 py-0.5 rounded border border-neutral-800">Entrar →</span>
+              </div>
+            </div>
+
+            <!-- Divisor -->
+            <div class="flex items-center space-x-3 text-[10px] text-textMuted font-mono">
+              <div class="flex-1 border-t border-cardBorder"></div>
+              <span>OU ENTRE COM E-MAIL</span>
+              <div class="flex-1 border-t border-cardBorder"></div>
+            </div>
+
+            <!-- Formulário de Login -->
+            <form id="landing-form-login" class="space-y-3">
+              <div>
+                <label class="block text-textSecondary text-[11px] font-mono mb-1">E-mail Acadêmico:</label>
+                <input type="email" id="landing-login-email" placeholder="seu.email@universidade.edu" class="w-full bg-[#0e0e0e] border border-cardBorder focus:border-amber-500/60 focus:outline-none rounded p-2 text-white text-xs">
+              </div>
+              <div>
+                <label class="block text-textSecondary text-[11px] font-mono mb-1">Senha:</label>
+                <input type="password" id="landing-login-password" placeholder="••••••••" class="w-full bg-[#0e0e0e] border border-cardBorder focus:border-amber-500/60 focus:outline-none rounded p-2 text-white text-xs">
+              </div>
+              <button type="submit" class="w-full py-2.5 bg-[#0e0e0e] hover:bg-[#16140f] border border-amber-500/50 hover:border-amber-400 text-amber-200 hover:text-white font-mono font-semibold text-xs rounded transition shadow-[0_0_15px_-3px_rgba(212,175,55,0.25)]">
+                Entrar no Santuário de Estudo →
+              </button>
+            </form>
+          </div>
+
+          <!-- PAINEL 2: CRIAR CONTA (REGISTRO) -->
+          <div id="landing-panel-register" class="space-y-3 hidden">
+            <form id="landing-form-register" class="space-y-3">
+              <div>
+                <label class="block text-textSecondary text-[11px] font-mono mb-1">Nome Completo:</label>
+                <input type="text" id="reg-name" placeholder="Ex: Lucas Almeida" required class="w-full bg-[#0e0e0e] border border-cardBorder focus:border-amber-500/60 focus:outline-none rounded p-2 text-white text-xs">
+              </div>
+              <div>
+                <label class="block text-textSecondary text-[11px] font-mono mb-1">E-mail de Estudo:</label>
+                <input type="email" id="reg-email" placeholder="seu.email@exemplo.com" required class="w-full bg-[#0e0e0e] border border-cardBorder focus:border-amber-500/60 focus:outline-none rounded p-2 text-white text-xs">
+              </div>
+              <div class="grid grid-cols-2 gap-2">
+                <div>
+                  <label class="block text-textSecondary text-[11px] font-mono mb-1">Instituição / Escola:</label>
+                  <input type="text" id="reg-institution" placeholder="Ex: USP, UFRJ, Colégio..." class="w-full bg-[#0e0e0e] border border-cardBorder focus:border-amber-500/60 focus:outline-none rounded p-2 text-white text-xs">
+                </div>
+                <div>
+                  <label class="block text-textSecondary text-[11px] font-mono mb-1">Curso / Série:</label>
+                  <input type="text" id="reg-course" placeholder="Ex: Direito, 3º Ano..." class="w-full bg-[#0e0e0e] border border-cardBorder focus:border-amber-500/60 focus:outline-none rounded p-2 text-white text-xs">
+                </div>
+              </div>
+              <div>
+                <label class="block text-textSecondary text-[11px] font-mono mb-1">Meta Principal de Estudo:</label>
+                <input type="text" id="reg-goal" placeholder="Ex: Aprovação na OAB, ENEM Medicina..." class="w-full bg-[#0e0e0e] border border-cardBorder focus:border-amber-500/60 focus:outline-none rounded p-2 text-white text-xs">
+              </div>
+              <div>
+                <label class="block text-textSecondary text-[11px] font-mono mb-1">Senha:</label>
+                <input type="password" id="reg-password" placeholder="••••••••" required class="w-full bg-[#0e0e0e] border border-cardBorder focus:border-amber-500/60 focus:outline-none rounded p-2 text-white text-xs">
+              </div>
+              <button type="submit" class="w-full py-2.5 bg-[#0e0e0e] hover:bg-[#16140f] border border-amber-500/50 hover:border-amber-400 text-amber-200 hover:text-white font-mono font-semibold text-xs rounded transition shadow-[0_0_15px_-3px_rgba(212,175,55,0.25)]">
+                Criar Minha Conta de Estudo →
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER DA LANDING PAGE -->
+    <footer class="border-t border-cardBorder bg-[#050505] py-8 px-6 md:px-12 flex flex-col sm:flex-row items-center justify-between text-xs font-mono text-textMuted gap-4">
+      <div class="flex items-center space-x-2">
+        <span>🏛️</span>
+        <span class="text-white font-cinzel">LOGOSSOPHIA</span>
+        <span>•</span>
+        <span>Santuário Socrático & Foco Monástico</span>
+      </div>
+      <div>
+        <span>MMXXVI • Todos os direitos reservados à Erudição</span>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- CAMADA 2: ÁREA LOGADA (APP PRINCIPAL DE ESTUDO & FOCO)                    -->
+  <!-- ========================================================================= -->
+  <div id="app-layer" class="flex min-h-screen hidden">
 
     <!-- ========================================================================= -->
     <!-- BARRA LATERAL ESQUERDA (SIDEBAR DE FUNCIONALIDADES)                       -->
@@ -230,9 +586,15 @@
           </button>
 
           <!-- Botão de Login / Perfil -->
-          <button id="btn-header-login" class="flex items-center space-x-1.5 text-xs font-mono bg-[#0b0b0b] hover:bg-neutral-900 border border-cardBorder px-3 py-1.5 rounded-full transition text-neutral-300 hover:text-white shadow-sm" title="Login / Gerenciar Conta">
+          <button id="btn-header-login" class="flex items-center space-x-1.5 text-xs font-mono bg-[#0b0b0b] hover:bg-neutral-900 border border-cardBorder px-3 py-1.5 rounded-full transition text-neutral-300 hover:text-white shadow-sm" title="Gerenciar Perfil">
             <span id="header-user-avatar" class="text-xs">🏛️</span>
             <span id="header-user-name" class="font-medium text-white">Lucas</span>
+          </button>
+
+          <!-- Botão de Desconectar / Sair para a Landing Page -->
+          <button id="btn-header-logout" class="flex items-center space-x-1.5 text-xs font-mono bg-[#0b0b0b] hover:bg-red-950/40 border border-cardBorder hover:border-red-800/80 px-2.5 py-1.5 rounded-full transition text-neutral-400 hover:text-red-300 shadow-sm" title="Sair da Conta / Voltar à Página Pública">
+            <span>🚪</span>
+            <span class="hidden sm:inline">Sair</span>
           </button>
         </div>
       </header>
