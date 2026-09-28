@@ -136,7 +136,7 @@
                 <span class="text-base">📝</span>
                 <span class="font-medium">Tabulae</span>
               </span>
-              <span id="sidebar-tabulae-count" class="text-[10px] font-mono bg-neutral-900 text-white px-2 py-0.5 rounded-full border border-neutral-700">2</span>
+              <span id="sidebar-tabulae-count" class="text-[10px] font-mono bg-neutral-900 text-white px-2 py-0.5 rounded-full border border-neutral-700">0</span>
             </button>
 
             <!-- 4. Vigília Foco (Pomodoro) -->
@@ -155,11 +155,11 @@
       <!-- Rodapé da Barra Lateral: Estatísticas de Vigília & Configurações -->
       <div class="p-4 border-t border-cardBorder/70 bg-[#0A0A0A] text-xs font-mono space-y-3">
         <div class="flex items-center justify-between text-textSecondary">
-          <span class="flex items-center space-x-1.5">
+          <span class="flex items-center space-x-1.5" id="sidebar-streak-display">
             <span>🔥</span>
-            <span>19 Dias Streak</span>
+            <span>0 Dias Streak</span>
           </span>
-          <span class="text-white font-bold">32h Total</span>
+          <span class="text-white font-bold" id="sidebar-total-hours">0h Total</span>
         </div>
         <div class="pt-2 border-t border-cardBorder/40 flex items-center justify-between">
           <button id="sidebar-btn-settings" class="flex items-center space-x-2 text-textSecondary hover:text-white transition">
@@ -224,7 +224,7 @@
           <!-- Botão Tabulae Pill -->
           <button id="btn-open-tabulae" class="flex items-center space-x-2 text-xs font-mono bg-[#181818] hover:bg-neutral-800 border border-cardBorder px-3.5 py-1.5 rounded-full transition text-neutral-300 shadow-sm" title="Abrir Tabulae de Repetição Espaçada">
             <span>Tabulae</span>
-            <span id="flashcard-badge" class="bg-neutral-900 text-white px-2 py-0.5 rounded-full text-[10px] border border-neutral-700 font-semibold">2</span>
+            <span id="flashcard-badge" class="bg-neutral-900 text-white px-2 py-0.5 rounded-full text-[10px] border border-neutral-700 font-semibold">0</span>
           </button>
 
           <!-- Alternador de Tema Claro / Escuro -->
@@ -283,10 +283,10 @@
                 <span class="text-[11px] font-mono uppercase text-textMuted">Tempo de Vigília</span>
                 <span class="text-base">⏳</span>
               </div>
-              <div class="text-2xl sm:text-3xl font-bold font-mono text-white" id="stat-total-hours">32.5h</div>
-              <div class="text-[11px] text-textSecondary font-sans flex items-center space-x-1">
-                <span class="text-emerald-400 font-mono">+4.5h</span>
-                <span>nesta semana • 8 sessões</span>
+              <div class="text-2xl sm:text-3xl font-bold font-mono text-white" id="stat-total-hours">0.0h</div>
+              <div class="text-[11px] text-textSecondary font-sans flex items-center space-x-1" id="stat-hours-sub">
+                <span class="text-emerald-400 font-mono">0h</span>
+                <span>nesta semana • 0 sessões</span>
               </div>
             </div>
 
@@ -296,10 +296,10 @@
                 <span class="text-[11px] font-mono uppercase text-textMuted">Constância (Streak)</span>
                 <span class="text-base">🔥</span>
               </div>
-              <div class="text-2xl sm:text-3xl font-bold font-mono text-white" id="stat-streak-days">19 Dias</div>
-              <div class="text-[11px] text-textSecondary font-sans flex items-center space-x-1">
-                <span class="text-amber-400 font-mono">100%</span>
-                <span>consistência diária mantida</span>
+              <div class="text-2xl sm:text-3xl font-bold font-mono text-white" id="stat-streak-days">0 Dias</div>
+              <div class="text-[11px] text-textSecondary font-sans flex items-center space-x-1" id="stat-streak-sub">
+                <span class="text-amber-400 font-mono">0%</span>
+                <span>inicie sua vigília hoje</span>
               </div>
             </div>
 
@@ -309,8 +309,8 @@
                 <span class="text-[11px] font-mono uppercase text-textMuted">Retenção Maiêutica</span>
                 <span class="text-base">🧠</span>
               </div>
-              <div class="text-2xl sm:text-3xl font-bold font-mono text-white" id="stat-retention-rate">89%</div>
-              <div class="text-[11px] text-textSecondary font-sans flex items-center space-x-1">
+              <div class="text-2xl sm:text-3xl font-bold font-mono text-white" id="stat-retention-rate">--</div>
+              <div class="text-[11px] text-textSecondary font-sans flex items-center space-x-1" id="stat-retention-sub">
                 <span>Calculada por respostas socráticas</span>
               </div>
             </div>
@@ -321,9 +321,9 @@
                 <span class="text-[11px] font-mono uppercase text-textMuted">Tabulae Ativas</span>
                 <span class="text-base">📝</span>
               </div>
-              <div class="text-2xl sm:text-3xl font-bold font-mono text-white" id="stat-cards-count">24 Cartões</div>
-              <div class="text-[11px] text-textSecondary font-sans flex items-center space-x-1">
-                <span class="text-amber-400 font-mono">2</span>
+              <div class="text-2xl sm:text-3xl font-bold font-mono text-white" id="stat-cards-count">0 Cartões</div>
+              <div class="text-[11px] text-textSecondary font-sans flex items-center space-x-1" id="stat-cards-sub">
+                <span class="text-amber-400 font-mono">0</span>
                 <span>pendentes de revisão hoje</span>
               </div>
             </div>
@@ -401,69 +401,9 @@
                   </tr>
                 </thead>
                 <tbody id="dashboard-sessions-table" class="divide-y divide-cardBorder/40">
-                  <tr class="hover:bg-neutral-900/40 transition">
-                    <td class="px-5 py-3.5 font-mono text-textSecondary">Hoje, 10:15</td>
-                    <td class="px-5 py-3.5 font-medium text-white flex items-center space-x-2">
-                      <span>⚖️</span>
-                      <span>Colisão de Direitos Fundamentais</span>
-                    </td>
-                    <td class="px-5 py-3.5"><span class="px-2 py-0.5 rounded bg-neutral-900 border border-neutral-800 text-[10px] font-mono text-neutral-300">Superior</span></td>
-                    <td class="px-5 py-3.5 font-mono text-textSecondary">35 min</td>
-                    <td class="px-5 py-3.5 font-mono text-emerald-400">+3 Tabulae</td>
-                    <td class="px-5 py-3.5 text-right">
-                      <button class="btn-resume-discipline text-neutral-300 hover:text-white underline text-[11px] font-mono" data-disc="law">Estudar na Ágora →</button>
-                    </td>
-                  </tr>
-                  <tr class="hover:bg-neutral-900/40 transition">
-                    <td class="px-5 py-3.5 font-mono text-textSecondary">Ontem, 16:30</td>
-                    <td class="px-5 py-3.5 font-medium text-white flex items-center space-x-2">
-                      <span>🏛️</span>
-                      <span>O Mito do Anel de Giges (Platão)</span>
-                    </td>
-                    <td class="px-5 py-3.5"><span class="px-2 py-0.5 rounded bg-neutral-900 border border-neutral-800 text-[10px] font-mono text-neutral-300">Superior</span></td>
-                    <td class="px-5 py-3.5 font-mono text-textSecondary">45 min</td>
-                    <td class="px-5 py-3.5 font-mono text-emerald-400">+2 Tabulae</td>
-                    <td class="px-5 py-3.5 text-right">
-                      <button class="btn-resume-discipline text-neutral-300 hover:text-white underline text-[11px] font-mono" data-disc="philosophy">Estudar na Ágora →</button>
-                    </td>
-                  </tr>
-                  <tr class="hover:bg-neutral-900/40 transition">
-                    <td class="px-5 py-3.5 font-mono text-textSecondary">26 Set, 14:00</td>
-                    <td class="px-5 py-3.5 font-medium text-white flex items-center space-x-2">
-                      <span>🩺</span>
-                      <span>Fisiologia da Concentração Renal</span>
-                    </td>
-                    <td class="px-5 py-3.5"><span class="px-2 py-0.5 rounded bg-neutral-900 border border-neutral-800 text-[10px] font-mono text-neutral-300">Superior</span></td>
-                    <td class="px-5 py-3.5 font-mono text-textSecondary">30 min</td>
-                    <td class="px-5 py-3.5 font-mono text-emerald-400">+1 Tabula</td>
-                    <td class="px-5 py-3.5 text-right">
-                      <button class="btn-resume-discipline text-neutral-300 hover:text-white underline text-[11px] font-mono" data-disc="med">Estudar na Ágora →</button>
-                    </td>
-                  </tr>
-                  <tr class="hover:bg-neutral-900/40 transition">
-                    <td class="px-5 py-3.5 font-mono text-textSecondary">25 Set, 19:10</td>
-                    <td class="px-5 py-3.5 font-medium text-white flex items-center space-x-2">
-                      <span>✍️</span>
-                      <span>Redação ENEM: Preservação do Patrimônio</span>
-                    </td>
-                    <td class="px-5 py-3.5"><span class="px-2 py-0.5 rounded bg-neutral-900 border border-neutral-800 text-[10px] font-mono text-neutral-300">BNCC</span></td>
-                    <td class="px-5 py-3.5 font-mono text-textSecondary">50 min</td>
-                    <td class="px-5 py-3.5 font-mono text-emerald-400">+4 Tabulae</td>
-                    <td class="px-5 py-3.5 text-right">
-                      <button class="btn-resume-discipline text-neutral-300 hover:text-white underline text-[11px] font-mono" data-disc="bncc_redacao">Estudar na Ágora →</button>
-                    </td>
-                  </tr>
-                  <tr class="hover:bg-neutral-900/40 transition">
-                    <td class="px-5 py-3.5 font-mono text-textSecondary">24 Set, 09:40</td>
-                    <td class="px-5 py-3.5 font-medium text-white flex items-center space-x-2">
-                      <span>💻</span>
-                      <span>Algoritmos de Ordenação & Complexidade</span>
-                    </td>
-                    <td class="px-5 py-3.5"><span class="px-2 py-0.5 rounded bg-neutral-900 border border-neutral-800 text-[10px] font-mono text-neutral-300">Superior</span></td>
-                    <td class="px-5 py-3.5 font-mono text-textSecondary">25 min</td>
-                    <td class="px-5 py-3.5 font-mono text-emerald-400">+2 Tabulae</td>
-                    <td class="px-5 py-3.5 text-right">
-                      <button class="btn-resume-discipline text-neutral-300 hover:text-white underline text-[11px] font-mono" data-disc="cs">Estudar na Ágora →</button>
+                  <tr id="sessions-empty-row">
+                    <td colspan="6" class="px-5 py-8 text-center text-textMuted font-mono text-xs">
+                      Nenhuma sessão registrada ainda. Inicie sua primeira vigília ou debate socrático na Ágora para registrar seu progresso canônico.
                     </td>
                   </tr>
                 </tbody>
@@ -1126,8 +1066,11 @@
       </div>
 
       <!-- Rodapé do Modal com Ações -->
-      <div class="mt-6 pt-4 border-t border-cardBorder flex items-center justify-between">
-        <span class="text-[10px] font-mono text-textMuted">Persistência local & SQLite</span>
+      <div class="mt-6 pt-4 border-t border-cardBorder flex flex-wrap items-center justify-between gap-3">
+        <button id="btn-reset-user-data" type="button" class="px-3 py-1.5 bg-red-950/40 hover:bg-red-900/60 border border-red-800/80 text-red-300 rounded text-xs transition flex items-center space-x-1.5" title="Zera horas de vigília, streak, flashcards e histórico de sessões">
+          <span>🗑️</span>
+          <span>Zerar Dados da Conta</span>
+        </button>
         <div class="flex items-center space-x-2">
           <button id="btn-cancel-settings" type="button" class="px-3 py-1.5 text-textSecondary hover:text-white rounded text-xs transition">
             Cancelar

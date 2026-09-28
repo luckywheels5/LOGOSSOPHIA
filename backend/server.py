@@ -344,12 +344,21 @@ class LogossophiaHandler(http.server.SimpleHTTPRequestHandler):
 
             conn.commit()
             conn.close()
+        # 5. Zerar Dados do Usuário (Horas, Sessões, Flashcards)
+        elif path == "/api/user/reset":
+            user_id = body.get("user_id", "usr-erudito-01")
+            conn = get_db()
+            cursor = conn.cursor()
+            cursor.execute("DELETE FROM study_sessions WHERE user_id = ?", (user_id,))
+            cursor.execute("DELETE FROM flashcards WHERE user_id = ?", (user_id,))
+            cursor.execute("DELETE FROM chat_history WHERE user_id = ?", (user_id,))
+            conn.commit()
+            conn.close()
             return self._send_json(
-                201,
+                200,
                 {
                     "success": True,
-                    "id": sess_id,
-                    "message": "Sessão de vigília arquivada!",
+                    "message": "Dados de sessões e flashcards zerados com sucesso!",
                 },
             )
 

@@ -240,25 +240,11 @@ const ACCOUNTS_DATABASE = {
     pomoMin: 30,
     aiMode: "socratic_rigorous",
     apiKey: "",
-    streakDays: 19,
-    totalHours: 32,
+    streakDays: 0,
+    totalHours: 0,
+    sessions: [],
     disciplines: ["law", "philosophy", "theology", "history"],
-    flashcards: [
-      {
-        id: "crd-01",
-        discipline: "law",
-        front: "Qual a distinção dogmática entre regra e princípio segundo Robert Alexy?",
-        back: "Regras são mandamentos de definição (aplicam-se por tudo-ou-nada via subsunção); princípios são mandamentos de otimização (aplicam-se por ponderação proporcional).",
-        status: "cristalizado"
-      },
-      {
-        id: "crd-02",
-        discipline: "philosophy",
-        front: "Qual o dilema ético fundamental ilustrado pelo Mito do Anel de Giges?",
-        back: "Se a justiça é desejada por si mesma ou apenas pela coerção e medo da reprovação social.",
-        status: "em_raciocinio"
-      }
-    ]
+    flashcards: []
   },
   "usr-vestibulanda-02": {
     id: "usr-vestibulanda-02",
@@ -418,6 +404,7 @@ const DOM = {
   settingPomoMin: document.getElementById('setting-pomo-min'),
   apiKeyContainer: document.getElementById('api-key-container'),
   btnSaveSettings: document.getElementById('btn-save-settings'),
+  btnResetUserData: document.getElementById('btn-reset-user-data'),
   btnViewDashboardTab: document.getElementById('btn-view-dashboard-tab'),
 
   // Espaço de Upload Dedicado
@@ -955,7 +942,11 @@ function toggleTheme() {
 // ==========================================
 function getStoredAccounts() {
   try {
-    const raw = localStorage.getItem('logossophia_accounts_v1');
+    // Limpa versões legadas de cache com dados mockados antigos
+    if (localStorage.getItem('logossophia_accounts_v1')) {
+      localStorage.removeItem('logossophia_accounts_v1');
+    }
+    const raw = localStorage.getItem('logossophia_accounts_v2');
     if (raw) return JSON.parse(raw);
   } catch (e) {
     console.warn("Falha ao ler localStorage:", e);
@@ -965,10 +956,87 @@ function getStoredAccounts() {
 
 function saveStoredAccounts(accounts) {
   try {
-    localStorage.setItem('logossophia_accounts_v1', JSON.stringify(accounts));
+    localStorage.setItem('logossophia_accounts_v2', JSON.stringify(accounts));
   } catch (e) {
     console.warn("Falha ao salvar localStorage:", e);
   }
+}
+
+function renderSessionsTable(sessions) {
+  const tbody = document.getElementById('dashboard-sessions-table');
+  if (!tbody) return;
+
+  if (!sessions || sessions.length === 0) {
+    tbody.innerHTML = `
+      <tr id="sessions-empty-row">
+        <td colspan="6" class="px-5 py-8 text-center text-textMuted font-mono text-xs">
+          Nenhuma sessão registrada ainda. Inicie sua primeira vigília ou debate socrático na Ágora para registrar seu progresso canônico.
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  let html = '';
+  sessions.forEach(s => {
+    const discInfo = KNOWLEDGE_BASE[s.discipline] || { title: s.discipline, badge: s.cycle || 'Superior' };
+    const mins = Math.max(1, Math.round((s.duration || 1500) / 60));
+    html += `
+      <tr class="hover:bg-neutral-900/40 transition">
+        <td class="px-5 py-3.5 font-mono text-textSecondary">${s.date || 'Hoje'}</td>
+        <td class="px-5 py-3.5 font-medium text-white flex items-center space-x-2">
+          <span>🏛️</span>
+          <span>${discInfo.title || s.discipline}</span>
+        </td>
+        <td class="px-5 py-3.5"><span class="px-2 py-0.5 rounded bg-neutral-900 border border-neutral-800 text-[10px] font-mono text-neutral-300 uppercase">${s.cycle || 'Superior'}</span></td>
+        <td class="px-5 py-3.5 font-mono text-textSecondary">${mins} min</td>
+        <td class="px-5 py-3.5 font-mono text-emerald-400">${s.cardsGenerated ? `+${s.cardsGenerated} Tabulae` : '--'}</td>
+        <td class="px-5 py-3.5 text-right">
+          <button class="btn-resume-discipline text-neutral-300 hover:text-white underline text-[11px] font-mono" data-disc="${s.discipline}">Estudar na Ágora →</button>
+        </td>
+      </tr>
+    `;
+  });
+  tbody.innerHTML = html;
+
+  tbody.querySelectorAll('.btn-resume-discipline').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const disc = btn.dataset.disc;
+      if (disc) loadDiscipline(disc, true);
+    });
+  });
+}
+
+function resetUserAccountData() {
+  if (!confirm("Atenção: Deseja realmente zerar todos os dados de estudo (horas de vigília, constância, histórico de sessões e Tabulae) da sua conta?")) {
+    return;
+  }
+
+  const accounts = getStoredAccounts();
+  const user = accounts[AppState.currentUserId];
+  if (user) {
+    user.streakDays = 0;
+    user.totalHours = 0;
+    user.flashcards = [];
+    user.sessions = [];
+    saveStoredAccounts(accounts);
+  }
+
+  AppState.flashcards = [];
+  AppState.currentCardIndex = 0;
+
+  // Sincroniza exclusão no backend SQLite
+  try {
+    fetch('http://localhost:8000/api/user/reset', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_id: AppState.currentUserId })
+    }).catch(() => {});
+  } catch (e) {}
+
+  loadUserAccount(AppState.currentUserId, true);
+  alert("Todos os dados da sua conta foram zerados com sucesso.");
 }
 
 function loadUserAccount(userId, skipDisciplineReload = false) {
@@ -988,10 +1056,13 @@ function loadUserAccount(userId, skipDisciplineReload = false) {
   if (headerUserAvatar) headerUserAvatar.textContent = user.avatar || '🏛️';
   if (headerUserName) headerUserName.textContent = user.name.split(' ')[0];
 
+  const userHours = (typeof user.totalHours === 'number') ? user.totalHours : 0;
+  const userStreak = (typeof user.streakDays === 'number') ? user.streakDays : 0;
+
   // Atualiza Tracker Stats
   const trackerSummary = document.getElementById('tracker-summary');
   if (trackerSummary) {
-    trackerSummary.textContent = `${user.totalHours || 32}h Vigília • ${user.streakDays || 19}d Streak`;
+    trackerSummary.textContent = `${userHours}h Vigília • ${userStreak}d Streak`;
   }
 
   // Atualiza Pomodoro
@@ -1022,11 +1093,32 @@ function loadUserAccount(userId, skipDisciplineReload = false) {
   const heroGreeting = document.getElementById('hero-user-greeting');
   if (heroGreeting) heroGreeting.textContent = `${user.name} — ${user.course} (${user.institution.split(' ')[0]})`;
   const statHours = document.getElementById('stat-total-hours');
-  if (statHours) statHours.textContent = `${user.totalHours || 32.5}h`;
+  if (statHours) statHours.textContent = `${userHours.toFixed(1)}h`;
   const statStreak = document.getElementById('stat-streak-days');
-  if (statStreak) statStreak.textContent = `${user.streakDays || 19} Dias`;
+  if (statStreak) statStreak.textContent = `${userStreak} Dias`;
+  const statRetention = document.getElementById('stat-retention-rate');
+  if (statRetention) statRetention.textContent = userHours > 0 ? '89%' : '--';
   const statCards = document.getElementById('stat-cards-count');
-  if (statCards) statCards.textContent = `${(user.flashcards || []).length || 24} Cartões`;
+  if (statCards) statCards.textContent = `${AppState.flashcards.length} Cartões`;
+
+  const sidebarStreak = document.getElementById('sidebar-streak-display');
+  if (sidebarStreak) sidebarStreak.innerHTML = `<span>🔥</span><span>${userStreak} Dias Streak</span>`;
+  const sidebarTotalHours = document.getElementById('sidebar-total-hours');
+  if (sidebarTotalHours) sidebarTotalHours.textContent = `${userHours}h Total`;
+
+  const statHoursSub = document.getElementById('stat-hours-sub');
+  if (statHoursSub) {
+    statHoursSub.innerHTML = `<span class="text-emerald-400 font-mono">${userHours}h</span><span>nesta semana • ${(user.sessions || []).length} sessões</span>`;
+  }
+
+  const statCardsSub = document.getElementById('stat-cards-sub');
+  if (statCardsSub) {
+    const pendingCount = AppState.flashcards.filter(c => c.status !== 'cristalizado').length;
+    statCardsSub.innerHTML = `<span class="text-amber-400 font-mono">${pendingCount}</span><span>pendentes de revisão hoje</span>`;
+  }
+
+  // Renderiza tabela histórica de sessões
+  renderSessionsTable(user.sessions || []);
 
   // Ajusta ciclo e carrega disciplina ativa
   if (!skipDisciplineReload) {
@@ -1111,15 +1203,18 @@ function recordStudySession(durationSec, type = 'pomodoro') {
   if (user) {
     const hoursAdded = Math.round((durationSec / 3600) * 10) / 10;
     user.totalHours = Math.round(((user.totalHours || 0) + hoursAdded) * 10) / 10;
+    if (!user.streakDays || user.streakDays === 0) user.streakDays = 1;
+    if (!user.sessions) user.sessions = [];
+    user.sessions.unshift({
+      id: Date.now(),
+      discipline: AppState.currentDiscipline,
+      cycle: AppState.currentCycle,
+      duration: durationSec,
+      date: "Hoje, " + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      cardsGenerated: 0
+    });
     saveStoredAccounts(accounts);
-    const trackerSummary = document.getElementById('tracker-summary');
-    if (trackerSummary) {
-      trackerSummary.textContent = `${user.totalHours}h Vigília • ${user.streakDays || 19}d Streak`;
-    }
-    const statHours = document.getElementById('stat-total-hours');
-    if (statHours) {
-      statHours.textContent = `${user.totalHours}h`;
-    }
+    loadUserAccount(AppState.currentUserId, true);
   }
 
   try {
@@ -1876,6 +1971,10 @@ document.addEventListener('DOMContentLoaded', () => {
       saveUserAccount();
       DOM.modalSettings.classList.add('hidden');
     });
+  }
+
+  if (DOM.btnResetUserData) {
+    DOM.btnResetUserData.addEventListener('click', resetUserAccountData);
   }
 
   if (DOM.btnViewDashboardTab) {
