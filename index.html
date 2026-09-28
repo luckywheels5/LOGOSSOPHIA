@@ -113,14 +113,182 @@
         Em uma era de superficialidade e feeds efêmeros, o Logossophia recupera a disciplina dos mosteiros medievais e o rigor dialético da maiêutica socrática para transformar o estudo em uma busca profunda e autônoma pela verdade.
       </p>
 
-      <div class="flex flex-wrap items-center justify-center gap-4 pt-2">
-        <a href="#landing-auth" class="px-8 py-3.5 bg-[#0e0e0e] hover:bg-[#16140f] border border-amber-500/60 hover:border-amber-400 text-amber-100 hover:text-white rounded-full font-mono font-semibold text-xs sm:text-sm tracking-wide transition shadow-[0_0_25px_-5px_rgba(212,175,55,0.35)] flex items-center space-x-2">
-          <span>ENTRAR NO SANTUÁRIO DE ESTUDO</span>
-          <span>→</span>
-        </a>
-        <a href="#landing-manifesto" class="px-6 py-3.5 border border-cardBorder hover:border-neutral-500 bg-[#0b0b0b] hover:bg-neutral-900 text-textSecondary hover:text-white rounded-full font-mono text-xs sm:text-sm tracking-wide transition">
-          Ler o Manifesto Monástico ↓
-        </a>
+      <!-- ========================================================================= -->
+      <!-- PORTAL DE ACESSO (PRIMEIRO PLANO / TOPO DO SANTUÁRIO)                     -->
+      <!-- ========================================================================= -->
+      <div id="landing-auth" class="w-full max-w-md mx-auto pt-2 scroll-mt-24 select-none">
+        <div class="bg-[#0b0b0b] border border-cardBorder rounded-2xl p-6 sm:p-7 shadow-[0_15px_40px_rgba(0,0,0,0.8)] space-y-5 text-left">
+          
+          <!-- Abas de Entrada: Entrar vs Criar Conta -->
+          <div class="flex border-b border-cardBorder text-xs font-mono">
+            <button id="btn-landing-tab-login" class="flex-1 py-2.5 text-center text-white border-b-2 border-amber-400 font-semibold transition">
+              Entrar
+            </button>
+            <button id="btn-landing-tab-register" class="flex-1 py-2.5 text-center text-textMuted hover:text-white transition">
+              Criar Conta
+            </button>
+          </div>
+
+          <!-- PAINEL 1: ENTRAR -->
+          <div id="landing-panel-login" class="space-y-4">
+            <!-- Botão de Entrada com Google -->
+            <button id="btn-landing-google-login" type="button" class="w-full py-2.5 px-4 bg-[#141414] hover:bg-[#1c1c1c] border border-neutral-700 hover:border-amber-400/80 rounded-xl flex items-center justify-center space-x-3 text-xs font-mono text-white transition shadow-sm group">
+              <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+              </svg>
+              <span class="font-medium group-hover:text-amber-200 transition">Continuar com o Google</span>
+            </button>
+
+            <!-- Container Dinâmico: Acesso Rápido (Apenas se o usuário tiver deslogado) -->
+            <div id="landing-quick-login-container" class="hidden space-y-2"></div>
+            <div id="landing-quick-login-divider" class="hidden items-center space-x-3 text-[10px] text-textMuted font-mono">
+              <div class="flex-1 border-t border-cardBorder"></div>
+              <span>OU OUTRA CONTA</span>
+              <div class="flex-1 border-t border-cardBorder"></div>
+            </div>
+
+            <!-- Divisor E-mail -->
+            <div class="flex items-center space-x-3 text-[10px] text-textMuted font-mono">
+              <div class="flex-1 border-t border-cardBorder"></div>
+              <span>OU ENTRE COM E-MAIL</span>
+              <div class="flex-1 border-t border-cardBorder"></div>
+            </div>
+
+            <!-- Formulário de Login -->
+            <form id="landing-form-login" class="space-y-3">
+              <div>
+                <label class="block text-textSecondary text-[11px] font-mono mb-1">E-mail Cadastrado:</label>
+                <input type="email" id="landing-login-email" placeholder="seu.email@universidade.edu" class="w-full bg-[#0e0e0e] border border-cardBorder focus:border-amber-500/60 focus:outline-none rounded-lg p-2.5 text-white text-xs">
+              </div>
+              <div>
+                <label class="block text-textSecondary text-[11px] font-mono mb-1">Senha:</label>
+                <input type="password" id="landing-login-password" placeholder="••••••••" class="w-full bg-[#0e0e0e] border border-cardBorder focus:border-amber-500/60 focus:outline-none rounded-lg p-2.5 text-white text-xs">
+              </div>
+              <button type="submit" class="w-full py-2.5 bg-[#0e0e0e] hover:bg-[#16140f] border border-amber-500/50 hover:border-amber-400 text-amber-200 hover:text-white font-mono font-semibold text-xs rounded-lg transition shadow-[0_0_15px_-3px_rgba(212,175,55,0.25)]">
+                Entrar no Santuário de Estudo →
+              </button>
+            </form>
+          </div>
+
+          <!-- PAINEL 2: CRIAR CONTA (REGISTRO COM ESCOLHA DE FACULDADE E CURSO) -->
+          <div id="landing-panel-register" class="space-y-4 hidden">
+            <!-- Botão de Registro com Google -->
+            <button id="btn-landing-google-reg" type="button" class="w-full py-2.5 px-4 bg-[#141414] hover:bg-[#1c1c1c] border border-neutral-700 hover:border-amber-400/80 rounded-xl flex items-center justify-center space-x-3 text-xs font-mono text-white transition shadow-sm group">
+              <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+              </svg>
+              <span class="font-medium group-hover:text-amber-200 transition">Cadastrar com o Google</span>
+            </button>
+
+            <!-- Divisor -->
+            <div class="flex items-center space-x-3 text-[10px] text-textMuted font-mono">
+              <div class="flex-1 border-t border-cardBorder"></div>
+              <span>OU COM DADOS ACADÊMICOS</span>
+              <div class="flex-1 border-t border-cardBorder"></div>
+            </div>
+
+            <form id="landing-form-register" class="space-y-3">
+              <div>
+                <label class="block text-textSecondary text-[11px] font-mono mb-1">Nome Completo:</label>
+                <input type="text" id="reg-name" placeholder="Ex: Lucas Almeida" required class="w-full bg-[#0e0e0e] border border-cardBorder focus:border-amber-500/60 focus:outline-none rounded-lg p-2.5 text-white text-xs">
+              </div>
+              <div>
+                <label class="block text-textSecondary text-[11px] font-mono mb-1">E-mail:</label>
+                <input type="email" id="reg-email" placeholder="seu.email@exemplo.com" required class="w-full bg-[#0e0e0e] border border-cardBorder focus:border-amber-500/60 focus:outline-none rounded-lg p-2.5 text-white text-xs">
+              </div>
+
+              <!-- Escolha de Faculdade / Universidade -->
+              <div>
+                <label class="block text-textSecondary text-[11px] font-mono mb-1">Faculdade / Universidade:</label>
+                <select id="reg-select-institution" class="w-full bg-[#0e0e0e] border border-cardBorder focus:border-amber-500/60 focus:outline-none rounded-lg p-2.5 text-white text-xs cursor-pointer">
+                  <option value="USP — Universidade de São Paulo" selected>🏛️ USP — Universidade de São Paulo</option>
+                  <option value="UNICAMP — Univ. Estadual de Campinas">🏛️ UNICAMP — Univ. Estadual de Campinas</option>
+                  <option value="UFRJ — Univ. Federal do Rio de Janeiro">🏛️ UFRJ — Univ. Federal do Rio de Janeiro</option>
+                  <option value="UFMG — Univ. Federal de Minas Gerais">🏛️ UFMG — Univ. Federal de Minas Gerais</option>
+                  <option value="UNESP — Univ. Estadual Paulista">🏛️ UNESP — Univ. Estadual Paulista</option>
+                  <option value="UFRGS — Univ. Federal do Rio Grande do Sul">🏛️ UFRGS — Univ. Federal do Rio Grande do Sul</option>
+                  <option value="UFSC — Univ. Federal de Santa Catarina">🏛️ UFSC — Univ. Federal de Santa Catarina</option>
+                  <option value="UFBA — Universidade Federal da Bahia">🏛️ UFBA — Universidade Federal da Bahia</option>
+                  <option value="UnB — Universidade de Brasília">🏛️ UnB — Universidade de Brasília</option>
+                  <option value="PUC (SP / Rio / PR / RS / Minas)">🏛️ PUC (SP / Rio / PR / RS / Minas)</option>
+                  <option value="FGV — Fundação Getulio Vargas">🏛️ FGV — Fundação Getulio Vargas</option>
+                  <option value="Mackenzie — Univ. Presbiteriana">🏛️ Mackenzie — Univ. Presbiteriana</option>
+                  <option value="Insper — Ensino e Pesquisa">🏛️ Insper — Ensino e Pesquisa</option>
+                  <option value="Estácio / Unip / Anhembi Morumbi">🏛️ Estácio / Unip / Anhembi Morumbi</option>
+                  <option value="Universidade de Coimbra / Lisboa (Portugal)">🏛️ Universidade de Coimbra / Lisboa (Portugal)</option>
+                  <option value="Universidade Estrangeira (Harvard / Oxford / Sorbonne)">🏛️ Universidade Estrangeira (Harvard / Oxford / Sorbonne)</option>
+                  <option value="Ensino Médio / Colégio / Pré-Vestibular">🏫 Ensino Médio / Colégio / Pré-Vestibular</option>
+                  <option value="__other__">✏️ Outra Faculdade / Instituição (Digitar)...</option>
+                </select>
+                <input type="text" id="reg-custom-institution" placeholder="Digite o nome da sua faculdade..." class="w-full bg-[#0e0e0e] border border-cardBorder focus:border-amber-500/60 focus:outline-none rounded-lg p-2 text-white text-xs mt-1.5 hidden">
+              </div>
+
+              <!-- Escolha de Curso e Semestre -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <div>
+                  <label class="block text-textSecondary text-[11px] font-mono mb-1">Curso / Área:</label>
+                  <select id="reg-select-course" class="w-full bg-[#0e0e0e] border border-cardBorder focus:border-amber-500/60 focus:outline-none rounded-lg p-2.5 text-white text-xs cursor-pointer">
+                    <option value="Direito" selected>⚖️ Direito</option>
+                    <option value="Medicina">🩺 Medicina</option>
+                    <option value="Filosofia & Letras">📜 Filosofia & Humanidades</option>
+                    <option value="Psicologia">🧠 Psicologia & Neurociência</option>
+                    <option value="Ciência da Computação & TI">💻 Ciência da Computação & Software</option>
+                    <option value="Engenharia">⚙️ Engenharia</option>
+                    <option value="Administração">📊 Administração & Negócios</option>
+                    <option value="Economia">📈 Economia & Finanças</option>
+                    <option value="História & Ciências Sociais">🏛️ História & Ciências Sociais</option>
+                    <option value="Letras & Literatura">📖 Letras & Literatura</option>
+                    <option value="Relações Internacionais">🌐 Relações Internacionais</option>
+                    <option value="Arquitetura & Urbanismo">📐 Arquitetura & Urbanismo</option>
+                    <option value="Biologia & Biomedicina">🔬 Biologia & Biomedicina</option>
+                    <option value="Física & Matemática">⚛️ Física & Matemática</option>
+                    <option value="Ensino Médio / ENEM & Vestibulares">🎯 Ensino Médio / ENEM & Vestibulares</option>
+                    <option value="Concursos Públicos / OAB">⚖️ Concursos Públicos / Magistratura / OAB</option>
+                    <option value="__other__">✏️ Outro Curso (Digitar)...</option>
+                  </select>
+                  <input type="text" id="reg-custom-course" placeholder="Digite o nome do seu curso..." class="w-full bg-[#0e0e0e] border border-cardBorder focus:border-amber-500/60 focus:outline-none rounded-lg p-2 text-white text-xs mt-1.5 hidden">
+                </div>
+                <div>
+                  <label class="block text-textSecondary text-[11px] font-mono mb-1">Semestre / Período:</label>
+                  <select id="reg-select-period" class="w-full bg-[#0e0e0e] border border-cardBorder focus:border-amber-500/60 focus:outline-none rounded-lg p-2.5 text-white text-xs cursor-pointer">
+                    <option value="1º Semestre">1º Semestre</option>
+                    <option value="2º Semestre">2º Semestre</option>
+                    <option value="3º Semestre">3º Semestre</option>
+                    <option value="4º Semestre">4º Semestre</option>
+                    <option value="5º Semestre">5º Semestre</option>
+                    <option value="6º Semestre" selected>6º Semestre</option>
+                    <option value="7º Semestre">7º Semestre</option>
+                    <option value="8º Semestre">8º Semestre</option>
+                    <option value="9º Semestre">9º Semestre</option>
+                    <option value="10º Semestre">10º Semestre</option>
+                    <option value="Internato Clínico">Internato Clínico</option>
+                    <option value="Fase de TCC">Fase de TCC / Conclusão</option>
+                    <option value="Graduado / Concurso / OAB">Graduado / Concursando / OAB</option>
+                    <option value="Pós-Graduação">Pós-Graduação / Mestrado</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-textSecondary text-[11px] font-mono mb-1">Meta Principal de Estudo:</label>
+                <input type="text" id="reg-goal" placeholder="Ex: Aprovação na OAB, Residência Médica, ENEM..." class="w-full bg-[#0e0e0e] border border-cardBorder focus:border-amber-500/60 focus:outline-none rounded-lg p-2.5 text-white text-xs">
+              </div>
+              <div>
+                <label class="block text-textSecondary text-[11px] font-mono mb-1">Senha:</label>
+                <input type="password" id="reg-password" placeholder="••••••••" required class="w-full bg-[#0e0e0e] border border-cardBorder focus:border-amber-500/60 focus:outline-none rounded-lg p-2.5 text-white text-xs">
+              </div>
+              <button type="submit" class="w-full py-2.5 bg-[#0e0e0e] hover:bg-[#16140f] border border-amber-500/50 hover:border-amber-400 text-amber-200 hover:text-white font-mono font-semibold text-xs rounded-lg transition shadow-[0_0_15px_-3px_rgba(212,175,55,0.25)]">
+                Criar Minha Conta de Estudo →
+              </button>
+            </form>
+          </div>
+        </div>
       </div>
 
       <!-- Métricas / Badges Canônicas -->
@@ -252,227 +420,6 @@
             <p class="text-xs text-textSecondary font-sans leading-relaxed">
               Transite com fluidez entre ciclos de estudo: Direito, Medicina, Computação, Filosofia, Economia, Exatas e Teologia, ou prepare-se para o ENEM com módulos de Redação Argumentativa, Biologia Evolutiva, Mecânica Clássica e Sintaxe.
             </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- SEÇÃO 3: ACESSO & AUTENTICAÇÃO -->
-    <section id="landing-auth" class="py-20 px-6 md:px-12 border-t border-cardBorder bg-[#080808]">
-      <div class="max-w-md mx-auto space-y-6">
-        <div class="text-center space-y-2">
-          <span class="text-[10px] font-mono uppercase tracking-[0.25em] text-amber-400">PORTAL DE ACESSO</span>
-          <h2 class="font-cinzel text-2xl sm:text-3xl font-bold text-white tracking-wider">ENTRAR NO SANTUÁRIO</h2>
-          <p class="text-xs text-textSecondary font-sans">
-            Acesse seu espaço de estudo privado, livre de distrações e preservando todos os seus blocos de foco.
-          </p>
-        </div>
-
-        <!-- Card de Autenticação na Landing -->
-        <div class="bg-[#0b0b0b] border border-cardBorder rounded-xl p-6 shadow-2xl space-y-5">
-          <!-- Abas de Entrada: Entrar vs Criar Conta -->
-          <div class="flex border-b border-cardBorder text-xs font-mono">
-            <button id="btn-landing-tab-login" class="flex-1 py-2 text-center text-white border-b-2 border-amber-400 font-semibold transition">
-              Entrar
-            </button>
-            <button id="btn-landing-tab-register" class="flex-1 py-2 text-center text-textMuted hover:text-white transition">
-              Criar Conta
-            </button>
-          </div>
-
-          <!-- PAINEL 1: ENTRAR (LOGIN & ACESSO RÁPIDO) -->
-          <div id="landing-panel-login" class="space-y-4">
-            <!-- Botão de Entrada com Google -->
-            <button id="btn-landing-google-login" type="button" class="w-full py-2.5 px-4 bg-[#141414] hover:bg-[#1c1c1c] border border-neutral-700 hover:border-amber-400/80 rounded-xl flex items-center justify-center space-x-3 text-xs font-mono text-white transition shadow-sm group">
-              <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24">
-                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-              </svg>
-              <span class="font-medium group-hover:text-amber-200 transition">Continuar com o Google</span>
-            </button>
-
-            <!-- Divisor -->
-            <div class="flex items-center space-x-3 text-[10px] text-textMuted font-mono">
-              <div class="flex-1 border-t border-cardBorder"></div>
-              <span>OU ACESSO RÁPIDO</span>
-              <div class="flex-1 border-t border-cardBorder"></div>
-            </div>
-
-            <!-- Acesso Rápido de Estudante -->
-            <div class="space-y-2">
-              <div class="landing-quick-login p-2.5 bg-[#0e0e0e] border border-cardBorder hover:border-neutral-500 rounded-lg flex items-center justify-between cursor-pointer transition group" data-user-id="usr-erudito-01">
-                <div class="flex items-center space-x-2.5">
-                  <span class="text-lg">🏛️</span>
-                  <div>
-                    <div class="text-xs font-semibold text-white group-hover:text-amber-200 transition">Lucas Almeida</div>
-                    <div class="text-[10px] font-mono text-textMuted">Direito • USP (Ensino Superior)</div>
-                  </div>
-                </div>
-                <span class="text-[10px] font-mono text-neutral-400 group-hover:text-white bg-[#050505] px-2 py-0.5 rounded border border-neutral-800">Entrar →</span>
-              </div>
-
-              <div class="landing-quick-login p-2.5 bg-[#0e0e0e] border border-cardBorder hover:border-neutral-500 rounded-lg flex items-center justify-between cursor-pointer transition group" data-user-id="usr-vestibulanda-02">
-                <div class="flex items-center space-x-2.5">
-                  <span class="text-lg">✍️</span>
-                  <div>
-                    <div class="text-xs font-semibold text-white group-hover:text-amber-200 transition">Beatriz Silveira</div>
-                    <div class="text-[10px] font-mono text-textMuted">3º Ano Médio • Sto. Agostinho (ENEM)</div>
-                  </div>
-                </div>
-                <span class="text-[10px] font-mono text-neutral-400 group-hover:text-white bg-[#050505] px-2 py-0.5 rounded border border-neutral-800">Entrar →</span>
-              </div>
-
-              <div class="landing-quick-login p-2.5 bg-[#0e0e0e] border border-cardBorder hover:border-neutral-500 rounded-lg flex items-center justify-between cursor-pointer transition group" data-user-id="usr-medico-03">
-                <div class="flex items-center space-x-2.5">
-                  <span class="text-lg">🩺</span>
-                  <div>
-                    <div class="text-xs font-semibold text-white group-hover:text-amber-200 transition">Dr. André Valério</div>
-                    <div class="text-[10px] font-mono text-textMuted">Medicina • UFRJ (Internato Clínico)</div>
-                  </div>
-                </div>
-                <span class="text-[10px] font-mono text-neutral-400 group-hover:text-white bg-[#050505] px-2 py-0.5 rounded border border-neutral-800">Entrar →</span>
-              </div>
-            </div>
-
-            <!-- Divisor -->
-            <div class="flex items-center space-x-3 text-[10px] text-textMuted font-mono">
-              <div class="flex-1 border-t border-cardBorder"></div>
-              <span>OU ENTRE COM E-MAIL</span>
-              <div class="flex-1 border-t border-cardBorder"></div>
-            </div>
-
-            <!-- Formulário de Login -->
-            <form id="landing-form-login" class="space-y-3">
-              <div>
-                <label class="block text-textSecondary text-[11px] font-mono mb-1">E-mail Cadastrado:</label>
-                <input type="email" id="landing-login-email" placeholder="seu.email@universidade.edu" class="w-full bg-[#0e0e0e] border border-cardBorder focus:border-amber-500/60 focus:outline-none rounded p-2 text-white text-xs">
-              </div>
-              <div>
-                <label class="block text-textSecondary text-[11px] font-mono mb-1">Senha:</label>
-                <input type="password" id="landing-login-password" placeholder="••••••••" class="w-full bg-[#0e0e0e] border border-cardBorder focus:border-amber-500/60 focus:outline-none rounded p-2 text-white text-xs">
-              </div>
-              <button type="submit" class="w-full py-2.5 bg-[#0e0e0e] hover:bg-[#16140f] border border-amber-500/50 hover:border-amber-400 text-amber-200 hover:text-white font-mono font-semibold text-xs rounded transition shadow-[0_0_15px_-3px_rgba(212,175,55,0.25)]">
-                Entrar no Santuário de Estudo →
-              </button>
-            </form>
-          </div>
-
-          <!-- PAINEL 2: CRIAR CONTA (REGISTRO COM ESCOLHA DE FACULDADE E CURSO) -->
-          <div id="landing-panel-register" class="space-y-4 hidden">
-            <!-- Botão de Registro com Google -->
-            <button id="btn-landing-google-reg" type="button" class="w-full py-2.5 px-4 bg-[#141414] hover:bg-[#1c1c1c] border border-neutral-700 hover:border-amber-400/80 rounded-xl flex items-center justify-center space-x-3 text-xs font-mono text-white transition shadow-sm group">
-              <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24">
-                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-              </svg>
-              <span class="font-medium group-hover:text-amber-200 transition">Cadastrar com o Google</span>
-            </button>
-
-            <!-- Divisor -->
-            <div class="flex items-center space-x-3 text-[10px] text-textMuted font-mono">
-              <div class="flex-1 border-t border-cardBorder"></div>
-              <span>OU COM DADOS ACADÊMICOS</span>
-              <div class="flex-1 border-t border-cardBorder"></div>
-            </div>
-
-            <form id="landing-form-register" class="space-y-3">
-              <div>
-                <label class="block text-textSecondary text-[11px] font-mono mb-1">Nome Completo:</label>
-                <input type="text" id="reg-name" placeholder="Ex: Lucas Almeida" required class="w-full bg-[#0e0e0e] border border-cardBorder focus:border-amber-500/60 focus:outline-none rounded p-2 text-white text-xs">
-              </div>
-              <div>
-                <label class="block text-textSecondary text-[11px] font-mono mb-1">E-mail:</label>
-                <input type="email" id="reg-email" placeholder="seu.email@exemplo.com" required class="w-full bg-[#0e0e0e] border border-cardBorder focus:border-amber-500/60 focus:outline-none rounded p-2 text-white text-xs">
-              </div>
-
-              <!-- Escolha de Faculdade / Universidade -->
-              <div>
-                <label class="block text-textSecondary text-[11px] font-mono mb-1">Faculdade / Universidade:</label>
-                <select id="reg-select-institution" class="w-full bg-[#0e0e0e] border border-cardBorder focus:border-amber-500/60 focus:outline-none rounded p-2 text-white text-xs cursor-pointer">
-                  <option value="USP — Universidade de São Paulo" selected>🏛️ USP — Universidade de São Paulo</option>
-                  <option value="UNICAMP — Univ. Estadual de Campinas">🏛️ UNICAMP — Univ. Estadual de Campinas</option>
-                  <option value="UFRJ — Univ. Federal do Rio de Janeiro">🏛️ UFRJ — Univ. Federal do Rio de Janeiro</option>
-                  <option value="UFMG — Univ. Federal de Minas Gerais">🏛️ UFMG — Univ. Federal de Minas Gerais</option>
-                  <option value="UNESP — Univ. Estadual Paulista">🏛️ UNESP — Univ. Estadual Paulista</option>
-                  <option value="UFRGS — Univ. Federal do Rio Grande do Sul">🏛️ UFRGS — Univ. Federal do Rio Grande do Sul</option>
-                  <option value="UFSC — Univ. Federal de Santa Catarina">🏛️ UFSC — Univ. Federal de Santa Catarina</option>
-                  <option value="UFBA — Universidade Federal da Bahia">🏛️ UFBA — Universidade Federal da Bahia</option>
-                  <option value="UnB — Universidade de Brasília">🏛️ UnB — Universidade de Brasília</option>
-                  <option value="PUC (SP / Rio / PR / RS / Minas)">🏛️ PUC (SP / Rio / PR / RS / Minas)</option>
-                  <option value="FGV — Fundação Getulio Vargas">🏛️ FGV — Fundação Getulio Vargas</option>
-                  <option value="Mackenzie — Univ. Presbiteriana">🏛️ Mackenzie — Univ. Presbiteriana</option>
-                  <option value="Insper — Ensino e Pesquisa">🏛️ Insper — Ensino e Pesquisa</option>
-                  <option value="Estácio / Unip / Anhembi Morumbi">🏛️ Estácio / Unip / Anhembi Morumbi</option>
-                  <option value="Universidade de Coimbra / Lisboa (Portugal)">🏛️ Universidade de Coimbra / Lisboa (Portugal)</option>
-                  <option value="Universidade Estrangeira (Harvard / Oxford / Sorbonne)">🏛️ Universidade Estrangeira (Harvard / Oxford / Sorbonne)</option>
-                  <option value="Ensino Médio / Colégio / Pré-Vestibular">🏫 Ensino Médio / Colégio / Pré-Vestibular</option>
-                  <option value="__other__">✏️ Outra Faculdade / Instituição (Digitar)...</option>
-                </select>
-                <input type="text" id="reg-custom-institution" placeholder="Digite o nome da sua faculdade..." class="w-full bg-[#0e0e0e] border border-cardBorder focus:border-amber-500/60 focus:outline-none rounded p-2 text-white text-xs mt-1.5 hidden">
-              </div>
-
-              <!-- Escolha de Curso e Semestre -->
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                <div>
-                  <label class="block text-textSecondary text-[11px] font-mono mb-1">Curso / Área:</label>
-                  <select id="reg-select-course" class="w-full bg-[#0e0e0e] border border-cardBorder focus:border-amber-500/60 focus:outline-none rounded p-2 text-white text-xs cursor-pointer">
-                    <option value="Direito" selected>⚖️ Direito</option>
-                    <option value="Medicina">🩺 Medicina</option>
-                    <option value="Filosofia & Letras">📜 Filosofia & Humanidades</option>
-                    <option value="Psicologia">🧠 Psicologia & Neurociência</option>
-                    <option value="Ciência da Computação & TI">💻 Ciência da Computação & Software</option>
-                    <option value="Engenharia">⚙️ Engenharia</option>
-                    <option value="Administração">📊 Administração & Negócios</option>
-                    <option value="Economia">📈 Economia & Finanças</option>
-                    <option value="História & Ciências Sociais">🏛️ História & Ciências Sociais</option>
-                    <option value="Letras & Literatura">📖 Letras & Literatura</option>
-                    <option value="Relações Internacionais">🌐 Relações Internacionais</option>
-                    <option value="Arquitetura & Urbanismo">📐 Arquitetura & Urbanismo</option>
-                    <option value="Biologia & Biomedicina">🔬 Biologia & Biomedicina</option>
-                    <option value="Física & Matemática">⚛️ Física & Matemática</option>
-                    <option value="Ensino Médio / ENEM & Vestibulares">🎯 Ensino Médio / ENEM & Vestibulares</option>
-                    <option value="Concursos Públicos / OAB">⚖️ Concursos Públicos / Magistratura / OAB</option>
-                    <option value="__other__">✏️ Outro Curso (Digitar)...</option>
-                  </select>
-                  <input type="text" id="reg-custom-course" placeholder="Digite o nome do seu curso..." class="w-full bg-[#0e0e0e] border border-cardBorder focus:border-amber-500/60 focus:outline-none rounded p-2 text-white text-xs mt-1.5 hidden">
-                </div>
-                <div>
-                  <label class="block text-textSecondary text-[11px] font-mono mb-1">Semestre / Período:</label>
-                  <select id="reg-select-period" class="w-full bg-[#0e0e0e] border border-cardBorder focus:border-amber-500/60 focus:outline-none rounded p-2 text-white text-xs cursor-pointer">
-                    <option value="1º Semestre">1º Semestre</option>
-                    <option value="2º Semestre">2º Semestre</option>
-                    <option value="3º Semestre">3º Semestre</option>
-                    <option value="4º Semestre">4º Semestre</option>
-                    <option value="5º Semestre">5º Semestre</option>
-                    <option value="6º Semestre" selected>6º Semestre</option>
-                    <option value="7º Semestre">7º Semestre</option>
-                    <option value="8º Semestre">8º Semestre</option>
-                    <option value="9º Semestre">9º Semestre</option>
-                    <option value="10º Semestre">10º Semestre</option>
-                    <option value="Internato Clínico">Internato Clínico</option>
-                    <option value="Fase de TCC">Fase de TCC / Conclusão</option>
-                    <option value="Graduado / Concurso / OAB">Graduado / Concursando / OAB</option>
-                    <option value="Pós-Graduação">Pós-Graduação / Mestrado</option>
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label class="block text-textSecondary text-[11px] font-mono mb-1">Meta Principal de Estudo:</label>
-                <input type="text" id="reg-goal" placeholder="Ex: Aprovação na OAB, Residência Médica, ENEM..." class="w-full bg-[#0e0e0e] border border-cardBorder focus:border-amber-500/60 focus:outline-none rounded p-2 text-white text-xs">
-              </div>
-              <div>
-                <label class="block text-textSecondary text-[11px] font-mono mb-1">Senha:</label>
-                <input type="password" id="reg-password" placeholder="••••••••" required class="w-full bg-[#0e0e0e] border border-cardBorder focus:border-amber-500/60 focus:outline-none rounded p-2 text-white text-xs">
-              </div>
-              <button type="submit" class="w-full py-2.5 bg-[#0e0e0e] hover:bg-[#16140f] border border-amber-500/50 hover:border-amber-400 text-amber-200 hover:text-white font-mono font-semibold text-xs rounded transition shadow-[0_0_15px_-3px_rgba(212,175,55,0.25)]">
-                Criar Minha Conta de Estudo →
-              </button>
-            </form>
           </div>
         </div>
       </div>

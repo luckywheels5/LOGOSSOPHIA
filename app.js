@@ -1513,6 +1513,64 @@ function checkAuthStatus() {
   }
 }
 
+function updateLandingQuickAccess() {
+  const container = document.getElementById('landing-quick-login-container');
+  const divider = document.getElementById('landing-quick-login-divider');
+  if (!container) return;
+
+  const lastUserId = localStorage.getItem('logossophia_last_logout_user');
+  if (!lastUserId) {
+    container.classList.add('hidden');
+    container.innerHTML = '';
+    if (divider) {
+      divider.classList.add('hidden');
+      divider.classList.remove('flex');
+    }
+    return;
+  }
+
+  const accounts = getStoredAccounts();
+  const user = accounts[lastUserId];
+  if (!user) {
+    container.classList.add('hidden');
+    container.innerHTML = '';
+    if (divider) {
+      divider.classList.add('hidden');
+      divider.classList.remove('flex');
+    }
+    return;
+  }
+
+  const instShort = user.institution && user.institution.includes('—') ? user.institution.split('—')[0].trim() : (user.institution || 'Academia').split(' ')[0];
+  container.innerHTML = `
+    <div class="space-y-1.5 text-left">
+      <span class="text-[10px] font-mono uppercase text-amber-400/90 tracking-wider block">Última Sessão / Continuar como:</span>
+      <div class="landing-quick-login p-3 bg-[#121212] border border-amber-500/40 hover:border-amber-400 rounded-xl flex items-center justify-between cursor-pointer transition group" data-user-id="${user.id}">
+        <div class="flex items-center space-x-3">
+          <span class="text-xl">${user.avatar || '🏛️'}</span>
+          <div>
+            <div class="text-xs font-semibold text-white group-hover:text-amber-200 transition">${user.name}</div>
+            <div class="text-[10px] font-mono text-textMuted">${user.course || 'Estudos Gerais'} • ${instShort}</div>
+          </div>
+        </div>
+        <span class="text-[10px] font-mono text-amber-300 group-hover:text-white bg-[#080808] px-2.5 py-1 rounded border border-amber-500/30">Entrar novamente →</span>
+      </div>
+    </div>
+  `;
+  container.classList.remove('hidden');
+  if (divider) {
+    divider.classList.remove('hidden');
+    divider.classList.add('flex');
+  }
+
+  const card = container.querySelector('.landing-quick-login');
+  if (card) {
+    card.addEventListener('click', () => {
+      loginUser(user.id);
+    });
+  }
+}
+
 function loginUser(userId = 'usr-erudito-01') {
   localStorage.setItem('logossophia_authenticated', 'true');
   loadUserAccount(userId);
@@ -1523,10 +1581,14 @@ function loginUser(userId = 'usr-erudito-01') {
 
 function logoutUser() {
   localStorage.setItem('logossophia_authenticated', 'false');
+  if (AppState.currentUserId) {
+    localStorage.setItem('logossophia_last_logout_user', AppState.currentUserId);
+  }
   if (AppState.pomoIsRunning) {
     resetPomodoro();
   }
   checkAuthStatus();
+  updateLandingQuickAccess();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -1544,6 +1606,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Verifica status de autenticação (Página Pública vs App Principal)
   checkAuthStatus();
+  updateLandingQuickAccess();
 
   // Requisito: Ao entrar no site, a primeira coisa que o usuário vê são as estatísticas de estudo
   switchMainView('dashboard');
