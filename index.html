@@ -181,97 +181,59 @@
     <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
 
       <!-- ========================================================================= -->
-      <!-- TOP NAVIGATION BAR: Sleek, Balanced, Sticky Context Bar                    -->
+      <!-- TOP NAVIGATION BAR: Central Brand com Coruja + Ampulheta + LOGOSSOPHIA     -->
       <!-- ========================================================================= -->
-      <header class="w-full bg-[#121212]/95 backdrop-blur border-b border-cardBorder h-16 px-4 md:px-6 flex items-center justify-between sticky top-0 z-20 select-none">
+      <header class="w-full bg-[#121212]/95 backdrop-blur border-b border-cardBorder py-5 px-4 md:px-8 flex items-center justify-center relative sticky top-0 z-20 select-none">
         
-        <!-- Esquerda: Breadcrumb do Contexto Ativo (Ciclo & Disciplina) -->
-        <div class="flex items-center space-x-2.5 min-w-0">
-          <span id="header-cycle-pill" class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-neutral-900 border border-neutral-700 text-neutral-300 shrink-0 font-medium">
-            Superior
-          </span>
-          <span class="text-neutral-600 text-xs">/</span>
-          <div class="flex items-center space-x-1.5 truncate">
-            <span id="header-disc-icon" class="text-sm shrink-0">⚖️</span>
-            <span id="header-disc-title" class="font-cinzel text-xs md:text-sm font-semibold tracking-wide text-white truncate max-w-[180px] sm:max-w-xs">
-              Colisão de Direitos Fundamentais
-            </span>
-          </div>
-        </div>
-
-        <!-- Centro: Emblema LOGOSSOPHIA com Coruja sobre Ampulheta -->
-        <div class="hidden xl:flex items-center space-x-2.5 cursor-pointer hover:opacity-90 transition shrink-0" id="brand-logo" title="Logossophia — Socratic Engine">
-          <div class="w-8 h-8 flex items-center justify-center text-white shrink-0">
-            <!-- SVG Coruja sobre Ampulheta -->
-            <svg class="w-7 h-7" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M35 15 L40 21 C45 19 55 19 60 21 L65 15 C65 22 66 26 66 30 C67 36 65 42 61 47 L39 47 C35 42 33 36 34 30 C34 26 35 22 35 15 Z" stroke-width="2" fill="#181818" />
-              <path d="M34 30 C33 36 34 42 39 47" stroke-width="1.8" />
-              <path d="M66 30 C67 36 66 42 61 47" stroke-width="1.8" />
-              <circle cx="43" cy="27" r="4.8" stroke-width="1.8" fill="#101010" />
-              <circle cx="57" cy="27" r="4.8" stroke-width="1.8" fill="#101010" />
-              <circle cx="43" cy="27" r="2.2" fill="currentColor" stroke="none" />
-              <circle cx="57" cy="27" r="2.2" fill="currentColor" stroke="none" />
-              <polygon points="50,26 47.5,31 50,35 52.5,31" fill="currentColor" stroke="none" />
-              <path d="M42 47 L42 50.5 M44.5 47 L44.5 51 M47 47 L47 50.5" stroke-width="1.8" />
-              <path d="M53 47 L53 50.5 M55.5 47 L55.5 51 M58 47 L58 50.5" stroke-width="1.8" />
-              <rect x="27" y="50" width="46" height="4" rx="1.5" stroke-width="2" fill="#222222" />
-              <path d="M33 54 C34 64 45 66 48 70 C45 74 34 76 33 86" stroke-width="2" />
-              <path d="M67 54 C66 64 55 66 52 70 C55 74 66 76 67 86" stroke-width="2" />
-              <line x1="30.5" y1="54" x2="30.5" y2="86" stroke-width="1.8" />
-              <line x1="69.5" y1="54" x2="69.5" y2="86" stroke-width="1.8" />
-              <rect x="27" y="86" width="46" height="4" rx="1.5" stroke-width="2" fill="#222222" />
-              <path d="M37 59 L63 59 C59 66 54 68 50 69 C46 68 41 66 37 59 Z" fill="#444444" stroke="none" />
-              <line x1="50" y1="69" x2="50" y2="78" stroke-width="1.5" stroke-dasharray="1.5 2" />
-              <path d="M38 85 C42 81 46 78 50 78 C54 78 58 81 62 85 Z" fill="currentColor" stroke="none" />
+        <!-- Centro: Emblema LOGOSSOPHIA com Coruja de Asas Abertas sobre Ampulheta -->
+        <div class="flex items-center space-x-3.5 cursor-pointer hover:opacity-90 transition select-none" id="brand-logo" title="LOGOSSOPHIA — Socratic Engine">
+          <div class="w-10 h-10 flex items-center justify-center text-white shrink-0">
+            <svg class="w-9 h-9" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M43 32 L40 24 L48 27 L50 28 L52 27 L60 24 L57 32 Z" fill="#1C1C1C" />
+              <circle cx="45" cy="35" r="4.5" stroke="currentColor" fill="#141414" />
+              <circle cx="55" cy="35" r="4.5" stroke="currentColor" fill="#141414" />
+              <circle cx="45" cy="35" r="1.5" fill="currentColor" />
+              <circle cx="55" cy="35" r="1.5" fill="currentColor" />
+              <polygon points="50,38 48,42 52,42" fill="currentColor" />
+              <path d="M41 35 C32 30, 20 23, 14 26 C13 32, 22 40, 31 43 C22 45, 18 52, 26 53 C33 53, 38 48, 42 46" />
+              <path d="M22 34 C28 38, 35 41, 41 41" stroke-width="1.2" />
+              <path d="M28 44 C34 46, 38 46, 42 46" stroke-width="1.2" />
+              <path d="M59 35 C68 30, 80 23, 86 26 C87 32, 78 40, 69 43 C78 45, 82 52, 74 53 C67 53, 62 48, 58 46" />
+              <path d="M78 34 C72 38, 65 41, 59 41" stroke-width="1.2" />
+              <path d="M72 44 C66 46, 62 46, 58 46" stroke-width="1.2" />
+              <path d="M44 43 C44 48, 47 51, 50 51 C53 51, 56 48, 56 43" />
+              <!-- Ampulheta -->
+              <line x1="38" y1="52" x2="62" y2="52" stroke-width="2.5" />
+              <rect x="36" y="50" width="28" height="3" rx="1" fill="#222222" />
+              <path d="M40 53 C40 63, 48 64, 49 67 C48 70, 40 71, 40 81" />
+              <path d="M60 53 C60 63, 52 64, 51 67 C52 70, 60 71, 60 81" />
+              <polygon points="43,56 57,56 50,65" fill="#333333" stroke="none" />
+              <polygon points="42,80 58,80 55,73 45,73" fill="currentColor" stroke="none" />
+              <line x1="50" y1="65" x2="50" y2="73" stroke-dasharray="1 1.5" />
+              <line x1="38" y1="82" x2="62" y2="82" stroke-width="2.5" />
+              <rect x="36" y="81" width="28" height="3" rx="1" fill="#222222" />
+              <line x1="39" y1="53" x2="39" y2="81" stroke-width="1.2" />
+              <line x1="61" y1="53" x2="61" y2="81" stroke-width="1.2" />
             </svg>
           </div>
-          <span class="font-cinzel text-base font-bold tracking-[0.22em] text-white">LOGOSSOPHIA</span>
+          <span class="font-cinzel text-2xl sm:text-3xl font-semibold tracking-[0.25em] text-white">LOGOSSOPHIA</span>
         </div>
 
-        <!-- Direita: Widget Minimalista Pomodoro + Tabulae + Botão de Login + Configurações -->
-        <div class="flex items-center space-x-2 sm:space-x-3 shrink-0">
-          
-          <!-- WIDGET MINIMALISTA POMODORO NA BARRA FIXA -->
-          <div id="header-pomo-widget" class="flex items-center bg-[#181818] border border-cardBorder hover:border-neutral-600 rounded-full px-2.5 py-1 transition select-none shadow-sm">
-            <!-- Botão Iniciar/Pausar Compacto com Ícone -->
-            <button id="pomo-toggle" class="w-6 h-6 rounded-full bg-white hover:bg-neutral-200 text-black flex items-center justify-center text-[10px] font-bold transition mr-2 shrink-0 shadow-sm" title="Iniciar / Pausar Vigília">
-              <span id="pomo-toggle-icon">▶</span>
-            </button>
-            
-            <!-- Contador Digital da Vigília -->
-            <span id="pomo-display" class="font-mono text-xs md:text-sm font-semibold text-white tracking-tight mr-2">25:00</span>
-            
-            <!-- Modos Rápidos de Tempo (25m / 5m / 15m) -->
-            <div class="flex items-center border-l border-neutral-700 pl-2 space-x-1 text-[10px] font-mono text-textMuted">
-              <button class="pomo-mode-btn text-white font-bold px-1 py-0.5 rounded transition" data-mins="25" title="Vigília (25 min)">25m</button>
-              <button class="pomo-mode-btn hover:text-white px-1 py-0.5 rounded transition" data-mins="5" title="Pausa Breve (5 min)">5m</button>
-              <button class="pomo-mode-btn hover:text-white px-1 py-0.5 rounded transition" data-mins="15" title="Contemplação (15 min)">15m</button>
-            </div>
-
-            <!-- Botão Reset Compacto -->
-            <button id="pomo-reset" class="ml-1.5 text-textMuted hover:text-white text-xs px-1" title="Reiniciar Vigília">↺</button>
-          </div>
-
-          <!-- Botão Tabulae (Flashcards) -->
-          <button id="btn-open-tabulae" class="hidden sm:flex items-center space-x-1.5 text-xs font-mono bg-cardBg hover:bg-neutral-800 border border-cardBorder px-3 py-1.5 rounded-full transition text-neutral-300 shadow-sm" title="Abrir Tabulae de Repetição Espaçada">
+        <!-- Ações no Topo Direito (Exatamente como no design original da captura) -->
+        <div class="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 flex items-center space-x-2.5">
+          <!-- Botão Tabulae Pill -->
+          <button id="btn-open-tabulae" class="flex items-center space-x-2 text-xs font-mono bg-[#181818] hover:bg-neutral-800 border border-cardBorder px-3.5 py-1.5 rounded-full transition text-neutral-300 shadow-sm" title="Abrir Tabulae de Repetição Espaçada">
             <span>Tabulae</span>
-            <span id="flashcard-badge" class="bg-neutral-900 text-white px-1.5 py-0.5 rounded-full text-[10px] border border-neutral-700">2</span>
+            <span id="flashcard-badge" class="bg-neutral-900 text-white px-2 py-0.5 rounded-full text-[10px] border border-neutral-700 font-semibold">2</span>
           </button>
 
-          <!-- BOTÃO DE LOGIN / PERFIL DO ESTUDANTE -->
-          <button id="btn-header-login" class="flex items-center space-x-2 text-xs font-mono bg-[#1C1C1C] hover:bg-[#262626] border border-cardBorder hover:border-neutral-500 px-3 py-1.5 rounded-full transition text-white shadow-sm" title="Entrar / Trocar Conta">
-            <span id="header-user-avatar" class="text-xs">🏛️</span>
-            <span id="header-user-name" class="font-medium max-w-[90px] truncate hidden md:inline">Lucas A.</span>
-            <span class="text-[10px] text-textMuted font-sans">▾</span>
-          </button>
-
-          <!-- BOTÃO ALTERNADOR DE TEMA (CLARO / PERGAMINHO VS ESCURO) -->
-          <button id="btn-toggle-theme" class="text-textSecondary hover:text-white p-2 border border-cardBorder bg-cardBg hover:bg-neutral-800 rounded-full transition shadow-sm flex items-center justify-center w-8 h-8" title="Alternar Modo Claro (Pergaminho) / Noturno">
+          <!-- Alternador de Tema Claro / Escuro -->
+          <button id="btn-toggle-theme" class="text-textSecondary hover:text-white p-2 border border-cardBorder bg-[#181818] hover:bg-neutral-800 rounded-full transition shadow-sm flex items-center justify-center w-8 h-8" title="Alternar Modo Claro / Noturno">
             <span id="theme-toggle-icon" class="text-xs">☀️</span>
           </button>
-          
+
           <!-- Botão de Configurações -->
-          <button id="btn-settings" class="text-textSecondary hover:text-white p-2 border border-cardBorder bg-cardBg hover:bg-neutral-800 rounded-full transition" title="Configurações da Conta & SQLite">
+          <button id="btn-settings" class="text-textSecondary hover:text-white p-2 border border-cardBorder bg-[#181818] hover:bg-neutral-800 rounded-full transition shadow-sm flex items-center justify-center w-8 h-8" title="Configurações da Conta & SQLite">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -367,6 +329,54 @@
             </div>
 
           </div>
+
+          <!-- ========================================================================= -->
+          <!-- CARD HERO: POMODORO TIMER (VIGÍLIA & FOCO ACADÊMICO)                      -->
+          <!-- ========================================================================= -->
+          <section id="pomodoro-section" class="bg-cardBg border border-cardBorder rounded-xl overflow-hidden shadow-sm transition">
+            <div class="px-6 py-3 border-b border-cardBorder/60 bg-[#161616] flex items-center justify-between">
+              <div class="flex items-center space-x-2">
+                <span class="text-xs uppercase font-mono tracking-wider font-semibold text-textSecondary">POMODORO TIMER</span>
+                <span class="text-[10px] font-mono text-textMuted bg-neutral-900 border border-neutral-800 px-2 py-0.5 rounded">Vigília Acadêmica</span>
+              </div>
+              <span id="pomo-status-label" class="text-[10px] font-mono uppercase tracking-widest text-textMuted">Foco</span>
+            </div>
+
+            <div class="px-6 sm:px-8 py-8 flex flex-col md:flex-row items-center justify-around gap-6">
+              <!-- Botão START FOCUS -->
+              <div class="w-full md:w-48 flex justify-center md:justify-start order-2 md:order-1">
+                <button id="pomo-toggle" class="w-44 py-2.5 px-6 rounded-full border border-neutral-300 hover:bg-white hover:text-black font-mono font-medium text-xs tracking-wider transition-all duration-200 text-center uppercase shadow-sm">
+                  START FOCUS
+                </button>
+              </div>
+
+              <!-- Timer Circular Central -->
+              <div class="relative flex items-center justify-center select-none order-1 md:order-2">
+                <svg class="w-44 h-44 sm:w-48 sm:h-48 transform -rotate-90" viewBox="0 0 180 180">
+                  <circle cx="90" cy="90" r="76" stroke="#2B2B2B" stroke-width="7" fill="none" />
+                  <circle id="pomo-circle-progress" cx="90" cy="90" r="76" stroke="#FFFFFF" stroke-width="7" fill="none" 
+                    stroke-linecap="round" stroke-dasharray="477.5" stroke-dashoffset="0" class="transition-all duration-1000 ease-linear" />
+                </svg>
+                <div class="absolute inset-0 flex flex-col items-center justify-center">
+                  <span id="pomo-display" class="font-mono text-3xl sm:text-4xl font-bold tracking-tight text-white">25:00</span>
+                </div>
+              </div>
+
+              <!-- Botão RESET -->
+              <div class="w-full md:w-48 flex justify-center md:justify-end order-3">
+                <button id="pomo-reset" class="w-36 py-2.5 px-6 rounded-full border border-cardBorder hover:border-neutral-500 font-mono font-medium text-xs tracking-wider text-textSecondary hover:text-white transition-all duration-200 text-center uppercase">
+                  RESET
+                </button>
+              </div>
+            </div>
+
+            <!-- Modos Rápidos de Tempo (25m / 5m / 15m) -->
+            <div class="px-6 py-2.5 border-t border-cardBorder/60 bg-[#161616] flex justify-center space-x-6 text-xs font-mono text-textSecondary">
+              <button class="pomo-mode-btn text-white font-semibold underline decoration-2 underline-offset-4" data-mins="25">Vigília (25m)</button>
+              <button class="pomo-mode-btn hover:text-white transition" data-mins="5">Pausa Breve (5m)</button>
+              <button class="pomo-mode-btn hover:text-white transition" data-mins="15">Contemplação (15m)</button>
+            </div>
+          </section>
 
           <!-- TABELA HISTÓRICA DE SESSÕES ANTERIORES -->
           <div class="bg-cardBg border border-cardBorder rounded-xl overflow-hidden shadow-sm">
@@ -775,11 +785,15 @@
               <!-- 2. LEITOR DO SCRIPTORIUM (EXIBIDO APÓS CARREGAR) -->
               <div id="reader-wrapper" class="hidden">
                 <div class="mb-3 flex items-center justify-between border-b border-cardBorder pb-2">
-                  <div class="flex items-center space-x-2">
-                    <h3 id="doc-title" class="font-cinzel text-sm font-bold text-white tracking-wide">Material Carregado</h3>
-                    <span id="doc-version-badge" class="text-[10px] font-mono bg-cardBg border border-cardBorder px-2 py-0.5 rounded text-neutral-400">PRÓPRIO</span>
+                  <div class="flex items-center space-x-2 min-w-0">
+                    <span id="header-cycle-pill" class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-neutral-900 border border-neutral-700 text-neutral-300 font-medium shrink-0">Superior</span>
+                    <span class="text-neutral-600 text-xs">/</span>
+                    <span id="header-disc-icon" class="text-sm shrink-0">⚖️</span>
+                    <h3 id="doc-title" class="font-cinzel text-sm font-bold text-white tracking-wide truncate">Material Carregado</h3>
+                    <span id="header-disc-title" class="hidden"></span>
+                    <span id="doc-version-badge" class="text-[10px] font-mono bg-cardBg border border-cardBorder px-2 py-0.5 rounded text-neutral-400 shrink-0">PRÓPRIO</span>
                   </div>
-                  <button id="btn-change-doc" class="text-[11px] font-mono text-textSecondary hover:text-white px-2 py-1 border border-cardBorder rounded hover:border-neutral-600 transition">
+                  <button id="btn-change-doc" class="text-[11px] font-mono text-textSecondary hover:text-white px-2 py-1 border border-cardBorder rounded hover:border-neutral-600 transition shrink-0">
                     + Substituir Material
                   </button>
                 </div>

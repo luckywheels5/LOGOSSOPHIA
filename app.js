@@ -1933,10 +1933,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (DOM.sidebarBtnPomo) {
     DOM.sidebarBtnPomo.addEventListener('click', () => {
-      const headerPomo = document.getElementById('header-pomo-widget');
-      if (headerPomo) {
-        headerPomo.classList.add('ring-2', 'ring-white');
-        setTimeout(() => headerPomo.classList.remove('ring-2', 'ring-white'), 1200);
+      switchMainView('dashboard');
+      const pomoSection = document.getElementById('pomodoro-section');
+      if (pomoSection) {
+        pomoSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        pomoSection.classList.add('ring-2', 'ring-white/40');
+        setTimeout(() => pomoSection.classList.remove('ring-2', 'ring-white/40'), 1500);
       }
       togglePomodoro();
     });
@@ -1963,7 +1965,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (DOM.cardActionPomo) {
     DOM.cardActionPomo.addEventListener('click', () => {
-      DOM.sidebarBtnPomo.click();
+      const pomoSection = document.getElementById('pomodoro-section');
+      if (pomoSection) {
+        pomoSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        pomoSection.classList.add('ring-2', 'ring-white/40');
+        setTimeout(() => pomoSection.classList.remove('ring-2', 'ring-white/40'), 1500);
+      }
+      togglePomodoro();
     });
   }
 

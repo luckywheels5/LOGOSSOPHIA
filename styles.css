@@ -365,6 +365,20 @@ html:not(.dark) #pomo-display {
   color: #1C1B18 !important;
 }
 
+html:not(.dark) #pomo-circle-progress {
+  stroke: #1C1B18 !important;
+}
+
+html:not(.dark) #pomo-reset {
+  border-color: #DED7C8 !important;
+  color: #7A756B !important;
+}
+
+html:not(.dark) #pomo-reset:hover {
+  color: #1C1B18 !important;
+  border-color: #1C1B18 !important;
+}
+
 html:not(.dark) .pomo-mode-btn {
   color: #7A756B !important;
 }
@@ -500,4 +514,31 @@ html:not(.dark) #btn-dashboard-enter-agora {
 
 html:not(.dark) #btn-dashboard-enter-agora:hover {
   background-color: #33312B !important;
+}
+
+html:not(.dark) header {
+  background-color: rgba(247, 245, 238, 0.95) !important;
+  border-bottom-color: #DED7C8 !important;
+}
+
+html:not(.dark) #brand-logo span {
+  color: #1C1B18 !important;
+}
+
+html:not(.dark) #btn-open-tabulae {
+  background-color: #FFFFFF !important;
+  border-color: #DED7C8 !important;
+  color: #1C1B18 !important;
+}
+
+html:not(.dark) #flashcard-badge {
+  background-color: #E2DDD2 !important;
+  color: #1C1B18 !important;
+  border-color: #C5BFB0 !important;
+}
+
+html:not(.dark) #btn-settings {
+  background-color: #FFFFFF !important;
+  border-color: #DED7C8 !important;
+  color: #1C1B18 !important;
 }
