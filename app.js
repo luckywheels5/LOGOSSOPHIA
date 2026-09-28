@@ -990,7 +990,7 @@ function renderSessionsTable(sessions) {
         </td>
         <td class="px-5 py-3.5"><span class="px-2 py-0.5 rounded bg-neutral-900 border border-neutral-800 text-[10px] font-mono text-neutral-300 uppercase">${s.cycle || 'Superior'}</span></td>
         <td class="px-5 py-3.5 font-mono text-textSecondary">${mins} min</td>
-        <td class="px-5 py-3.5 font-mono text-emerald-400">${s.cardsGenerated ? `+${s.cardsGenerated} Tabulae` : '--'}</td>
+        <td class="px-5 py-3.5 font-mono text-emerald-400">${s.cardsGenerated ? `+${s.cardsGenerated} Flashcards` : '--'}</td>
         <td class="px-5 py-3.5 text-right">
           <button class="btn-resume-discipline text-neutral-300 hover:text-white underline text-[11px] font-mono" data-disc="${s.discipline}">Estudar na Ágora →</button>
         </td>
@@ -1009,7 +1009,7 @@ function renderSessionsTable(sessions) {
 }
 
 function resetUserAccountData() {
-  if (!confirm("Atenção: Deseja realmente zerar todos os dados de estudo (horas de vigília, constância, histórico de sessões e Tabulae) da sua conta?")) {
+  if (!confirm("Atenção: Deseja realmente zerar todos os dados de estudo (horas de vigília, constância, histórico de sessões e Flashcards) da sua conta?")) {
     return;
   }
 
@@ -1361,7 +1361,7 @@ function appendAgoraMessage(text, allowFlashcard = false) {
     html += `
       <div class="pt-2 border-t border-cardBorder mt-2 flex justify-end">
         <button class="btn-create-card-from-chat text-[11px] font-mono text-neutral-400 hover:text-white flex items-center space-x-1 px-2.5 py-1 bg-[#121212] border border-cardBorder rounded hover:border-neutral-500 transition">
-          <span>📝 Cristalizar em Tabula (Flashcard)</span>
+          <span>📝 Cristalizar em Flashcard</span>
         </button>
       </div>
     `;
@@ -1414,7 +1414,7 @@ function renderFlashcardDeck() {
   if (AppState.flashcards.length === 0) {
     DOM.flashcardDeck.innerHTML = `
       <div class="text-center text-textSecondary font-mono text-xs py-8">
-        Nenhuma Tabula registrada ainda. Interrogue a Ágora para cristalizar suas sínteses de estudo.
+        Nenhum Flashcard registrado ainda. Interrogue a Ágora para cristalizar suas sínteses de estudo.
       </div>
     `;
     DOM.deckProgress.textContent = "0 de 0";
@@ -1431,7 +1431,7 @@ function renderFlashcardDeck() {
         <div class="flip-card-front shadow-lg">
           <span class="text-[10px] font-mono uppercase text-textSecondary tracking-widest mb-3">[FRENTE // PROVOCAÇÃO]</span>
           <p class="font-garamond text-lg text-white leading-relaxed px-4">${card.front}</p>
-          <span class="text-[10px] font-mono text-textMuted mt-4">Clique para virar a Tabula ↺</span>
+          <span class="text-[10px] font-mono text-textMuted mt-4">Clique para virar o Flashcard ↺</span>
         </div>
         <!-- VERSO -->
         <div class="flip-card-back shadow-lg">
@@ -1477,7 +1477,7 @@ function createFlashcardFromAgora(synthesisText) {
   };
   AppState.flashcards.push(newCard);
   updateFlashcardBadge();
-  alert("Tabula criada e arquivada para repetição espaçada.");
+  alert("Flashcard criado e arquivado para repetição espaçada.");
 }
 
 // ==========================================
@@ -1751,7 +1751,7 @@ document.addEventListener('DOMContentLoaded', () => {
       status: "obscuro"
     });
     updateFlashcardBadge();
-    alert("Passagem adicionada às suas Tabulae.");
+    alert("Passagem adicionada aos seus Flashcards.");
   });
 
   // Modais Tabulae & Config

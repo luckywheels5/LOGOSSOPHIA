@@ -95,7 +95,7 @@
   transition: stroke-dashoffset 1s linear;
 }
 
-/* Flip 3D das Tabulae de Flashcards */
+/* Flip 3D dos Flashcards */
 .flip-card {
   background-color: transparent;
   width: 100%;
@@ -500,20 +500,10 @@ html:not(.dark) thead.bg-\[\#121212\] {
   background-color: #E8E4D7 !important;
 }
 
-html:not(.dark) #card-action-agora:hover,
 html:not(.dark) #card-action-tabulae:hover,
 html:not(.dark) #card-action-pomo:hover {
   border-color: #8E897E !important;
   background-color: #F4EFE2 !important;
-}
-
-html:not(.dark) #btn-dashboard-enter-agora {
-  background-color: #1C1B18 !important;
-  color: #FFFFFF !important;
-}
-
-html:not(.dark) #btn-dashboard-enter-agora:hover {
-  background-color: #33312B !important;
 }
 
 html:not(.dark) header {
