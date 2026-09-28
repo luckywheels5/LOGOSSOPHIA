@@ -92,25 +92,12 @@
         </div>
       </div>
 
-      <!-- Card da Conta do Estudante Vinculada / Botão de Login -->
-      <div class="px-3 pt-3">
-        <div id="sidebar-user-card" class="p-2.5 bg-[#121212] border border-cardBorder rounded-lg flex items-center justify-between cursor-pointer hover:border-neutral-500 transition group select-none" title="Clique para gerenciar sua conta, login e configurações">
-          <div class="flex items-center space-x-2.5 min-w-0">
-            <div id="user-avatar" class="w-8 h-8 rounded-full bg-neutral-800 border border-neutral-700 flex items-center justify-center text-sm shadow-inner shrink-0">🏛️</div>
-            <div class="min-w-0">
-              <div id="user-display-name" class="text-xs font-semibold text-white truncate">Lucas Almeida</div>
-              <div id="user-display-info" class="text-[10px] font-mono text-textMuted truncate">Direito • USP</div>
-            </div>
-          </div>
-          <span class="text-[10px] font-mono text-textSecondary group-hover:text-white transition bg-neutral-900 border border-neutral-800 px-2 py-0.5 rounded">Login</span>
-        </div>
-      </div>
-
-      <!-- Menu de Navegação / Funcionalidades -->
+      <!-- Menu de Ferramentas de Estudo -->
       <div class="flex-1 overflow-y-auto py-4 px-3 space-y-5">
         
-        <!-- NAVEGAÇÃO PRINCIPAL (MINIMALISTA, LIMPA & FOCADA) -->
+        <!-- NAVEGAÇÃO PRINCIPAL (EXCLUSIVAMENTE FERRAMENTAS) -->
         <div>
+          <span class="text-[10px] font-mono text-textMuted uppercase tracking-wider px-3 mb-2.5 block font-semibold">Ferramentas</span>
           <nav class="space-y-1.5 text-xs font-sans">
             <!-- 1. Estatísticas / Tabularium (Primeira tela que o usuário vê) -->
             <button id="sidebar-btn-dashboard" class="sidebar-nav-btn active w-full flex items-center justify-between px-3.5 py-3 rounded-lg text-white bg-neutral-900 border border-neutral-700 transition shadow-sm" title="Ver Estatísticas e Histórico de Sessões">
@@ -219,7 +206,7 @@
           <span class="font-cinzel text-2xl sm:text-3xl font-semibold tracking-[0.25em] text-white">LOGOSSOPHIA</span>
         </div>
 
-        <!-- Ações no Topo Direito (Exatamente como no design original da captura) -->
+        <!-- Ações no Topo Direito (Flashcards, Tema, Configurações & Login) -->
         <div class="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 flex items-center space-x-2.5">
           <!-- Botão Flashcards Pill -->
           <button id="btn-open-tabulae" class="flex items-center space-x-2 text-xs font-mono bg-[#181818] hover:bg-neutral-800 border border-cardBorder px-3.5 py-1.5 rounded-full transition text-neutral-300 shadow-sm" title="Abrir Flashcards de Repetição Espaçada">
@@ -238,6 +225,12 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
             </svg>
+          </button>
+
+          <!-- Botão de Login / Perfil -->
+          <button id="btn-header-login" class="flex items-center space-x-1.5 text-xs font-mono bg-[#181818] hover:bg-neutral-800 border border-cardBorder px-3 py-1.5 rounded-full transition text-neutral-300 hover:text-white shadow-sm" title="Login / Gerenciar Conta">
+            <span id="header-user-avatar" class="text-xs">🏛️</span>
+            <span id="header-user-name" class="font-medium text-white">Lucas</span>
           </button>
         </div>
       </header>
