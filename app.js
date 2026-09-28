@@ -849,6 +849,7 @@ function togglePomodoro() {
   if (AppState.pomoIsRunning) {
     clearInterval(AppState.pomoTimer);
     AppState.pomoIsRunning = false;
+    document.body.classList.remove('immersion-mode');
     if (toggleIcon) {
       toggleIcon.textContent = '▶';
     } else if (DOM.pomoToggle) {
@@ -857,12 +858,15 @@ function togglePomodoro() {
     if (DOM.pomoStatusLabel) DOM.pomoStatusLabel.textContent = 'Pausado';
   } else {
     AppState.pomoIsRunning = true;
+    document.body.classList.add('immersion-mode');
     if (toggleIcon) {
       toggleIcon.textContent = '⏸';
     } else if (DOM.pomoToggle) {
       DOM.pomoToggle.textContent = 'PAUSE FOCUS';
     }
-    if (DOM.pomoStatusLabel) DOM.pomoStatusLabel.textContent = 'Foco';
+    if (DOM.pomoStatusLabel) {
+      DOM.pomoStatusLabel.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-amber-400 inline-block animate-pulse mr-1"></span>Foco Ativo';
+    }
 
     AppState.pomoTimer = setInterval(() => {
       if (AppState.pomoSeconds > 0) {
@@ -871,6 +875,7 @@ function togglePomodoro() {
       } else {
         clearInterval(AppState.pomoTimer);
         AppState.pomoIsRunning = false;
+        document.body.classList.remove('immersion-mode');
         if (toggleIcon) {
           toggleIcon.textContent = '▶';
         } else if (DOM.pomoToggle) {
@@ -878,7 +883,7 @@ function togglePomodoro() {
         }
         playMonasteryChime();
         recordStudySession(AppState.pomoInitialSeconds, 'pomodoro');
-        alert("Ciclo de vigília concluído com sucesso. Descanse e medite brevemente.");
+        alert("Bloco de foco concluído com sucesso. Descanse e medite brevemente durante sua pausa.");
         AppState.pomoSeconds = AppState.pomoInitialSeconds;
         updatePomoDisplay();
       }
@@ -889,6 +894,7 @@ function togglePomodoro() {
 function resetPomodoro() {
   clearInterval(AppState.pomoTimer);
   AppState.pomoIsRunning = false;
+  document.body.classList.remove('immersion-mode');
   const toggleIcon = document.getElementById('pomo-toggle-icon');
   if (toggleIcon) {
     toggleIcon.textContent = '▶';
@@ -970,7 +976,7 @@ function renderSessionsTable(sessions) {
     tbody.innerHTML = `
       <tr id="sessions-empty-row">
         <td colspan="6" class="px-5 py-8 text-center text-textMuted font-mono text-xs">
-          Nenhuma sessão registrada ainda. Inicie sua primeira vigília ou debate socrático na Ágora para registrar seu progresso canônico.
+          Nenhuma sessão registrada ainda. Inicie seu primeiro bloco de foco ou debate socrático na Ágora para registrar seu progresso canônico.
         </td>
       </tr>
     `;
@@ -1009,7 +1015,7 @@ function renderSessionsTable(sessions) {
 }
 
 function resetUserAccountData() {
-  if (!confirm("Atenção: Deseja realmente zerar todos os dados de estudo (horas de vigília, constância, histórico de sessões e Flashcards) da sua conta?")) {
+  if (!confirm("Atenção: Deseja realmente zerar todos os dados de estudo (horas de foco, constância, histórico de sessões e Flashcards) da sua conta?")) {
     return;
   }
 
@@ -1053,7 +1059,7 @@ function loadUserAccount(userId, skipDisciplineReload = false) {
   // Atualiza Tracker Stats
   const trackerSummary = document.getElementById('tracker-summary');
   if (trackerSummary) {
-    trackerSummary.textContent = `${userHours}h Vigília • ${userStreak}d Streak`;
+    trackerSummary.textContent = `${userHours}h Foco • ${userStreak}d Streak`;
   }
 
   // Atualiza Pomodoro

@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LOGOSSOPHIA — Socratic Study & Focus Platform</title>
   
-  <!-- Fontes: Cinzel, EB Garamond, Inter, JetBrains Mono -->
+  <!-- Fontes: Cinzel, Cormorant Garamond, EB Garamond, Inter, JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800;900&family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -18,19 +18,21 @@
       theme: {
         extend: {
           colors: {
-            appBg: '#141414',
-            sidebarBg: '#0F0F0F',
-            cardBg: '#1A1A1A',
-            cardInner: '#161616',
-            cardBorder: '#282828',
-            cardBorderHover: '#3A3A3A',
-            textPrimary: '#EEEEEE',
-            textSecondary: '#8E8E8E',
-            textMuted: '#555555',
-            accentWhite: '#FFFFFF'
+            appBg: '#050505',
+            sidebarBg: '#080808',
+            cardBg: '#0b0b0b',
+            cardInner: '#0e0e0e',
+            cardBorder: '#222222',
+            cardBorderHover: '#333333',
+            textPrimary: '#EDEDED',
+            textSecondary: '#888888',
+            textMuted: '#505050',
+            accentWhite: '#FFFFFF',
+            amberCandle: '#D4AF37'
           },
           fontFamily: {
             cinzel: ['Cinzel', 'serif'],
+            cormorant: ['"Cormorant Garamond"', 'serif'],
             garamond: ['"EB Garamond"', 'serif'],
             sans: ['Inter', 'sans-serif'],
             mono: ['"JetBrains Mono"', 'monospace']
@@ -126,11 +128,11 @@
               <span id="sidebar-tabulae-count" class="text-[10px] font-mono bg-neutral-900 text-white px-2 py-0.5 rounded-full border border-neutral-700">0</span>
             </button>
 
-            <!-- 4. Vigília Foco (Pomodoro) -->
-            <button id="sidebar-btn-pomo" class="sidebar-nav-btn w-full flex items-center justify-between px-3.5 py-3 rounded-lg text-textSecondary hover:text-white hover:bg-neutral-900/60 transition" title="Iniciar ou Pausar Vigília">
+            <!-- 4. Bloco de Foco (Pomodoro) -->
+            <button id="sidebar-btn-pomo" class="sidebar-nav-btn w-full flex items-center justify-between px-3.5 py-3 rounded-lg text-textSecondary hover:text-white hover:bg-neutral-900/60 transition" title="Iniciar ou Pausar Bloco de Foco">
               <span class="flex items-center space-x-2.5">
                 <span class="text-base">⏳</span>
-                <span class="font-medium">Vigília Foco</span>
+                <span class="font-medium">Bloco de Foco</span>
               </span>
               <span class="text-[10px] font-mono text-textMuted" id="sidebar-pomo-status">25:00</span>
             </button>
@@ -139,8 +141,8 @@
 
       </div>
 
-      <!-- Rodapé da Barra Lateral: Estatísticas de Vigília & Configurações -->
-      <div class="p-4 border-t border-cardBorder/70 bg-[#0A0A0A] text-xs font-mono space-y-3">
+      <!-- Rodapé da Barra Lateral: Estatísticas de Foco & Configurações -->
+      <div class="p-4 border-t border-cardBorder bg-[#080808] text-xs font-mono space-y-3">
         <div class="flex items-center justify-between text-textSecondary">
           <span class="flex items-center space-x-1.5" id="sidebar-streak-display">
             <span>🔥</span>
@@ -170,7 +172,7 @@
       <!-- ========================================================================= -->
       <!-- TOP NAVIGATION BAR: Central Brand com Coruja + Ampulheta + LOGOSSOPHIA     -->
       <!-- ========================================================================= -->
-      <header class="w-full bg-[#121212]/95 backdrop-blur border-b border-cardBorder py-5 px-4 md:px-8 flex items-center justify-center relative sticky top-0 z-20 select-none">
+      <header class="w-full bg-[#050505]/95 backdrop-blur border-b border-cardBorder py-5 px-4 md:px-8 flex items-center justify-center relative sticky top-0 z-20 select-none">
         
         <!-- Centro: Emblema LOGOSSOPHIA com Coruja de Asas Abertas sobre Ampulheta -->
         <div class="flex items-center space-x-3.5 cursor-pointer hover:opacity-90 transition select-none" id="brand-logo" title="LOGOSSOPHIA — Socratic Engine">
@@ -209,18 +211,18 @@
         <!-- Ações no Topo Direito (Flashcards, Tema, Configurações & Login) -->
         <div class="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 flex items-center space-x-2.5">
           <!-- Botão Flashcards Pill -->
-          <button id="btn-open-tabulae" class="flex items-center space-x-2 text-xs font-mono bg-[#181818] hover:bg-neutral-800 border border-cardBorder px-3.5 py-1.5 rounded-full transition text-neutral-300 shadow-sm" title="Abrir Flashcards de Repetição Espaçada">
+          <button id="btn-open-tabulae" class="flex items-center space-x-2 text-xs font-mono bg-[#0b0b0b] hover:bg-neutral-900 border border-cardBorder px-3.5 py-1.5 rounded-full transition text-neutral-300 shadow-sm" title="Abrir Flashcards de Repetição Espaçada">
             <span>Flashcards</span>
-            <span id="flashcard-badge" class="bg-neutral-900 text-white px-2 py-0.5 rounded-full text-[10px] border border-neutral-700 font-semibold">0</span>
+            <span id="flashcard-badge" class="bg-[#050505] text-white px-2 py-0.5 rounded-full text-[10px] border border-neutral-800 font-semibold">0</span>
           </button>
 
           <!-- Alternador de Tema Claro / Escuro -->
-          <button id="btn-toggle-theme" class="text-textSecondary hover:text-white p-2 border border-cardBorder bg-[#181818] hover:bg-neutral-800 rounded-full transition shadow-sm flex items-center justify-center w-8 h-8" title="Alternar Modo Claro / Noturno">
+          <button id="btn-toggle-theme" class="text-textSecondary hover:text-white p-2 border border-cardBorder bg-[#0b0b0b] hover:bg-neutral-900 rounded-full transition shadow-sm flex items-center justify-center w-8 h-8" title="Alternar Modo Claro / Noturno">
             <span id="theme-toggle-icon" class="text-xs">☀️</span>
           </button>
 
           <!-- Botão de Configurações -->
-          <button id="btn-settings" class="text-textSecondary hover:text-white p-2 border border-cardBorder bg-[#181818] hover:bg-neutral-800 rounded-full transition shadow-sm flex items-center justify-center w-8 h-8" title="Configurações da Conta">
+          <button id="btn-settings" class="text-textSecondary hover:text-white p-2 border border-cardBorder bg-[#0b0b0b] hover:bg-neutral-900 rounded-full transition shadow-sm flex items-center justify-center w-8 h-8" title="Configurações da Conta">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -228,7 +230,7 @@
           </button>
 
           <!-- Botão de Login / Perfil -->
-          <button id="btn-header-login" class="flex items-center space-x-1.5 text-xs font-mono bg-[#181818] hover:bg-neutral-800 border border-cardBorder px-3 py-1.5 rounded-full transition text-neutral-300 hover:text-white shadow-sm" title="Login / Gerenciar Conta">
+          <button id="btn-header-login" class="flex items-center space-x-1.5 text-xs font-mono bg-[#0b0b0b] hover:bg-neutral-900 border border-cardBorder px-3 py-1.5 rounded-full transition text-neutral-300 hover:text-white shadow-sm" title="Login / Gerenciar Conta">
             <span id="header-user-avatar" class="text-xs">🏛️</span>
             <span id="header-user-name" class="font-medium text-white">Lucas</span>
           </button>
@@ -253,7 +255,7 @@
               </div>
               <h1 class="font-cinzel text-2xl sm:text-3xl font-bold text-white tracking-wide">TABULARIUM DE ESTUDOS</h1>
               <p class="text-textSecondary text-xs sm:text-sm font-sans leading-relaxed">
-                Registro canônico de vigília, retenção dialética e constância acumulados nas suas sessões de estudo anteriores.
+                Registro canônico de blocos de foco, retenção dialética e constância acumulados nas suas sessões de estudo anteriores.
               </p>
             </div>
           </div>
@@ -261,10 +263,10 @@
           <!-- GRID DE 4 CARDS DE MÉTRICAS PRINCIPAIS -->
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             
-            <!-- Métrica 1: Tempo Total de Vigília -->
+            <!-- Métrica 1: Tempo Total de Foco -->
             <div class="bg-cardBg border border-cardBorder rounded-xl p-5 shadow-sm space-y-2">
               <div class="flex items-center justify-between">
-                <span class="text-[11px] font-mono uppercase text-textMuted">Tempo de Vigília</span>
+                <span class="text-[11px] font-mono uppercase text-textMuted">Tempo de Foco</span>
                 <span class="text-base">⏳</span>
               </div>
               <div class="text-2xl sm:text-3xl font-bold font-mono text-white" id="stat-total-hours">0.0h</div>
@@ -283,7 +285,7 @@
               <div class="text-2xl sm:text-3xl font-bold font-mono text-white" id="stat-streak-days">0 Dias</div>
               <div class="text-[11px] text-textSecondary font-sans flex items-center space-x-1" id="stat-streak-sub">
                 <span class="text-amber-400 font-mono">0%</span>
-                <span>inicie sua vigília hoje</span>
+                <span>inicie seu bloco de foco hoje</span>
               </div>
             </div>
 
@@ -315,13 +317,13 @@
           </div>
 
           <!-- ========================================================================= -->
-          <!-- CARD HERO: POMODORO TIMER (VIGÍLIA & FOCO ACADÊMICO)                      -->
+          <!-- CARD HERO: POMODORO TIMER (BLOCOS DE FOCO)                                -->
           <!-- ========================================================================= -->
           <section id="pomodoro-section" class="bg-cardBg border border-cardBorder rounded-xl overflow-hidden shadow-sm transition">
-            <div class="px-6 py-3 border-b border-cardBorder/60 bg-[#161616] flex items-center justify-between">
+            <div class="px-6 py-3 border-b border-cardBorder bg-[#0e0e0e] flex items-center justify-between">
               <div class="flex items-center space-x-2">
-                <span class="text-xs uppercase font-mono tracking-wider font-semibold text-textSecondary">POMODORO TIMER</span>
-                <span class="text-[10px] font-mono text-textMuted bg-neutral-900 border border-neutral-800 px-2 py-0.5 rounded">Vigília Acadêmica</span>
+                <span class="font-cinzel text-xs uppercase tracking-wider font-semibold text-textSecondary">POMODORO TIMER</span>
+                <span class="text-[10px] font-mono text-textMuted bg-[#080808] border border-neutral-800 px-2 py-0.5 rounded">Bloco de Foco</span>
               </div>
               <span id="pomo-status-label" class="text-[10px] font-mono uppercase tracking-widest text-textMuted">Foco</span>
             </div>
@@ -329,7 +331,7 @@
             <div class="px-6 sm:px-8 py-8 flex flex-col md:flex-row items-center justify-around gap-6">
               <!-- Botão START FOCUS -->
               <div class="w-full md:w-48 flex justify-center md:justify-start order-2 md:order-1">
-                <button id="pomo-toggle" class="w-44 py-2.5 px-6 rounded-full border border-neutral-300 hover:bg-white hover:text-black font-mono font-medium text-xs tracking-wider transition-all duration-200 text-center uppercase shadow-sm">
+                <button id="pomo-toggle" class="w-44 py-2.5 px-6 rounded-full border border-neutral-700 hover:border-amber-400/60 font-mono font-medium text-xs tracking-wider transition-all duration-200 text-center uppercase shadow-sm">
                   START FOCUS
                 </button>
               </div>
@@ -337,8 +339,8 @@
               <!-- Timer Circular Central -->
               <div class="relative flex items-center justify-center select-none order-1 md:order-2">
                 <svg class="w-44 h-44 sm:w-48 sm:h-48 transform -rotate-90" viewBox="0 0 180 180">
-                  <circle cx="90" cy="90" r="76" stroke="#2B2B2B" stroke-width="7" fill="none" />
-                  <circle id="pomo-circle-progress" cx="90" cy="90" r="76" stroke="#FFFFFF" stroke-width="7" fill="none" 
+                  <circle cx="90" cy="90" r="76" stroke="#1c1c1c" stroke-width="7" fill="none" />
+                  <circle id="pomo-circle-progress" cx="90" cy="90" r="76" stroke="#D4AF37" stroke-width="7" fill="none" 
                     stroke-linecap="round" stroke-dasharray="477.5" stroke-dashoffset="0" class="transition-all duration-1000 ease-linear" />
                 </svg>
                 <div class="absolute inset-0 flex flex-col items-center justify-center">
@@ -355,31 +357,31 @@
             </div>
 
             <!-- Modos Rápidos de Tempo (25m / 5m / 15m) -->
-            <div class="px-6 py-2.5 border-t border-cardBorder/60 bg-[#161616] flex justify-center space-x-6 text-xs font-mono text-textSecondary">
-              <button class="pomo-mode-btn text-white font-semibold underline decoration-2 underline-offset-4" data-mins="25">Vigília (25m)</button>
-              <button class="pomo-mode-btn hover:text-white transition" data-mins="5">Pausa Breve (5m)</button>
-              <button class="pomo-mode-btn hover:text-white transition" data-mins="15">Contemplação (15m)</button>
+            <div class="px-6 py-2.5 border-t border-cardBorder bg-[#0e0e0e] flex justify-center space-x-6 text-xs font-mono text-textSecondary">
+              <button class="pomo-mode-btn text-white font-semibold underline decoration-2 underline-offset-4" data-mins="25">Bloco de Foco (25m)</button>
+              <button class="pomo-mode-btn hover:text-white transition" data-mins="5">Pausa Curta (5m)</button>
+              <button class="pomo-mode-btn hover:text-white transition" data-mins="15">Pausa Longa (15m)</button>
             </div>
           </section>
 
           <!-- TABELA HISTÓRICA DE SESSÕES ANTERIORES -->
-          <div class="bg-cardBg border border-cardBorder rounded-xl overflow-hidden shadow-sm">
-            <div class="px-5 py-4 border-b border-cardBorder/70 bg-[#161616] flex items-center justify-between">
+          <div id="dashboard-sessions-table-wrapper" class="bg-cardBg border border-cardBorder rounded-xl overflow-hidden shadow-sm transition">
+            <div class="px-5 py-4 border-b border-cardBorder bg-[#0e0e0e] flex items-center justify-between">
               <div class="flex items-center space-x-2">
-                <span class="text-xs uppercase font-mono tracking-wider font-semibold text-textSecondary">HISTÓRICO DE SESSÕES ANTERIORES</span>
-                <span class="text-[10px] font-mono text-textMuted bg-neutral-900 border border-neutral-800 px-2 py-0.5 rounded">Armazenamento Ativo</span>
+                <span class="font-cinzel text-xs uppercase tracking-wider font-semibold text-textSecondary">HISTÓRICO DE SESSÕES ANTERIORES</span>
+                <span class="text-[10px] font-mono text-textMuted bg-[#080808] border border-neutral-800 px-2 py-0.5 rounded">Armazenamento Ativo</span>
               </div>
               <span class="text-xs text-textMuted font-mono">Últimas sessões registradas no perfil</span>
             </div>
 
             <div class="overflow-x-auto">
               <table class="w-full text-left text-xs font-sans">
-                <thead class="bg-[#121212] text-[10px] font-mono uppercase text-textMuted border-b border-cardBorder">
+                <thead class="bg-[#080808] text-[10px] font-mono uppercase text-textMuted border-b border-cardBorder">
                   <tr>
                     <th class="px-5 py-3 font-semibold">Data & Horário</th>
                     <th class="px-5 py-3 font-semibold">Disciplina / Tratado</th>
                     <th class="px-5 py-3 font-semibold">Ciclo</th>
-                    <th class="px-5 py-3 font-semibold">Vigília Foco</th>
+                    <th class="px-5 py-3 font-semibold">Bloco de Foco</th>
                     <th class="px-5 py-3 font-semibold">Flashcards Gerados</th>
                     <th class="px-5 py-3 font-semibold text-right">Ação</th>
                   </tr>
@@ -387,7 +389,7 @@
                 <tbody id="dashboard-sessions-table" class="divide-y divide-cardBorder/40">
                   <tr id="sessions-empty-row">
                     <td colspan="6" class="px-5 py-8 text-center text-textMuted font-mono text-xs">
-                      Nenhuma sessão registrada ainda. Inicie sua primeira vigília ou debate socrático na Ágora para registrar seu progresso canônico.
+                      Nenhuma sessão registrada ainda. Inicie seu primeiro bloco de foco ou debate socrático na Ágora para registrar seu progresso canônico.
                     </td>
                   </tr>
                 </tbody>
@@ -396,7 +398,7 @@
           </div>
 
           <!-- CARDS DE ACESSO RÁPIDO DO ESTUDANTE -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div id="atrium-actions-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4 transition">
             <div class="bg-cardBg border border-cardBorder rounded-xl p-5 hover:border-neutral-500 transition cursor-pointer group" id="card-action-tabulae">
               <div class="text-2xl mb-2">📝</div>
               <h3 class="font-semibold text-sm text-white group-hover:text-amber-200 transition">Revisar Flashcards</h3>
@@ -407,9 +409,9 @@
 
             <div class="bg-cardBg border border-cardBorder rounded-xl p-5 hover:border-neutral-500 transition cursor-pointer group" id="card-action-pomo">
               <div class="text-2xl mb-2">⏳</div>
-              <h3 class="font-semibold text-sm text-white group-hover:text-amber-200 transition">Iniciar Vigília</h3>
+              <h3 class="font-semibold text-sm text-white group-hover:text-amber-200 transition">Iniciar Bloco de Foco</h3>
               <p class="text-xs text-textSecondary mt-1 leading-relaxed">
-                Dispare uma nova sessão de foco monástico de 25 ou 30 minutos com sino suave.
+                Dispare um novo bloco de foco monástico de 25 ou 30 minutos com sino suave.
               </p>
             </div>
           </div>
@@ -613,12 +615,12 @@
 
           <!-- CARD ESQUERDO: STUDY TRACKER / SCRIPTORIUM -->
           <section id="study-tracker-card" class="bg-cardBg border border-cardBorder rounded-xl overflow-hidden flex flex-col shadow-lg h-full">
-            <div class="px-5 py-3 border-b border-cardBorder/60 bg-[#161616] flex items-center justify-between shrink-0">
-              <span class="text-xs uppercase font-mono tracking-wider font-semibold text-textSecondary">STUDY TRACKER</span>
-              <span class="text-[10px] font-mono text-textMuted uppercase" id="tracker-summary">32h Vigília • 19d Streak</span>
+            <div class="px-5 py-3 border-b border-cardBorder bg-[#0e0e0e] flex items-center justify-between shrink-0">
+              <span class="font-cinzel text-xs uppercase tracking-wider font-semibold text-textSecondary">STUDY TRACKER</span>
+              <span class="text-[10px] font-mono text-textMuted uppercase" id="tracker-summary">32h Foco • 19d Streak</span>
             </div>
 
-            <div class="p-3.5 border-b border-cardBorder bg-[#141414] flex flex-wrap sm:flex-nowrap items-center justify-between gap-3">
+            <div class="p-3.5 border-b border-cardBorder bg-[#0b0b0b] flex flex-wrap sm:flex-nowrap items-center justify-between gap-3">
               <div class="flex items-center space-x-2 flex-1 min-w-0">
                 <span class="text-[11px] font-mono text-textMuted uppercase shrink-0">Origem:</span>
                 <select id="discipline-selector" class="bg-cardBg border border-cardBorder text-xs text-white rounded px-2.5 py-1.5 focus:outline-none focus:border-neutral-500 font-sans cursor-pointer truncate w-full max-w-sm">
@@ -731,7 +733,7 @@
 
             </div>
 
-            <div class="px-6 py-3 border-t border-cardBorder/60 bg-[#161616] flex items-center justify-between text-xs font-mono text-textSecondary">
+            <div class="px-6 py-3 border-t border-cardBorder bg-[#0e0e0e] flex items-center justify-between text-xs font-mono text-textSecondary">
               <div class="flex items-center space-x-3">
                 <span>Retenção: <strong class="text-white">89%</strong></span>
                 <span>Flashcards: <strong class="text-white" id="tracker-card-count">0</strong></span>
@@ -742,11 +744,11 @@
             </div>
           </section>
 
-          <!-- CARD DIREITO: AI CHAT INTERFACE (ÁGORA) -->
+          <!-- CARD DIREITO: ÁGORA DIALÉTICA (CHAT MAIÊUTICO) -->
           <section id="ai-chat-card" class="bg-cardBg border border-cardBorder rounded-xl overflow-hidden flex flex-col shadow-lg h-full">
-            <div class="px-5 py-3 border-b border-cardBorder/60 bg-[#161616] flex items-center justify-between shrink-0">
+            <div class="px-5 py-3 border-b border-cardBorder bg-[#0e0e0e] flex items-center justify-between shrink-0">
               <div class="flex items-center space-x-2">
-                <span class="text-xs uppercase font-mono tracking-wider font-semibold text-textSecondary">AI CHAT INTERFACE</span>
+                <span class="font-cinzel text-xs uppercase tracking-wider font-semibold text-textSecondary">ÁGORA DIALÉTICA</span>
                 <span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.7)]"></span>
               </div>
               <span id="agora-status-subtitle" class="text-[10px] font-mono text-textMuted uppercase tracking-wider">Ágora • Maiêutica</span>
@@ -756,7 +758,7 @@
               <!-- Mensagens renderizadas via app.js -->
             </div>
 
-            <div class="px-4 py-2 bg-[#141414] border-t border-cardBorder flex items-center space-x-2 overflow-x-auto text-[11px] font-mono text-textSecondary">
+            <div class="px-4 py-2 bg-[#0b0b0b] border-t border-cardBorder flex items-center space-x-2 overflow-x-auto text-[11px] font-mono text-textSecondary">
               <span class="text-textMuted uppercase whitespace-nowrap">Testes Rápidos:</span>
               <button class="quick-prompt-btn px-2.5 py-1 bg-cardBg border border-cardBorder hover:border-neutral-500 rounded text-neutral-300 hover:text-white whitespace-nowrap transition" data-text="Me dê o resumo pronto deste capítulo.">
                 "Pedir Resumo"
@@ -826,7 +828,7 @@
       <!-- Painel 1: Troca Rápida de Perfil -->
       <div id="auth-panel-profiles" class="space-y-3">
         <p class="text-xs text-textSecondary font-sans leading-relaxed">
-          Selecione sua conta para carregar automaticamente a matriz curricular, os Flashcards e o tempo de vigília:
+          Selecione sua conta para carregar automaticamente a matriz curricular, os Flashcards e o tempo de foco:
         </p>
 
         <div class="space-y-2">
@@ -999,9 +1001,9 @@
           </div>
         </div>
 
-        <!-- SEÇÃO 3: PREFERÊNCIAS DO MOTOR & VIGÍLIA -->
+        <!-- SEÇÃO 3: PREFERÊNCIAS DO MOTOR & FOCO -->
         <div class="pt-3 border-t border-cardBorder space-y-3">
-          <span class="font-mono uppercase text-[10px] tracking-wider text-textMuted block font-semibold">Aparência, Motor Dialético & Vigília</span>
+          <span class="font-mono uppercase text-[10px] tracking-wider text-textMuted block font-semibold">Aparência, Motor Dialético & Foco</span>
           
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
@@ -1019,8 +1021,8 @@
               </select>
             </div>
             <div>
-              <label class="block text-textSecondary text-[11px] mb-1">Vigília (minutos):</label>
-              <input type="number" id="setting-pomo-min" value="30" min="5" max="90" class="w-full bg-cardInner border border-cardBorder rounded p-2 text-white font-mono text-xs focus:border-neutral-500">
+              <label class="block text-textSecondary text-[11px] mb-1">Bloco de Foco (minutos):</label>
+              <input type="number" id="setting-pomo-min" value="25" min="5" max="90" class="w-full bg-cardInner border border-cardBorder rounded p-2 text-white font-mono text-xs focus:border-neutral-500">
             </div>
           </div>
 
@@ -1043,7 +1045,7 @@
 
       <!-- Rodapé do Modal com Ações -->
       <div class="mt-6 pt-4 border-t border-cardBorder flex flex-wrap items-center justify-between gap-3">
-        <button id="btn-reset-user-data" type="button" class="px-3 py-1.5 bg-red-950/40 hover:bg-red-900/60 border border-red-800/80 text-red-300 rounded text-xs transition flex items-center space-x-1.5" title="Zera horas de vigília, streak, flashcards e histórico de sessões">
+        <button id="btn-reset-user-data" type="button" class="px-3 py-1.5 bg-red-950/40 hover:bg-red-900/60 border border-red-800/80 text-red-300 rounded text-xs transition flex items-center space-x-1.5" title="Zera horas de foco, streak, flashcards e histórico de sessões">
           <span>🗑️</span>
           <span>Zerar Dados da Conta</span>
         </button>
