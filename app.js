@@ -665,6 +665,10 @@ function updatePomoDisplay() {
   if (DOM.sidebarPomoStatus) {
     DOM.sidebarPomoStatus.textContent = timeStr;
   }
+  const headerPomoDisplay = document.getElementById('header-pomo-display');
+  if (headerPomoDisplay) {
+    headerPomoDisplay.textContent = timeStr;
+  }
 
   const progressRatio = AppState.pomoSeconds / AppState.pomoInitialSeconds;
   const offset = CIRCLE_CIRCUMFERENCE * (1 - progressRatio);
@@ -918,6 +922,15 @@ function syncSidebarSelection(key) {
   });
 }
 
+function updateHeaderBreadcrumb(cycleLabel, icon, title) {
+  const headerCyclePill = document.getElementById('header-cycle-pill');
+  const headerDiscIcon = document.getElementById('header-disc-icon');
+  const headerDiscTitle = document.getElementById('header-disc-title');
+  if (headerCyclePill) headerCyclePill.textContent = cycleLabel;
+  if (headerDiscIcon) headerDiscIcon.textContent = icon;
+  if (headerDiscTitle) headerDiscTitle.textContent = title;
+}
+
 function showUploadZone() {
   AppState.currentDiscipline = 'upload';
   if (DOM.disciplineSelector) DOM.disciplineSelector.value = 'upload';
@@ -926,6 +939,7 @@ function showUploadZone() {
   DOM.agoraStatusSubtitle.textContent = 'Ágora • Material Próprio';
   DOM.chatMessages.innerHTML = '';
   appendAgoraMessage(KNOWLEDGE_BASE.upload.initialPrompt);
+  updateHeaderBreadcrumb('Universal', '📁', 'Upload de Material Próprio');
 
   // Sincroniza item da barra lateral
   syncSidebarSelection('upload');
@@ -980,9 +994,11 @@ function loadDiscipline(key) {
     DOM.disciplineSelector.value = key;
   }
 
-  const selectedOpt = DOM.disciplineSelector.options[DOM.disciplineSelector.selectedIndex];
+  const selectedOpt = DOM.disciplineSelector ? DOM.disciplineSelector.options[DOM.disciplineSelector.selectedIndex] : null;
   const areaName = selectedOpt ? selectedOpt.text.split(' ')[1] : (isBncc ? 'BNCC' : 'Superior');
+  const discIcon = selectedOpt ? selectedOpt.text.split(' ')[0] : (isBncc ? '🏫' : '🎓');
   DOM.agoraStatusSubtitle.textContent = `Ágora • ${areaName}`;
+  updateHeaderBreadcrumb(isBncc ? 'BNCC Escola' : 'Superior', discIcon, data.title);
 
   syncSidebarSelection(key);
 
@@ -1393,6 +1409,20 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.classList.add('active', 'text-white', 'bg-neutral-900', 'border-neutral-700');
       btn.classList.remove('text-textSecondary');
     }
+  }
+
+  const brandLogo = document.getElementById('brand-logo');
+  if (brandLogo) {
+    brandLogo.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  const sidebarLogo = document.getElementById('sidebar-logo');
+  if (sidebarLogo) {
+    sidebarLogo.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
   }
 
   if (DOM.sidebarBtnHome) {

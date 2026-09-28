@@ -54,19 +54,29 @@
       <!-- Topo da Barra Lateral: Logo Ícone + Nome -->
       <div class="p-5 border-b border-cardBorder/70 flex items-center space-x-3 cursor-pointer" id="sidebar-logo">
         <div class="w-8 h-8 flex items-center justify-center text-white shrink-0">
-          <!-- Ícone Compacto: Coruja + Ampulheta -->
-          <svg class="w-7 h-7" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M43 32 L40 24 L48 27 L50 28 L52 27 L60 24 L57 32 Z" fill="#1C1C1C" />
-            <circle cx="45" cy="35" r="4" stroke="currentColor" />
-            <circle cx="55" cy="35" r="4" stroke="currentColor" />
-            <polygon points="50,38 48,42 52,42" fill="currentColor" />
-            <path d="M41 35 C32 30, 20 23, 14 26 C13 32, 22 40, 31 43 C22 45, 18 52, 26 53 C33 53, 38 48, 42 46" />
-            <path d="M59 35 C68 30, 80 23, 86 26 C87 32, 78 40, 69 43 C78 45, 82 52, 74 53 C67 53, 62 48, 58 46" />
+          <!-- Ícone Autêntico: Coruja Empoleirada sobre a Ampulheta -->
+          <svg class="w-7 h-7" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Coruja: Orelhas, cabeça e corpo com asas fechadas -->
+            <path d="M35 15 L40 21 C45 19 55 19 60 21 L65 15 C65 22 66 26 66 30 C67 36 65 42 61 47 L39 47 C35 42 33 36 34 30 C34 26 35 22 35 15 Z" stroke-width="2" fill="#181818" />
+            <path d="M34 30 C33 36 34 42 39 47" stroke-width="1.8" />
+            <path d="M66 30 C67 36 66 42 61 47" stroke-width="1.8" />
+            <circle cx="43" cy="27" r="4.8" stroke-width="1.8" fill="#101010" />
+            <circle cx="57" cy="27" r="4.8" stroke-width="1.8" fill="#101010" />
+            <circle cx="43" cy="27" r="2.2" fill="currentColor" stroke="none" />
+            <circle cx="57" cy="27" r="2.2" fill="currentColor" stroke="none" />
+            <polygon points="50,26 47.5,31 50,35 52.5,31" fill="currentColor" stroke="none" />
+            <path d="M42 47 L42 50.5 M44.5 47 L44.5 51 M47 47 L47 50.5" stroke-width="1.8" />
+            <path d="M53 47 L53 50.5 M55.5 47 L55.5 51 M58 47 L58 50.5" stroke-width="1.8" />
             <!-- Ampulheta -->
-            <line x1="38" y1="52" x2="62" y2="52" stroke-width="2.5" />
-            <path d="M40 53 C40 63, 48 64, 49 67 C48 70, 40 71, 40 81" />
-            <path d="M60 53 C60 63, 52 64, 51 67 C52 70, 60 71, 60 81" />
-            <line x1="38" y1="82" x2="62" y2="82" stroke-width="2.5" />
+            <rect x="27" y="50" width="46" height="4" rx="1.5" stroke-width="2" fill="#222222" />
+            <path d="M33 54 C34 64 45 66 48 70 C45 74 34 76 33 86" stroke-width="2" />
+            <path d="M67 54 C66 64 55 66 52 70 C55 74 66 76 67 86" stroke-width="2" />
+            <line x1="30.5" y1="54" x2="30.5" y2="86" stroke-width="1.8" />
+            <line x1="69.5" y1="54" x2="69.5" y2="86" stroke-width="1.8" />
+            <rect x="27" y="86" width="46" height="4" rx="1.5" stroke-width="2" fill="#222222" />
+            <path d="M37 59 L63 59 C59 66 54 68 50 69 C46 68 41 66 37 59 Z" fill="#444444" stroke="none" />
+            <line x1="50" y1="69" x2="50" y2="78" stroke-width="1.5" stroke-dasharray="1.5 2" />
+            <path d="M38 85 C42 81 46 78 50 78 C54 78 58 81 62 85 Z" fill="currentColor" stroke="none" />
           </svg>
         </div>
         <div class="overflow-hidden">
@@ -274,50 +284,68 @@
     <!-- ========================================================================= -->
     <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
 
-      <!-- TOP HEADER: Central Brand com Coruja de Atena + Ampulheta + LOGOSSOPHIA -->
-      <header class="w-full bg-[#121212] border-b border-cardBorder py-6 px-4 flex flex-col items-center justify-center relative shadow-sm">
-        <div class="flex items-center space-x-4 cursor-pointer select-none" id="brand-logo">
-          <!-- Ícone Vetorial Autêntico: Coruja com Asas Abertas pousada sobre a Ampulheta -->
-          <div class="w-16 h-16 flex items-center justify-center text-white">
-            <svg class="w-14 h-14" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M43 32 L40 24 L48 27 L50 28 L52 27 L60 24 L57 32 Z" fill="#1C1C1C" />
-              <circle cx="45" cy="35" r="4.5" stroke="currentColor" fill="#141414" />
-              <circle cx="55" cy="35" r="4.5" stroke="currentColor" fill="#141414" />
-              <circle cx="45" cy="35" r="1.5" fill="currentColor" />
-              <circle cx="55" cy="35" r="1.5" fill="currentColor" />
-              <polygon points="50,38 48,42 52,42" fill="currentColor" />
-              <path d="M41 35 C32 30, 20 23, 14 26 C13 32, 22 40, 31 43 C22 45, 18 52, 26 53 C33 53, 38 48, 42 46" />
-              <path d="M22 34 C28 38, 35 41, 41 41" stroke-width="1.2" />
-              <path d="M28 44 C34 46, 38 46, 42 46" stroke-width="1.2" />
-              <path d="M59 35 C68 30, 80 23, 86 26 C87 32, 78 40, 69 43 C78 45, 82 52, 74 53 C67 53, 62 48, 58 46" />
-              <path d="M78 34 C72 38, 65 41, 59 41" stroke-width="1.2" />
-              <path d="M72 44 C66 46, 62 46, 58 46" stroke-width="1.2" />
-              <path d="M44 43 C44 48, 47 51, 50 51 C53 51, 56 48, 56 43" />
-              <!-- Ampulheta -->
-              <line x1="38" y1="52" x2="62" y2="52" stroke-width="2.5" />
-              <rect x="36" y="50" width="28" height="3" rx="1" fill="#222222" />
-              <path d="M40 53 C40 63, 48 64, 49 67 C48 70, 40 71, 40 81" />
-              <path d="M60 53 C60 63, 52 64, 51 67 C52 70, 60 71, 60 81" />
-              <polygon points="43,56 57,56 50,65" fill="#333333" stroke="none" />
-              <polygon points="42,80 58,80 55,73 45,73" fill="currentColor" stroke="none" />
-              <line x1="50" y1="65" x2="50" y2="73" stroke-dasharray="1 1.5" />
-              <line x1="38" y1="82" x2="62" y2="82" stroke-width="2.5" />
-              <rect x="36" y="81" width="28" height="3" rx="1" fill="#222222" />
-              <line x1="39" y1="53" x2="39" y2="81" stroke-width="1.2" />
-              <line x1="61" y1="53" x2="61" y2="81" stroke-width="1.2" />
-            </svg>
+      <!-- ========================================================================= -->
+      <!-- TOP NAVIGATION BAR: Sleek, Balanced, Sticky Context Bar                    -->
+      <!-- ========================================================================= -->
+      <header class="w-full bg-[#121212]/95 backdrop-blur border-b border-cardBorder h-16 px-4 md:px-8 flex items-center justify-between sticky top-0 z-20 select-none">
+        
+        <!-- Esquerda: Breadcrumb do Contexto Ativo (Ciclo & Disciplina) -->
+        <div class="flex items-center space-x-2.5 min-w-0">
+          <span id="header-cycle-pill" class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-neutral-900 border border-neutral-700 text-neutral-300 shrink-0 font-medium">
+            Superior
+          </span>
+          <span class="text-neutral-600 text-xs">/</span>
+          <div class="flex items-center space-x-1.5 truncate">
+            <span id="header-disc-icon" class="text-sm shrink-0">⚖️</span>
+            <span id="header-disc-title" class="font-cinzel text-xs md:text-sm font-semibold tracking-wide text-white truncate">
+              Colisão de Direitos Fundamentais
+            </span>
           </div>
-
-          <h1 class="font-cinzel text-3xl md:text-4xl font-semibold tracking-[0.22em] text-white">LOGOSSOPHIA</h1>
         </div>
 
-        <!-- Ações no Topo Direito -->
-        <div class="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 flex items-center space-x-3">
-          <button id="btn-open-tabulae" class="flex items-center space-x-1.5 text-xs font-mono bg-cardBg hover:bg-neutral-800 border border-cardBorder px-3 py-1.5 rounded-full transition text-neutral-300">
+        <!-- Centro: Emblema LOGOSSOPHIA com Coruja sobre Ampulheta -->
+        <div class="hidden md:flex items-center space-x-2.5 cursor-pointer hover:opacity-90 transition shrink-0" id="brand-logo" title="Logossophia — Socratic Engine">
+          <div class="w-8 h-8 flex items-center justify-center text-white shrink-0">
+            <!-- SVG Coruja sobre Ampulheta -->
+            <svg class="w-7 h-7" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M35 15 L40 21 C45 19 55 19 60 21 L65 15 C65 22 66 26 66 30 C67 36 65 42 61 47 L39 47 C35 42 33 36 34 30 C34 26 35 22 35 15 Z" stroke-width="2" fill="#181818" />
+              <path d="M34 30 C33 36 34 42 39 47" stroke-width="1.8" />
+              <path d="M66 30 C67 36 66 42 61 47" stroke-width="1.8" />
+              <circle cx="43" cy="27" r="4.8" stroke-width="1.8" fill="#101010" />
+              <circle cx="57" cy="27" r="4.8" stroke-width="1.8" fill="#101010" />
+              <circle cx="43" cy="27" r="2.2" fill="currentColor" stroke="none" />
+              <circle cx="57" cy="27" r="2.2" fill="currentColor" stroke="none" />
+              <polygon points="50,26 47.5,31 50,35 52.5,31" fill="currentColor" stroke="none" />
+              <path d="M42 47 L42 50.5 M44.5 47 L44.5 51 M47 47 L47 50.5" stroke-width="1.8" />
+              <path d="M53 47 L53 50.5 M55.5 47 L55.5 51 M58 47 L58 50.5" stroke-width="1.8" />
+              <rect x="27" y="50" width="46" height="4" rx="1.5" stroke-width="2" fill="#222222" />
+              <path d="M33 54 C34 64 45 66 48 70 C45 74 34 76 33 86" stroke-width="2" />
+              <path d="M67 54 C66 64 55 66 52 70 C55 74 66 76 67 86" stroke-width="2" />
+              <line x1="30.5" y1="54" x2="30.5" y2="86" stroke-width="1.8" />
+              <line x1="69.5" y1="54" x2="69.5" y2="86" stroke-width="1.8" />
+              <rect x="27" y="86" width="46" height="4" rx="1.5" stroke-width="2" fill="#222222" />
+              <path d="M37 59 L63 59 C59 66 54 68 50 69 C46 68 41 66 37 59 Z" fill="#444444" stroke="none" />
+              <line x1="50" y1="69" x2="50" y2="78" stroke-width="1.5" stroke-dasharray="1.5 2" />
+              <path d="M38 85 C42 81 46 78 50 78 C54 78 58 81 62 85 Z" fill="currentColor" stroke="none" />
+            </svg>
+          </div>
+          <span class="font-cinzel text-base font-bold tracking-[0.22em] text-white">LOGOSSOPHIA</span>
+        </div>
+
+        <!-- Direita: Ações Rápidas (Pomodoro Sync + Tabulae + Settings) -->
+        <div class="flex items-center space-x-2.5 shrink-0">
+          <div class="hidden sm:flex items-center space-x-1.5 px-2.5 py-1 bg-cardInner border border-cardBorder rounded-full text-[11px] font-mono text-textSecondary" title="Status da Vigília Pomodoro">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block animate-pulse"></span>
+            <span id="header-pomo-status">Vigília:</span>
+            <span id="header-pomo-display" class="text-white font-semibold">25:00</span>
+          </div>
+
+          <button id="btn-open-tabulae" class="flex items-center space-x-1.5 text-xs font-mono bg-cardBg hover:bg-neutral-800 border border-cardBorder px-3 py-1.5 rounded-full transition text-neutral-300 shadow-sm" title="Abrir Tabulae de Repetição Espaçada">
             <span>Tabulae</span>
             <span id="flashcard-badge" class="bg-neutral-900 text-white px-2 py-0.5 rounded-full text-[10px] border border-neutral-700">2</span>
           </button>
-          <button id="btn-settings" class="text-textSecondary hover:text-white p-2 border border-cardBorder bg-cardBg rounded-full transition" title="Configurações">
+          
+          <button id="btn-settings" class="text-textSecondary hover:text-white p-2 border border-cardBorder bg-cardBg hover:bg-neutral-800 rounded-full transition" title="Configurações da Conta & SQLite">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -327,17 +355,18 @@
       </header>
 
       <!-- CONTAINER PRINCIPAL DO LAYOUT -->
-      <main class="max-w-6xl w-full mx-auto px-4 mt-6 space-y-6 pb-12" id="main-view-container">
+      <main class="max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 space-y-6 pb-12" id="main-view-container">
 
         <!-- ========================================================================= -->
-        <!-- CARD HERO: POMODORO TIMER (EXATAMENTE COMO NO SCREENSHOT)                  -->
+        <!-- CARD HERO: POMODORO TIMER                                                 -->
         <!-- ========================================================================= -->
         <section id="pomodoro-section" class="bg-cardBg border border-cardBorder rounded-xl overflow-hidden shadow-lg">
-          <div class="px-6 py-3 border-b border-cardBorder/60 bg-[#161616]">
+          <div class="px-6 py-3 border-b border-cardBorder/60 bg-[#161616] flex items-center justify-between">
             <span class="text-xs uppercase font-mono tracking-wider font-semibold text-textSecondary">POMODORO TIMER</span>
+            <span class="text-[10px] font-mono text-textMuted uppercase">Ciclo de Vigília & Concentração</span>
           </div>
 
-          <div class="px-8 py-8 flex flex-col md:flex-row items-center justify-around gap-6">
+          <div class="px-6 py-6 flex flex-col md:flex-row items-center justify-around gap-6">
             <!-- Botão START FOCUS -->
             <div class="w-full md:w-48 flex justify-center md:justify-start">
               <button id="pomo-toggle" class="w-44 py-2.5 px-6 rounded-full border border-neutral-300 hover:bg-white hover:text-black font-mono font-medium text-xs tracking-wider transition-all duration-200 text-center uppercase shadow-sm">
@@ -347,7 +376,7 @@
 
             <!-- Timer Circular Central -->
             <div class="relative flex items-center justify-center select-none">
-              <svg class="w-48 h-48 transform -rotate-90" viewBox="0 0 180 180">
+              <svg class="w-44 h-44 transform -rotate-90" viewBox="0 0 180 180">
                 <circle cx="90" cy="90" r="76" stroke="#2B2B2B" stroke-width="7" fill="none" />
                 <circle id="pomo-circle-progress" cx="90" cy="90" r="76" stroke="#FFFFFF" stroke-width="7" fill="none" 
                   stroke-linecap="round" stroke-dasharray="477.5" stroke-dashoffset="0" class="transition-all duration-1000 ease-linear" />
@@ -385,10 +414,10 @@
               <span class="text-[10px] font-mono text-textMuted uppercase" id="tracker-summary">32h Vigília • 19d Streak</span>
             </div>
 
-            <div class="p-4 border-b border-cardBorder bg-[#141414] flex flex-wrap items-center justify-between gap-2">
-              <div class="flex items-center space-x-2">
-                <span class="text-[11px] font-mono text-textSecondary uppercase">Origem:</span>
-                <select id="discipline-selector" class="bg-cardBg border border-cardBorder text-xs text-white rounded px-2.5 py-1.5 focus:outline-none focus:border-neutral-500 font-sans cursor-pointer">
+            <div class="p-3.5 border-b border-cardBorder bg-[#141414] flex flex-wrap sm:flex-nowrap items-center justify-between gap-3">
+              <div class="flex items-center space-x-2 flex-1 min-w-0">
+                <span class="text-[11px] font-mono text-textMuted uppercase shrink-0">Origem:</span>
+                <select id="discipline-selector" class="bg-cardBg border border-cardBorder text-xs text-white rounded px-2.5 py-1.5 focus:outline-none focus:border-neutral-500 font-sans cursor-pointer truncate w-full max-w-sm">
                   <option value="upload" selected>📁 Upload de Material Próprio (Universal)</option>
                   <optgroup label="🎓 Ensino Superior (Graduações)">
                     <option value="law">⚖️ Direito & Jurisprudência</option>
@@ -412,7 +441,7 @@
                   </optgroup>
                 </select>
               </div>
-              <button id="btn-trigger-upload" class="text-[11px] font-mono text-white bg-neutral-800 hover:bg-neutral-700 px-2.5 py-1 border border-neutral-600 rounded transition flex items-center space-x-1">
+              <button id="btn-trigger-upload" class="text-[11px] font-mono text-white bg-neutral-800 hover:bg-neutral-700 px-3 py-1.5 border border-neutral-600 rounded transition flex items-center space-x-1 shrink-0">
                 <span>↑</span>
                 <span>Novo Upload</span>
               </button>
