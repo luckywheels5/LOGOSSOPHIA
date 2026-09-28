@@ -242,7 +242,24 @@ const ACCOUNTS_DATABASE = {
     apiKey: "",
     streakDays: 0,
     totalHours: 0,
-    sessions: [],
+    sessions: [
+      {
+        id: "ses-01",
+        date: "Hoje, 14:15",
+        discipline: "law",
+        cycle: "superior",
+        duration: 1800,
+        cardsGenerated: 2
+      },
+      {
+        id: "ses-02",
+        date: "Ontem, 16:30",
+        discipline: "philosophy",
+        cycle: "superior",
+        duration: 1500,
+        cardsGenerated: 1
+      }
+    ],
     disciplines: ["law", "philosophy", "theology", "history"],
     flashcards: []
   },
@@ -319,8 +336,24 @@ const ACCOUNTS_DATABASE = {
     aiMode: "socratic_rigorous",
     apiKey: "",
     streakDays: 15,
-    totalHours: 42,
-    sessions: [],
+    sessions: [
+      {
+        id: "ses-03",
+        date: "Hoje, 10:00",
+        discipline: "theology",
+        cycle: "superior",
+        duration: 1800,
+        cardsGenerated: 2
+      },
+      {
+        id: "ses-04",
+        date: "Ontem, 15:45",
+        discipline: "law",
+        cycle: "superior",
+        duration: 1500,
+        cardsGenerated: 1
+      }
+    ],
     disciplines: ["theology", "law", "philosophy", "history"],
     flashcards: [
       {
@@ -1010,49 +1043,88 @@ function saveStoredAccounts(accounts) {
 }
 
 function renderSessionsTable(sessions) {
-  const tbody = document.getElementById('dashboard-sessions-table');
-  if (!tbody) return;
-
-  if (!sessions || sessions.length === 0) {
-    tbody.innerHTML = `
-      <tr id="sessions-empty-row">
-        <td colspan="6" class="px-5 py-8 text-center text-textMuted font-mono text-xs">
-          Nenhuma sessão registrada ainda. Inicie seu primeiro bloco de foco ou debate socrático na Ágora para registrar seu progresso canônico.
-        </td>
-      </tr>
-    `;
-    return;
+  const sidebarList = document.getElementById('sidebar-sessions-list');
+  const sidebarCount = document.getElementById('sidebar-sessions-count');
+  
+  if (sidebarCount) {
+    sidebarCount.textContent = (sessions || []).length;
   }
 
-  let html = '';
-  sessions.forEach(s => {
-    const discInfo = KNOWLEDGE_BASE[s.discipline] || { title: s.discipline, badge: s.cycle || 'Superior' };
-    const mins = Math.max(1, Math.round((s.duration || 1500) / 60));
-    html += `
-      <tr class="hover:bg-neutral-900/40 transition">
-        <td class="px-5 py-3.5 font-mono text-textSecondary">${s.date || 'Hoje'}</td>
-        <td class="px-5 py-3.5 font-medium text-white flex items-center space-x-2">
-          <span>🏛️</span>
-          <span>${discInfo.title || s.discipline}</span>
-        </td>
-        <td class="px-5 py-3.5"><span class="px-2 py-0.5 rounded bg-neutral-900 border border-neutral-800 text-[10px] font-mono text-neutral-300 uppercase">${s.cycle || 'Superior'}</span></td>
-        <td class="px-5 py-3.5 font-mono text-textSecondary">${mins} min</td>
-        <td class="px-5 py-3.5 font-mono text-emerald-400">${s.cardsGenerated ? `+${s.cardsGenerated} Flashcards` : '--'}</td>
-        <td class="px-5 py-3.5 text-right">
-          <button class="btn-resume-discipline text-neutral-300 hover:text-white underline text-[11px] font-mono" data-disc="${s.discipline}">Estudar na Ágora →</button>
-        </td>
-      </tr>
-    `;
-  });
-  tbody.innerHTML = html;
+  if (sidebarList) {
+    if (!sessions || sessions.length === 0) {
+      sidebarList.innerHTML = `
+        <div class="p-3 text-center text-[10px] font-mono text-textMuted bg-[#090909] rounded-lg border border-cardBorder/60 leading-relaxed">
+          Nenhuma sessão gravada ainda.<br><span class="text-neutral-500">Inicie um bloco de foco para registrar.</span>
+        </div>
+      `;
+    } else {
+      let html = '';
+      sessions.forEach(s => {
+        const discInfo = KNOWLEDGE_BASE[s.discipline] || { title: s.discipline, badge: s.cycle || 'Superior' };
+        const mins = Math.max(1, Math.round((s.duration || 1500) / 60));
+        html += `
+          <div class="sidebar-session-card p-2.5 bg-[#0b0b0b] hover:bg-[#121212] border border-cardBorder hover:border-neutral-500 rounded-lg transition group cursor-pointer" data-disc="${s.discipline}" title="Clique para retomar esta disciplina na Ágora">
+            <div class="flex items-center justify-between text-[10px] font-mono mb-1">
+              <span class="text-textMuted">${s.date || 'Hoje'}</span>
+              <span class="text-emerald-400 bg-emerald-950/70 border border-emerald-900/60 px-1.5 py-0.5 rounded font-bold">${mins}m</span>
+            </div>
+            <div class="text-xs font-semibold text-white group-hover:text-amber-200 transition truncate flex items-center space-x-1.5">
+              <span class="shrink-0 text-xs">🏛️</span>
+              <span class="truncate">${discInfo.title || s.discipline}</span>
+            </div>
+            <div class="flex items-center justify-between text-[9px] font-mono text-textMuted mt-1.5 pt-1 border-t border-cardBorder/40">
+              <span class="uppercase tracking-wider text-neutral-400">${s.cycle || 'Superior'}</span>
+              ${s.cardsGenerated ? `<span class="text-amber-400/90 font-medium">+${s.cardsGenerated} cards</span>` : `<span class="text-neutral-500">Concluído</span>`}
+            </div>
+          </div>
+        `;
+      });
+      sidebarList.innerHTML = html;
 
-  tbody.querySelectorAll('.btn-resume-discipline').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const disc = btn.dataset.disc;
-      if (disc) loadDiscipline(disc, true);
+      sidebarList.querySelectorAll('.sidebar-session-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const disc = card.dataset.disc;
+          if (disc) loadDiscipline(disc, true);
+        });
+      });
+    }
+  }
+
+  // Compatibilidade caso exista tabela no DOM
+  const tbody = document.getElementById('dashboard-sessions-table');
+  if (tbody) {
+    if (!sessions || sessions.length === 0) {
+      tbody.innerHTML = `
+        <tr id="sessions-empty-row">
+          <td colspan="6" class="px-5 py-8 text-center text-textMuted font-mono text-xs">
+            Nenhuma sessão registrada ainda.
+          </td>
+        </tr>
+      `;
+      return;
+    }
+    let tableHtml = '';
+    sessions.forEach(s => {
+      const discInfo = KNOWLEDGE_BASE[s.discipline] || { title: s.discipline, badge: s.cycle || 'Superior' };
+      const mins = Math.max(1, Math.round((s.duration || 1500) / 60));
+      tableHtml += `
+        <tr class="hover:bg-neutral-900/40 transition">
+          <td class="px-5 py-3.5 font-mono text-textSecondary">${s.date || 'Hoje'}</td>
+          <td class="px-5 py-3.5 font-medium text-white flex items-center space-x-2">
+            <span>🏛️</span>
+            <span>${discInfo.title || s.discipline}</span>
+          </td>
+          <td class="px-5 py-3.5"><span class="px-2 py-0.5 rounded bg-neutral-900 border border-neutral-800 text-[10px] font-mono text-neutral-300 uppercase">${s.cycle || 'Superior'}</span></td>
+          <td class="px-5 py-3.5 font-mono text-textSecondary">${mins} min</td>
+          <td class="px-5 py-3.5 font-mono text-emerald-400">${s.cardsGenerated ? `+${s.cardsGenerated} Flashcards` : '--'}</td>
+          <td class="px-5 py-3.5 text-right">
+            <button class="btn-resume-discipline text-neutral-300 hover:text-white underline text-[11px] font-mono" data-disc="${s.discipline}">Estudar na Ágora →</button>
+          </td>
+        </tr>
+      `;
     });
-  });
+    tbody.innerHTML = tableHtml;
+  }
 }
 
 function resetUserAccountData() {

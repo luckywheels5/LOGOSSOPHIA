@@ -517,6 +517,31 @@ html:not(.dark) .agora-cycle-tab.active {
   border-color: #1C1B18 !important;
 }
 
+/* Cards do Histórico de Sessões na Barra Lateral */
+.sidebar-session-card {
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sidebar-session-card:hover {
+  transform: translateX(2px);
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+html:not(.dark) .sidebar-session-card {
+  background-color: #FFFFFF !important;
+  border-color: #DED7C8 !important;
+}
+
+html:not(.dark) .sidebar-session-card:hover {
+  background-color: #F8F5ED !important;
+  border-color: #B5AEA0 !important;
+}
+
+html:not(.dark) .sidebar-session-card .text-white {
+  color: #1C1B18 !important;
+}
+
 html:not(.dark) #dashboard-sessions-table tr:hover {
   background-color: #F2EEE3 !important;
 }

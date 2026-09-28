@@ -508,6 +508,22 @@
           </nav>
         </div>
 
+        <!-- 2. SEÇÃO: HISTÓRICO DE SESSÕES ANTERIORES -->
+        <div class="pt-3 border-t border-cardBorder/70">
+          <div class="flex items-center justify-between px-2 mb-2">
+            <span class="text-[10px] font-mono text-textMuted uppercase tracking-wider block font-semibold flex items-center space-x-1.5">
+              <span>📜</span>
+              <span>Histórico de Sessões</span>
+            </span>
+            <span id="sidebar-sessions-count" class="text-[9px] font-mono text-textMuted bg-neutral-900 border border-neutral-800 px-1.5 py-0.5 rounded">0</span>
+          </div>
+
+          <!-- Lista Dinâmica de Sessões Anteriores -->
+          <div id="sidebar-sessions-list" class="space-y-1.5 px-0.5 max-h-64 overflow-y-auto pr-0.5">
+            <!-- Renderizado dinamicamente -->
+          </div>
+        </div>
+
       </div>
 
       <!-- Rodapé da Barra Lateral: Estatísticas de Foco & Configurações -->
@@ -704,39 +720,6 @@
               <button class="pomo-mode-btn hover:text-white transition" data-mins="15">Pausa Longa (15m)</button>
             </div>
           </section>
-
-          <!-- TABELA HISTÓRICA DE SESSÕES ANTERIORES -->
-          <div id="dashboard-sessions-table-wrapper" class="bg-cardBg border border-cardBorder rounded-xl overflow-hidden shadow-sm transition">
-            <div class="px-5 py-4 border-b border-cardBorder bg-[#0e0e0e] flex items-center justify-between">
-              <div class="flex items-center space-x-2">
-                <span class="font-cinzel text-xs uppercase tracking-wider font-semibold text-textSecondary">HISTÓRICO DE SESSÕES ANTERIORES</span>
-                <span class="text-[10px] font-mono text-textMuted bg-[#080808] border border-neutral-800 px-2 py-0.5 rounded">Armazenamento Ativo</span>
-              </div>
-              <span class="text-xs text-textMuted font-mono">Últimas sessões registradas no perfil</span>
-            </div>
-
-            <div class="overflow-x-auto">
-              <table class="w-full text-left text-xs font-sans">
-                <thead class="bg-[#080808] text-[10px] font-mono uppercase text-textMuted border-b border-cardBorder">
-                  <tr>
-                    <th class="px-5 py-3 font-semibold">Data & Horário</th>
-                    <th class="px-5 py-3 font-semibold">Disciplina / Tratado</th>
-                    <th class="px-5 py-3 font-semibold">Ciclo</th>
-                    <th class="px-5 py-3 font-semibold">Bloco de Foco</th>
-                    <th class="px-5 py-3 font-semibold">Flashcards Gerados</th>
-                    <th class="px-5 py-3 font-semibold text-right">Ação</th>
-                  </tr>
-                </thead>
-                <tbody id="dashboard-sessions-table" class="divide-y divide-cardBorder/40">
-                  <tr id="sessions-empty-row">
-                    <td colspan="6" class="px-5 py-8 text-center text-textMuted font-mono text-xs">
-                      Nenhuma sessão registrada ainda. Inicie seu primeiro bloco de foco ou debate socrático na Ágora para registrar seu progresso canônico.
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
 
           <!-- CARDS DE ACESSO RÁPIDO DO ESTUDANTE -->
           <div id="atrium-actions-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4 transition">
