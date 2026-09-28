@@ -109,156 +109,45 @@
       <!-- Menu de Navegação / Funcionalidades -->
       <div class="flex-1 overflow-y-auto py-4 px-3 space-y-5">
         
-        <!-- Bloco 1: AMBIENTES & FERRAMENTAS -->
+        <!-- NAVEGAÇÃO PRINCIPAL (MINIMALISTA, LIMPA & FOCADA) -->
         <div>
-          <span class="px-3 text-[10px] font-mono uppercase tracking-widest text-textMuted block mb-2 font-semibold">Funcionalidades</span>
-          <nav class="space-y-1 text-xs">
-            <button id="sidebar-btn-home" class="sidebar-nav-btn active w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-white bg-neutral-900 border border-neutral-700 transition">
+          <nav class="space-y-1.5 text-xs font-sans">
+            <!-- 1. Estatísticas / Tabularium (Primeira tela que o usuário vê) -->
+            <button id="sidebar-btn-dashboard" class="sidebar-nav-btn active w-full flex items-center justify-between px-3.5 py-3 rounded-lg text-white bg-neutral-900 border border-neutral-700 transition shadow-sm" title="Ver Estatísticas e Histórico de Sessões">
               <span class="flex items-center space-x-2.5">
-                <span class="text-sm">🏛️</span>
-                <span class="font-medium font-sans">Ágora Geral</span>
+                <span class="text-base">📊</span>
+                <span class="font-semibold tracking-wide">Estatísticas</span>
               </span>
-              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-            </button>
-            
-            <button id="sidebar-btn-pomo" class="sidebar-nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-textSecondary hover:text-white hover:bg-neutral-900/60 transition">
-              <span class="flex items-center space-x-2.5">
-                <span class="text-sm">⏳</span>
-                <span class="font-medium font-sans">Pomodoro & Vigília</span>
-              </span>
-              <span class="text-[10px] font-mono text-textMuted" id="sidebar-pomo-status">25:00</span>
+              <span class="text-[9px] font-mono text-emerald-400 font-bold bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800/80">19d</span>
             </button>
 
-            <button id="sidebar-btn-scriptorium" class="sidebar-nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-textSecondary hover:text-white hover:bg-neutral-900/60 transition">
+            <!-- 2. ÁGORA: Seção onde todas as disciplinas ficam armazenadas -->
+            <button id="sidebar-btn-agora" class="sidebar-nav-btn w-full flex items-center justify-between px-3.5 py-3 rounded-lg text-textSecondary hover:text-white hover:bg-neutral-900/60 transition" title="Acessar o Acervo de Disciplinas e o Diálogo Socrático">
               <span class="flex items-center space-x-2.5">
-                <span class="text-sm">📜</span>
-                <span class="font-medium font-sans">Scriptorium (Leitor)</span>
+                <span class="text-base">🏛️</span>
+                <span class="font-medium">Ágora</span>
               </span>
-              <span class="text-[9px] font-mono bg-neutral-900 text-neutral-400 px-1.5 py-0.5 rounded border border-neutral-800">ACF</span>
+              <span class="text-[9px] font-mono text-neutral-400 bg-neutral-900 px-2 py-0.5 rounded border border-neutral-800">Disciplinas</span>
             </button>
 
-            <button id="sidebar-btn-agora-chat" class="sidebar-nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-textSecondary hover:text-white hover:bg-neutral-900/60 transition">
+            <!-- 3. Tabulae (Flashcards de Repetição Espaçada) -->
+            <button id="sidebar-btn-tabulae" class="sidebar-nav-btn w-full flex items-center justify-between px-3.5 py-3 rounded-lg text-textSecondary hover:text-white hover:bg-neutral-900/60 transition" title="Revisar Tabulae de Repetição Espaçada">
               <span class="flex items-center space-x-2.5">
-                <span class="text-sm">⚡</span>
-                <span class="font-medium font-sans">Tutora Ágora (IA)</span>
-              </span>
-              <span class="text-[9px] font-mono text-emerald-400">Maiêutica</span>
-            </button>
-
-            <button id="sidebar-btn-tabulae" class="sidebar-nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-textSecondary hover:text-white hover:bg-neutral-900/60 transition">
-              <span class="flex items-center space-x-2.5">
-                <span class="text-sm">📝</span>
-                <span class="font-medium font-sans">Tabulae (Flashcards)</span>
+                <span class="text-base">📝</span>
+                <span class="font-medium">Tabulae</span>
               </span>
               <span id="sidebar-tabulae-count" class="text-[10px] font-mono bg-neutral-900 text-white px-2 py-0.5 rounded-full border border-neutral-700">2</span>
             </button>
 
-            <button id="sidebar-btn-dashboard" class="sidebar-nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-textSecondary hover:text-white hover:bg-neutral-900/60 transition">
+            <!-- 4. Vigília Foco (Pomodoro) -->
+            <button id="sidebar-btn-pomo" class="sidebar-nav-btn w-full flex items-center justify-between px-3.5 py-3 rounded-lg text-textSecondary hover:text-white hover:bg-neutral-900/60 transition" title="Iniciar ou Pausar Vigília">
               <span class="flex items-center space-x-2.5">
-                <span class="text-sm">📊</span>
-                <span class="font-medium font-sans">Tabularium (Métricas)</span>
+                <span class="text-base">⏳</span>
+                <span class="font-medium">Vigília Foco</span>
               </span>
-              <span class="text-[9px] font-mono text-textMuted">70d</span>
+              <span class="text-[10px] font-mono text-textMuted" id="sidebar-pomo-status">25:00</span>
             </button>
           </nav>
-        </div>
-
-        <!-- Bloco 2: DISCIPLINAS DO SABER (Seleção Direta na Barra Lateral) -->
-        <div class="space-y-2">
-          <div class="px-2 flex items-center justify-between">
-            <span class="text-[10px] font-mono uppercase tracking-widest text-textMuted font-semibold">Disciplinas</span>
-            <span id="active-cycle-badge" class="text-[9px] font-mono text-neutral-400 bg-neutral-900 px-1.5 py-0.5 rounded border border-neutral-800">Superior</span>
-          </div>
-
-          <!-- Alternador de Ciclo: Superior vs BNCC Escola -->
-          <div class="grid grid-cols-2 gap-1 p-1 bg-[#101010] border border-cardBorder rounded-lg text-[11px] font-sans">
-            <button id="btn-cycle-superior" type="button" class="py-1 px-2 rounded font-medium text-white bg-neutral-800 border border-neutral-700 text-center transition flex items-center justify-center space-x-1" data-cycle="superior">
-              <span>🎓</span>
-              <span>Superior</span>
-            </button>
-            <button id="btn-cycle-bncc" type="button" class="py-1 px-2 rounded font-medium text-textSecondary hover:text-white text-center transition flex items-center justify-center space-x-1" data-cycle="bncc">
-              <span>🏫</span>
-              <span>BNCC</span>
-            </button>
-          </div>
-
-          <!-- Botão Fixo Universal: Upload de Material -->
-          <button class="sidebar-disc-item active w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-white bg-neutral-900/80 border border-neutral-700 font-sans transition text-xs" data-disc="upload">
-            <span>📁</span>
-            <span class="truncate">Upload / Próprio</span>
-          </button>
-
-          <!-- Lista do Ciclo Superior -->
-          <div id="list-cycle-superior" class="space-y-1 text-xs">
-            <button class="sidebar-disc-item w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-textSecondary hover:text-white hover:bg-neutral-900/60 font-sans transition" data-disc="law">
-              <span>⚖️</span>
-              <span class="truncate">Direito & Jurisprudência</span>
-            </button>
-            <button class="sidebar-disc-item w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-textSecondary hover:text-white hover:bg-neutral-900/60 font-sans transition" data-disc="med">
-              <span>🩺</span>
-              <span class="truncate">Medicina & Fisiologia</span>
-            </button>
-            <button class="sidebar-disc-item w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-textSecondary hover:text-white hover:bg-neutral-900/60 font-sans transition" data-disc="cs">
-              <span>💻</span>
-              <span class="truncate">Computação & Algoritmos</span>
-            </button>
-            <button class="sidebar-disc-item w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-textSecondary hover:text-white hover:bg-neutral-900/60 font-sans transition" data-disc="philosophy">
-              <span>🏛️</span>
-              <span class="truncate">Filosofia & Dialética</span>
-            </button>
-            <button class="sidebar-disc-item w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-textSecondary hover:text-white hover:bg-neutral-900/60 font-sans transition" data-disc="exact">
-              <span>📐</span>
-              <span class="truncate">Cálculo & Exatas Univ.</span>
-            </button>
-            <button class="sidebar-disc-item w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-textSecondary hover:text-white hover:bg-neutral-900/60 font-sans transition" data-disc="admin">
-              <span>📈</span>
-              <span class="truncate">Economia & Gestão</span>
-            </button>
-            <button class="sidebar-disc-item w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-textSecondary hover:text-white hover:bg-neutral-900/60 font-sans transition" data-disc="history">
-              <span>⏳</span>
-              <span class="truncate">História & Fontes</span>
-            </button>
-            <button class="sidebar-disc-item w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-textSecondary hover:text-white hover:bg-neutral-900/60 font-sans transition" data-disc="theology">
-              <span>📜</span>
-              <span class="truncate">Teologia & Escrituras</span>
-            </button>
-          </div>
-
-          <!-- Lista do Ciclo BNCC (Escola / Vestibulares / ENEM) -->
-          <div id="list-cycle-bncc" class="space-y-1 text-xs hidden">
-            <button class="sidebar-disc-item w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-textSecondary hover:text-white hover:bg-neutral-900/60 font-sans transition" data-disc="bncc_redacao">
-              <span>✍️</span>
-              <span class="truncate">Redação ENEM (Teses)</span>
-            </button>
-            <button class="sidebar-disc-item w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-textSecondary hover:text-white hover:bg-neutral-900/60 font-sans transition" data-disc="bncc_portugues">
-              <span>📖</span>
-              <span class="truncate">Língua Portuguesa</span>
-            </button>
-            <button class="sidebar-disc-item w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-textSecondary hover:text-white hover:bg-neutral-900/60 font-sans transition" data-disc="bncc_matematica">
-              <span>🔢</span>
-              <span class="truncate">Matemática (BNCC)</span>
-            </button>
-            <button class="sidebar-disc-item w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-textSecondary hover:text-white hover:bg-neutral-900/60 font-sans transition" data-disc="bncc_biologia">
-              <span>🧬</span>
-              <span class="truncate">Biologia & Ecologia</span>
-            </button>
-            <button class="sidebar-disc-item w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-textSecondary hover:text-white hover:bg-neutral-900/60 font-sans transition" data-disc="bncc_fisica">
-              <span>⚡</span>
-              <span class="truncate">Física (Leis & Movimento)</span>
-            </button>
-            <button class="sidebar-disc-item w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-textSecondary hover:text-white hover:bg-neutral-900/60 font-sans transition" data-disc="bncc_quimica">
-              <span>🧪</span>
-              <span class="truncate">Química & Matéria</span>
-            </button>
-            <button class="sidebar-disc-item w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-textSecondary hover:text-white hover:bg-neutral-900/60 font-sans transition" data-disc="bncc_historia">
-              <span>🏛️</span>
-              <span class="truncate">História (BNCC)</span>
-            </button>
-            <button class="sidebar-disc-item w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-textSecondary hover:text-white hover:bg-neutral-900/60 font-sans transition" data-disc="bncc_geografia">
-              <span>🌍</span>
-              <span class="truncate">Geografia & Geopolítica</span>
-            </button>
-          </div>
         </div>
 
       </div>
@@ -394,8 +283,407 @@
       <!-- CONTAINER PRINCIPAL DO LAYOUT (100% MINIMALISTA & FOCO NO ESTUDO) -->
       <main class="max-w-7xl w-full mx-auto px-4 sm:px-6 py-5 pb-8" id="main-view-container">
 
-        <!-- WORKSPACE DE DUAS COLUNAS: SCRIPTORIUM (ESQUERDA) & ÁGORA CHAT (DIREITA) -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[calc(100vh-6.8rem)] min-h-[620px]">
+        <!-- ========================================================================= -->
+        <!-- VIEW 1: ESTATÍSTICAS DE ESTUDO & TABULARIUM (PRIMEIRA COISA QUE O USUÁRIO VÊ) -->
+        <!-- ========================================================================= -->
+        <div id="view-dashboard" class="space-y-6">
+          
+          <!-- Banner Hero de Boas-Vindas Acadêmico -->
+          <div class="bg-cardBg border border-cardBorder rounded-xl p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-sm">
+            <div class="space-y-1.5 max-w-2xl">
+              <div class="flex items-center space-x-2">
+                <span class="text-[10px] font-mono uppercase tracking-widest text-emerald-400 bg-emerald-950/60 border border-emerald-800/80 px-2 py-0.5 rounded">Sessão Ativa</span>
+                <span class="text-neutral-500 text-xs">•</span>
+                <span class="text-xs font-mono text-textMuted" id="hero-user-greeting">Lucas Almeida — Bacharelado em Direito (USP)</span>
+              </div>
+              <h1 class="font-cinzel text-2xl sm:text-3xl font-bold text-white tracking-wide">TABULARIUM DE ESTUDOS</h1>
+              <p class="text-textSecondary text-xs sm:text-sm font-sans leading-relaxed">
+                Registro canônico de vigília, retenção dialética e constância acumulados nas suas sessões de estudo anteriores.
+              </p>
+            </div>
+
+            <!-- Botão de Ação Primária: Entrar na Ágora -->
+            <div class="shrink-0 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+              <button id="btn-dashboard-enter-agora" class="px-5 py-3 bg-white hover:bg-neutral-200 text-black font-semibold rounded-lg text-xs md:text-sm transition shadow-md flex items-center justify-center space-x-2.5">
+                <span>🏛️</span>
+                <span>Acessar a Ágora (Disciplinas)</span>
+                <span>→</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- GRID DE 4 CARDS DE MÉTRICAS PRINCIPAIS -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            
+            <!-- Métrica 1: Tempo Total de Vigília -->
+            <div class="bg-cardBg border border-cardBorder rounded-xl p-5 shadow-sm space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] font-mono uppercase text-textMuted">Tempo de Vigília</span>
+                <span class="text-base">⏳</span>
+              </div>
+              <div class="text-2xl sm:text-3xl font-bold font-mono text-white" id="stat-total-hours">32.5h</div>
+              <div class="text-[11px] text-textSecondary font-sans flex items-center space-x-1">
+                <span class="text-emerald-400 font-mono">+4.5h</span>
+                <span>nesta semana • 8 sessões</span>
+              </div>
+            </div>
+
+            <!-- Métrica 2: Ofensiva / Constância (Streak) -->
+            <div class="bg-cardBg border border-cardBorder rounded-xl p-5 shadow-sm space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] font-mono uppercase text-textMuted">Constância (Streak)</span>
+                <span class="text-base">🔥</span>
+              </div>
+              <div class="text-2xl sm:text-3xl font-bold font-mono text-white" id="stat-streak-days">19 Dias</div>
+              <div class="text-[11px] text-textSecondary font-sans flex items-center space-x-1">
+                <span class="text-amber-400 font-mono">100%</span>
+                <span>consistência diária mantida</span>
+              </div>
+            </div>
+
+            <!-- Métrica 3: Retenção Dialética Estimada -->
+            <div class="bg-cardBg border border-cardBorder rounded-xl p-5 shadow-sm space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] font-mono uppercase text-textMuted">Retenção Maiêutica</span>
+                <span class="text-base">🧠</span>
+              </div>
+              <div class="text-2xl sm:text-3xl font-bold font-mono text-white" id="stat-retention-rate">89%</div>
+              <div class="text-[11px] text-textSecondary font-sans flex items-center space-x-1">
+                <span>Calculada por respostas socráticas</span>
+              </div>
+            </div>
+
+            <!-- Métrica 4: Tabulae (Repetição Espaçada) -->
+            <div class="bg-cardBg border border-cardBorder rounded-xl p-5 shadow-sm space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] font-mono uppercase text-textMuted">Tabulae Ativas</span>
+                <span class="text-base">📝</span>
+              </div>
+              <div class="text-2xl sm:text-3xl font-bold font-mono text-white" id="stat-cards-count">24 Cartões</div>
+              <div class="text-[11px] text-textSecondary font-sans flex items-center space-x-1">
+                <span class="text-amber-400 font-mono">2</span>
+                <span>pendentes de revisão hoje</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- TABELA HISTÓRICA DE SESSÕES ANTERIORES -->
+          <div class="bg-cardBg border border-cardBorder rounded-xl overflow-hidden shadow-sm">
+            <div class="px-5 py-4 border-b border-cardBorder/70 bg-[#161616] flex items-center justify-between">
+              <div class="flex items-center space-x-2">
+                <span class="text-xs uppercase font-mono tracking-wider font-semibold text-textSecondary">HISTÓRICO DE SESSÕES ANTERIORES</span>
+                <span class="text-[10px] font-mono text-textMuted bg-neutral-900 border border-neutral-800 px-2 py-0.5 rounded">SQLite Persistente</span>
+              </div>
+              <span class="text-xs text-textMuted font-mono">Últimas sessões registradas no perfil</span>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs font-sans">
+                <thead class="bg-[#121212] text-[10px] font-mono uppercase text-textMuted border-b border-cardBorder">
+                  <tr>
+                    <th class="px-5 py-3 font-semibold">Data & Horário</th>
+                    <th class="px-5 py-3 font-semibold">Disciplina / Tratado</th>
+                    <th class="px-5 py-3 font-semibold">Ciclo</th>
+                    <th class="px-5 py-3 font-semibold">Vigília Foco</th>
+                    <th class="px-5 py-3 font-semibold">Tabulae Geradas</th>
+                    <th class="px-5 py-3 font-semibold text-right">Ação</th>
+                  </tr>
+                </thead>
+                <tbody id="dashboard-sessions-table" class="divide-y divide-cardBorder/40">
+                  <tr class="hover:bg-neutral-900/40 transition">
+                    <td class="px-5 py-3.5 font-mono text-textSecondary">Hoje, 10:15</td>
+                    <td class="px-5 py-3.5 font-medium text-white flex items-center space-x-2">
+                      <span>⚖️</span>
+                      <span>Colisão de Direitos Fundamentais</span>
+                    </td>
+                    <td class="px-5 py-3.5"><span class="px-2 py-0.5 rounded bg-neutral-900 border border-neutral-800 text-[10px] font-mono text-neutral-300">Superior</span></td>
+                    <td class="px-5 py-3.5 font-mono text-textSecondary">35 min</td>
+                    <td class="px-5 py-3.5 font-mono text-emerald-400">+3 Tabulae</td>
+                    <td class="px-5 py-3.5 text-right">
+                      <button class="btn-resume-discipline text-neutral-300 hover:text-white underline text-[11px] font-mono" data-disc="law">Estudar na Ágora →</button>
+                    </td>
+                  </tr>
+                  <tr class="hover:bg-neutral-900/40 transition">
+                    <td class="px-5 py-3.5 font-mono text-textSecondary">Ontem, 16:30</td>
+                    <td class="px-5 py-3.5 font-medium text-white flex items-center space-x-2">
+                      <span>🏛️</span>
+                      <span>O Mito do Anel de Giges (Platão)</span>
+                    </td>
+                    <td class="px-5 py-3.5"><span class="px-2 py-0.5 rounded bg-neutral-900 border border-neutral-800 text-[10px] font-mono text-neutral-300">Superior</span></td>
+                    <td class="px-5 py-3.5 font-mono text-textSecondary">45 min</td>
+                    <td class="px-5 py-3.5 font-mono text-emerald-400">+2 Tabulae</td>
+                    <td class="px-5 py-3.5 text-right">
+                      <button class="btn-resume-discipline text-neutral-300 hover:text-white underline text-[11px] font-mono" data-disc="philosophy">Estudar na Ágora →</button>
+                    </td>
+                  </tr>
+                  <tr class="hover:bg-neutral-900/40 transition">
+                    <td class="px-5 py-3.5 font-mono text-textSecondary">26 Set, 14:00</td>
+                    <td class="px-5 py-3.5 font-medium text-white flex items-center space-x-2">
+                      <span>🩺</span>
+                      <span>Fisiologia da Concentração Renal</span>
+                    </td>
+                    <td class="px-5 py-3.5"><span class="px-2 py-0.5 rounded bg-neutral-900 border border-neutral-800 text-[10px] font-mono text-neutral-300">Superior</span></td>
+                    <td class="px-5 py-3.5 font-mono text-textSecondary">30 min</td>
+                    <td class="px-5 py-3.5 font-mono text-emerald-400">+1 Tabula</td>
+                    <td class="px-5 py-3.5 text-right">
+                      <button class="btn-resume-discipline text-neutral-300 hover:text-white underline text-[11px] font-mono" data-disc="med">Estudar na Ágora →</button>
+                    </td>
+                  </tr>
+                  <tr class="hover:bg-neutral-900/40 transition">
+                    <td class="px-5 py-3.5 font-mono text-textSecondary">25 Set, 19:10</td>
+                    <td class="px-5 py-3.5 font-medium text-white flex items-center space-x-2">
+                      <span>✍️</span>
+                      <span>Redação ENEM: Preservação do Patrimônio</span>
+                    </td>
+                    <td class="px-5 py-3.5"><span class="px-2 py-0.5 rounded bg-neutral-900 border border-neutral-800 text-[10px] font-mono text-neutral-300">BNCC</span></td>
+                    <td class="px-5 py-3.5 font-mono text-textSecondary">50 min</td>
+                    <td class="px-5 py-3.5 font-mono text-emerald-400">+4 Tabulae</td>
+                    <td class="px-5 py-3.5 text-right">
+                      <button class="btn-resume-discipline text-neutral-300 hover:text-white underline text-[11px] font-mono" data-disc="bncc_redacao">Estudar na Ágora →</button>
+                    </td>
+                  </tr>
+                  <tr class="hover:bg-neutral-900/40 transition">
+                    <td class="px-5 py-3.5 font-mono text-textSecondary">24 Set, 09:40</td>
+                    <td class="px-5 py-3.5 font-medium text-white flex items-center space-x-2">
+                      <span>💻</span>
+                      <span>Algoritmos de Ordenação & Complexidade</span>
+                    </td>
+                    <td class="px-5 py-3.5"><span class="px-2 py-0.5 rounded bg-neutral-900 border border-neutral-800 text-[10px] font-mono text-neutral-300">Superior</span></td>
+                    <td class="px-5 py-3.5 font-mono text-textSecondary">25 min</td>
+                    <td class="px-5 py-3.5 font-mono text-emerald-400">+2 Tabulae</td>
+                    <td class="px-5 py-3.5 text-right">
+                      <button class="btn-resume-discipline text-neutral-300 hover:text-white underline text-[11px] font-mono" data-disc="cs">Estudar na Ágora →</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- CARDS DE ACESSO RÁPIDO DO ESTUDANTE -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-cardBg border border-cardBorder rounded-xl p-5 hover:border-neutral-500 transition cursor-pointer group" id="card-action-agora">
+              <div class="text-2xl mb-2">🏛️</div>
+              <h3 class="font-semibold text-sm text-white group-hover:text-amber-200 transition">Acervo da Ágora</h3>
+              <p class="text-xs text-textSecondary mt-1 leading-relaxed">
+                Abra a seção com todas as disciplinas armazenadas, leitor acadêmico e inteligência socrática.
+              </p>
+            </div>
+
+            <div class="bg-cardBg border border-cardBorder rounded-xl p-5 hover:border-neutral-500 transition cursor-pointer group" id="card-action-tabulae">
+              <div class="text-2xl mb-2">📝</div>
+              <h3 class="font-semibold text-sm text-white group-hover:text-amber-200 transition">Revisar Tabulae</h3>
+              <p class="text-xs text-textSecondary mt-1 leading-relaxed">
+                Revise os flashcards programados pelo algoritmo de repetição espaçada para hoje.
+              </p>
+            </div>
+
+            <div class="bg-cardBg border border-cardBorder rounded-xl p-5 hover:border-neutral-500 transition cursor-pointer group" id="card-action-pomo">
+              <div class="text-2xl mb-2">⏳</div>
+              <h3 class="font-semibold text-sm text-white group-hover:text-amber-200 transition">Iniciar Vigília</h3>
+              <p class="text-xs text-textSecondary mt-1 leading-relaxed">
+                Dispare uma nova sessão de foco monástico de 25 ou 30 minutos com sino suave.
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ========================================================================= -->
+        <!-- VIEW 2: SEÇÃO "ÁGORA" (ARMAZENA TODAS AS DISCIPLINAS & WORKSPACE SOCRÁTICO)  -->
+        <!-- ========================================================================= -->
+        <div id="view-agora" class="hidden space-y-4">
+          
+          <!-- Topo da Seção Ágora: Voltar + Acervo de Disciplinas Organizado -->
+          <div class="bg-cardBg border border-cardBorder rounded-xl p-4 sm:p-5 shadow-sm space-y-4">
+            
+            <div class="flex flex-wrap items-center justify-between gap-3 border-b border-cardBorder/60 pb-3">
+              <div class="flex items-center space-x-3">
+                <button id="btn-back-to-dashboard" class="px-2.5 py-1.5 bg-neutral-900 border border-neutral-800 hover:border-neutral-600 rounded text-xs font-mono text-textSecondary hover:text-white transition flex items-center space-x-1.5">
+                  <span>←</span>
+                  <span>Estatísticas</span>
+                </button>
+                <div class="h-4 w-px bg-cardBorder"></div>
+                <div>
+                  <h2 class="font-cinzel text-sm sm:text-base font-bold text-white tracking-wide flex items-center space-x-2">
+                    <span>🏛️</span>
+                    <span>ÁGORA — ACERVO DE DISCIPLINAS</span>
+                  </h2>
+                  <span class="text-[10px] font-mono text-textMuted block">Escolha uma matéria do acervo para examinar no Scriptorium e na Tutora Ágora</span>
+                </div>
+              </div>
+
+              <!-- Alternador de Abas de Ciclo na Ágora -->
+              <div class="flex items-center space-x-1 bg-[#101010] p-1 border border-cardBorder rounded-lg text-xs font-sans">
+                <button id="agora-tab-superior" class="agora-cycle-tab active px-3 py-1.5 rounded font-medium text-white bg-neutral-800 border border-neutral-700 transition flex items-center space-x-1.5" data-cycle="superior">
+                  <span>🎓</span>
+                  <span>Superior</span>
+                </button>
+                <button id="agora-tab-bncc" class="agora-cycle-tab px-3 py-1.5 rounded font-medium text-textSecondary hover:text-white transition flex items-center space-x-1.5" data-cycle="bncc">
+                  <span>🏫</span>
+                  <span>BNCC</span>
+                </button>
+                <button id="agora-tab-upload" class="agora-cycle-tab px-3 py-1.5 rounded font-medium text-textSecondary hover:text-white transition flex items-center space-x-1.5" data-cycle="upload">
+                  <span>📁</span>
+                  <span>Upload Próprio</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Grid de Seleção de Disciplinas Armazenadas -->
+            <!-- 1. Grid Ciclo Superior -->
+            <div id="agora-grid-superior" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+              <button class="agora-disc-card active p-3 bg-neutral-900/90 border border-neutral-600 hover:border-white rounded-lg text-left transition flex flex-col justify-between" data-disc="law">
+                <div class="flex items-center space-x-2">
+                  <span class="text-base">⚖️</span>
+                  <span class="font-semibold text-xs text-white truncate">Direito</span>
+                </div>
+                <span class="text-[10px] text-textMuted mt-1">Direitos Fundamentais</span>
+              </button>
+
+              <button class="agora-disc-card p-3 bg-cardInner border border-cardBorder hover:border-neutral-500 rounded-lg text-left transition flex flex-col justify-between" data-disc="med">
+                <div class="flex items-center space-x-2">
+                  <span class="text-base">🩺</span>
+                  <span class="font-semibold text-xs text-white truncate">Medicina</span>
+                </div>
+                <span class="text-[10px] text-textMuted mt-1">Fisiologia Renal</span>
+              </button>
+
+              <button class="agora-disc-card p-3 bg-cardInner border border-cardBorder hover:border-neutral-500 rounded-lg text-left transition flex flex-col justify-between" data-disc="cs">
+                <div class="flex items-center space-x-2">
+                  <span class="text-base">💻</span>
+                  <span class="font-semibold text-xs text-white truncate">Computação</span>
+                </div>
+                <span class="text-[10px] text-textMuted mt-1">Algoritmos & Complexidade</span>
+              </button>
+
+              <button class="agora-disc-card p-3 bg-cardInner border border-cardBorder hover:border-neutral-500 rounded-lg text-left transition flex flex-col justify-between" data-disc="philosophy">
+                <div class="flex items-center space-x-2">
+                  <span class="text-base">🏛️</span>
+                  <span class="font-semibold text-xs text-white truncate">Filosofia</span>
+                </div>
+                <span class="text-[10px] text-textMuted mt-1">O Anel de Giges (Platão)</span>
+              </button>
+
+              <button class="agora-disc-card p-3 bg-cardInner border border-cardBorder hover:border-neutral-500 rounded-lg text-left transition flex flex-col justify-between" data-disc="exact">
+                <div class="flex items-center space-x-2">
+                  <span class="text-base">📐</span>
+                  <span class="font-semibold text-xs text-white truncate">Cálculo & Exatas</span>
+                </div>
+                <span class="text-[10px] text-textMuted mt-1">Teoria dos Números</span>
+              </button>
+
+              <button class="agora-disc-card p-3 bg-cardInner border border-cardBorder hover:border-neutral-500 rounded-lg text-left transition flex flex-col justify-between" data-disc="admin">
+                <div class="flex items-center space-x-2">
+                  <span class="text-base">📈</span>
+                  <span class="font-semibold text-xs text-white truncate">Economia</span>
+                </div>
+                <span class="text-[10px] text-textMuted mt-1">Teoria da Firma (Coase)</span>
+              </button>
+
+              <button class="agora-disc-card p-3 bg-cardInner border border-cardBorder hover:border-neutral-500 rounded-lg text-left transition flex flex-col justify-between" data-disc="history">
+                <div class="flex items-center space-x-2">
+                  <span class="text-base">⏳</span>
+                  <span class="font-semibold text-xs text-white truncate">História</span>
+                </div>
+                <span class="text-[10px] text-textMuted mt-1">Fontes Documentais</span>
+              </button>
+
+              <button class="agora-disc-card p-3 bg-cardInner border border-cardBorder hover:border-neutral-500 rounded-lg text-left transition flex flex-col justify-between" data-disc="theology">
+                <div class="flex items-center space-x-2">
+                  <span class="text-base">📜</span>
+                  <span class="font-semibold text-xs text-white truncate">Teologia</span>
+                </div>
+                <span class="text-[10px] text-textMuted mt-1">Epístola aos Romanos</span>
+              </button>
+            </div>
+
+            <!-- 2. Grid Ciclo BNCC (Educação Básica) -->
+            <div id="agora-grid-bncc" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 hidden">
+              <button class="agora-disc-card p-3 bg-cardInner border border-cardBorder hover:border-neutral-500 rounded-lg text-left transition flex flex-col justify-between" data-disc="bncc_redacao">
+                <div class="flex items-center space-x-2">
+                  <span class="text-base">✍️</span>
+                  <span class="font-semibold text-xs text-white truncate">Redação ENEM</span>
+                </div>
+                <span class="text-[10px] text-textMuted mt-1">Teses & Repertório</span>
+              </button>
+
+              <button class="agora-disc-card p-3 bg-cardInner border border-cardBorder hover:border-neutral-500 rounded-lg text-left transition flex flex-col justify-between" data-disc="bncc_portugues">
+                <div class="flex items-center space-x-2">
+                  <span class="text-base">📖</span>
+                  <span class="font-semibold text-xs text-white truncate">Português</span>
+                </div>
+                <span class="text-[10px] text-textMuted mt-1">Sintaxe & Ambiguidade</span>
+              </button>
+
+              <button class="agora-disc-card p-3 bg-cardInner border border-cardBorder hover:border-neutral-500 rounded-lg text-left transition flex flex-col justify-between" data-disc="bncc_matematica">
+                <div class="flex items-center space-x-2">
+                  <span class="text-base">🔢</span>
+                  <span class="font-semibold text-xs text-white truncate">Matemática</span>
+                </div>
+                <span class="text-[10px] text-textMuted mt-1">Geometria Euclidiana</span>
+              </button>
+
+              <button class="agora-disc-card p-3 bg-cardInner border border-cardBorder hover:border-neutral-500 rounded-lg text-left transition flex flex-col justify-between" data-disc="bncc_biologia">
+                <div class="flex items-center space-x-2">
+                  <span class="text-base">🧬</span>
+                  <span class="font-semibold text-xs text-white truncate">Biologia</span>
+                </div>
+                <span class="text-[10px] text-textMuted mt-1">Evolução & Seleção</span>
+              </button>
+
+              <button class="agora-disc-card p-3 bg-cardInner border border-cardBorder hover:border-neutral-500 rounded-lg text-left transition flex flex-col justify-between" data-disc="bncc_fisica">
+                <div class="flex items-center space-x-2">
+                  <span class="text-base">⚡</span>
+                  <span class="font-semibold text-xs text-white truncate">Física</span>
+                </div>
+                <span class="text-[10px] text-textMuted mt-1">Leis de Newton</span>
+              </button>
+
+              <button class="agora-disc-card p-3 bg-cardInner border border-cardBorder hover:border-neutral-500 rounded-lg text-left transition flex flex-col justify-between" data-disc="bncc_quimica">
+                <div class="flex items-center space-x-2">
+                  <span class="text-base">🧪</span>
+                  <span class="font-semibold text-xs text-white truncate">Química</span>
+                </div>
+                <span class="text-[10px] text-textMuted mt-1">Cinética Química</span>
+              </button>
+
+              <button class="agora-disc-card p-3 bg-cardInner border border-cardBorder hover:border-neutral-500 rounded-lg text-left transition flex flex-col justify-between" data-disc="bncc_historia">
+                <div class="flex items-center space-x-2">
+                  <span class="text-base">🏛️</span>
+                  <span class="font-semibold text-xs text-white truncate">História</span>
+                </div>
+                <span class="text-[10px] text-textMuted mt-1">Brasil Contemporâneo</span>
+              </button>
+
+              <button class="agora-disc-card p-3 bg-cardInner border border-cardBorder hover:border-neutral-500 rounded-lg text-left transition flex flex-col justify-between" data-disc="bncc_geografia">
+                <div class="flex items-center space-x-2">
+                  <span class="text-base">🌍</span>
+                  <span class="font-semibold text-xs text-white truncate">Geografia</span>
+                </div>
+                <span class="text-[10px] text-textMuted mt-1">Transição Demográfica</span>
+              </button>
+            </div>
+
+            <!-- 3. Grid Upload / Próprio -->
+            <div id="agora-grid-upload" class="p-4 bg-cardInner border border-dashed border-cardBorder rounded-lg flex items-center justify-between hidden">
+              <div class="flex items-center space-x-3">
+                <span class="text-2xl">📁</span>
+                <div>
+                  <h4 class="font-semibold text-xs text-white">Carregar Documento Próprio (PDF / Texto / Anotações)</h4>
+                  <p class="text-[11px] text-textSecondary">Arraste um PDF ou cole texto para ler no Scriptorium e debater com a Ágora.</p>
+                </div>
+              </div>
+              <button class="agora-disc-card px-4 py-2 bg-white text-black font-semibold rounded text-xs hover:bg-neutral-200 transition shrink-0" data-disc="upload">
+                Abrir Upload →
+              </button>
+            </div>
+
+          </div>
+
+          <!-- WORKSPACE DE DUAS COLUNAS: SCRIPTORIUM (ESQUERDA) & ÁGORA CHAT (DIREITA) -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[calc(100vh-14rem)] min-h-[600px]" id="agora-workspace">
 
           <!-- CARD ESQUERDO: STUDY TRACKER / SCRIPTORIUM -->
           <section id="study-tracker-card" class="bg-cardBg border border-cardBorder rounded-xl overflow-hidden flex flex-col shadow-lg h-full">
@@ -570,7 +858,9 @@
 
         </div>
 
-      </main>
+      </div>
+
+    </main>
 
     </div>
 

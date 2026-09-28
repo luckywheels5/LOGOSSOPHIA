@@ -431,19 +431,27 @@ const DOM = {
   btnChangeDoc: document.getElementById('btn-change-doc'),
   btnTriggerUpload: document.getElementById('btn-trigger-upload'),
 
-  // Barra Lateral Esquerda (Sidebar)
-  sidebarBtnHome: document.getElementById('sidebar-btn-home'),
-  sidebarBtnPomo: document.getElementById('sidebar-btn-pomo'),
-  sidebarBtnScriptorium: document.getElementById('sidebar-btn-scriptorium'),
-  sidebarBtnAgoraChat: document.getElementById('sidebar-btn-agora-chat'),
-  sidebarBtnTabulae: document.getElementById('sidebar-btn-tabulae'),
+  // Barra Lateral Esquerda (Sidebar Minimalista)
   sidebarBtnDashboard: document.getElementById('sidebar-btn-dashboard'),
+  sidebarBtnAgora: document.getElementById('sidebar-btn-agora'),
+  sidebarBtnTabulae: document.getElementById('sidebar-btn-tabulae'),
+  sidebarBtnPomo: document.getElementById('sidebar-btn-pomo'),
   sidebarBtnSettings: document.getElementById('sidebar-btn-settings'),
   sidebarPomoStatus: document.getElementById('sidebar-pomo-status'),
   sidebarTabulaeCount: document.getElementById('sidebar-tabulae-count'),
-  sidebarDiscItems: document.querySelectorAll('.sidebar-disc-item'),
   sidebarNavBtns: document.querySelectorAll('.sidebar-nav-btn'),
-  pomodoroSection: document.getElementById('pomodoro-section'),
+
+  // Views Principais
+  viewDashboard: document.getElementById('view-dashboard'),
+  viewAgora: document.getElementById('view-agora'),
+  btnDashboardEnterAgora: document.getElementById('btn-dashboard-enter-agora'),
+  btnBackToDashboard: document.getElementById('btn-back-to-dashboard'),
+  agoraCycleTabs: document.querySelectorAll('.agora-cycle-tab'),
+  agoraDiscCards: document.querySelectorAll('.agora-disc-card'),
+  cardActionAgora: document.getElementById('card-action-agora'),
+  cardActionTabulae: document.getElementById('card-action-tabulae'),
+  cardActionPomo: document.getElementById('card-action-pomo'),
+
   studyTrackerCard: document.getElementById('study-tracker-card'),
   aiChatCard: document.getElementById('ai-chat-card')
 };
@@ -1010,12 +1018,22 @@ function loadUserAccount(userId, skipDisciplineReload = false) {
   if (DOM.settingAiMode) DOM.settingAiMode.value = user.aiMode || 'socratic_rigorous';
   if (DOM.settingApiKey) DOM.settingApiKey.value = user.apiKey || '';
 
+  // Atualiza Estatísticas do Dashboard (Tabularium)
+  const heroGreeting = document.getElementById('hero-user-greeting');
+  if (heroGreeting) heroGreeting.textContent = `${user.name} — ${user.course} (${user.institution.split(' ')[0]})`;
+  const statHours = document.getElementById('stat-total-hours');
+  if (statHours) statHours.textContent = `${user.totalHours || 32.5}h`;
+  const statStreak = document.getElementById('stat-streak-days');
+  if (statStreak) statStreak.textContent = `${user.streakDays || 19} Dias`;
+  const statCards = document.getElementById('stat-cards-count');
+  if (statCards) statCards.textContent = `${(user.flashcards || []).length || 24} Cartões`;
+
   // Ajusta ciclo e carrega disciplina ativa
   if (!skipDisciplineReload) {
     const cycle = user.defaultCycle || 'superior';
     setCycle(cycle);
     const discToLoad = user.activeDiscipline || (cycle === 'bncc' ? 'bncc_redacao' : 'law');
-    loadDiscipline(discToLoad);
+    loadDiscipline(discToLoad, false);
   }
 
   // Sincroniza em background se servidor estiver ativo
@@ -1098,6 +1116,10 @@ function recordStudySession(durationSec, type = 'pomodoro') {
     if (trackerSummary) {
       trackerSummary.textContent = `${user.totalHours}h Vigília • ${user.streakDays || 19}d Streak`;
     }
+    const statHours = document.getElementById('stat-total-hours');
+    if (statHours) {
+      statHours.textContent = `${user.totalHours}h`;
+    }
   }
 
   try {
@@ -1122,38 +1144,84 @@ function recordStudySession(durationSec, type = 'pomodoro') {
 // ==========================================
 function setCycle(cycle) {
   AppState.currentCycle = cycle;
-  if (!DOM.btnCycleSuperior || !DOM.btnCycleBncc) return;
 
-  if (cycle === 'bncc') {
-    DOM.btnCycleBncc.classList.add('text-white', 'bg-neutral-800', 'border', 'border-neutral-700');
-    DOM.btnCycleBncc.classList.remove('text-textSecondary');
-    DOM.btnCycleSuperior.classList.remove('text-white', 'bg-neutral-800', 'border', 'border-neutral-700');
-    DOM.btnCycleSuperior.classList.add('text-textSecondary');
-    if (DOM.listCycleBncc) DOM.listCycleBncc.classList.remove('hidden');
-    if (DOM.listCycleSuperior) DOM.listCycleSuperior.classList.add('hidden');
-    if (DOM.activeCycleBadge) DOM.activeCycleBadge.textContent = 'BNCC Escola';
-  } else {
-    DOM.btnCycleSuperior.classList.add('text-white', 'bg-neutral-800', 'border', 'border-neutral-700');
-    DOM.btnCycleSuperior.classList.remove('text-textSecondary');
-    DOM.btnCycleBncc.classList.remove('text-white', 'bg-neutral-800', 'border', 'border-neutral-700');
-    DOM.btnCycleBncc.classList.add('text-textSecondary');
-    if (DOM.listCycleSuperior) DOM.listCycleSuperior.classList.remove('hidden');
-    if (DOM.listCycleBncc) DOM.listCycleBncc.classList.add('hidden');
-    if (DOM.activeCycleBadge) DOM.activeCycleBadge.textContent = 'Superior';
+  // Atualiza botões de abas de ciclo na Ágora
+  const agoraCycleTabs = document.querySelectorAll('.agora-cycle-tab');
+  agoraCycleTabs.forEach(tab => {
+    if (tab.dataset.cycle === cycle) {
+      tab.classList.add('active', 'text-white', 'bg-neutral-800', 'border', 'border-neutral-700');
+      tab.classList.remove('text-textSecondary');
+    } else {
+      tab.classList.remove('active', 'text-white', 'bg-neutral-800', 'border', 'border-neutral-700');
+      tab.classList.add('text-textSecondary');
+    }
+  });
+
+  // Alterna visibilidade dos grids de disciplinas na Ágora
+  const gridSuperior = document.getElementById('agora-grid-superior');
+  const gridBncc = document.getElementById('agora-grid-bncc');
+  const gridUpload = document.getElementById('agora-grid-upload');
+
+  if (gridSuperior) gridSuperior.classList.toggle('hidden', cycle !== 'superior');
+  if (gridBncc) gridBncc.classList.toggle('hidden', cycle !== 'bncc');
+  if (gridUpload) gridUpload.classList.toggle('hidden', cycle !== 'upload');
+
+  // Atualiza breadcrumb de cabeçalho
+  const headerCyclePill = document.getElementById('header-cycle-pill');
+  if (headerCyclePill) {
+    if (cycle === 'bncc') headerCyclePill.textContent = 'BNCC Escola';
+    else if (cycle === 'upload') headerCyclePill.textContent = 'Universal';
+    else headerCyclePill.textContent = 'Superior';
   }
 }
 
 function syncSidebarSelection(key) {
-  const allDiscItems = document.querySelectorAll('.sidebar-disc-item');
-  allDiscItems.forEach(i => {
-    if (i.dataset.disc === key) {
-      i.classList.add('active', 'text-white', 'bg-neutral-900/80', 'border-neutral-700');
-      i.classList.remove('text-textSecondary');
+  // Sincroniza cards de disciplina na seção Ágora
+  const cards = document.querySelectorAll('.agora-disc-card');
+  cards.forEach(card => {
+    if (card.dataset.disc === key) {
+      card.classList.add('active', 'bg-neutral-900/90', 'border-neutral-400');
+      card.classList.remove('bg-cardInner', 'border-cardBorder');
     } else {
-      i.classList.remove('active', 'text-white', 'bg-neutral-900/80', 'border-neutral-700');
-      i.classList.add('text-textSecondary');
+      card.classList.remove('active', 'bg-neutral-900/90', 'border-neutral-400');
+      card.classList.add('bg-cardInner', 'border-cardBorder');
     }
   });
+}
+
+function switchMainView(viewName) {
+  const viewDashboard = document.getElementById('view-dashboard');
+  const viewAgora = document.getElementById('view-agora');
+  const btnDashboard = document.getElementById('sidebar-btn-dashboard');
+  const btnAgora = document.getElementById('sidebar-btn-agora');
+
+  if (viewName === 'dashboard') {
+    if (viewDashboard) viewDashboard.classList.remove('hidden');
+    if (viewAgora) viewAgora.classList.add('hidden');
+
+    if (btnDashboard) {
+      btnDashboard.classList.add('active', 'text-white', 'bg-neutral-900', 'border-neutral-700');
+      btnDashboard.classList.remove('text-textSecondary');
+    }
+    if (btnAgora) {
+      btnAgora.classList.remove('active', 'text-white', 'bg-neutral-900', 'border-neutral-700');
+      btnAgora.classList.add('text-textSecondary');
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } else if (viewName === 'agora') {
+    if (viewAgora) viewAgora.classList.remove('hidden');
+    if (viewDashboard) viewDashboard.classList.add('hidden');
+
+    if (btnAgora) {
+      btnAgora.classList.add('active', 'text-white', 'bg-neutral-900', 'border-neutral-700');
+      btnAgora.classList.remove('text-textSecondary');
+    }
+    if (btnDashboard) {
+      btnDashboard.classList.remove('active', 'text-white', 'bg-neutral-900', 'border-neutral-700');
+      btnDashboard.classList.add('text-textSecondary');
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 }
 
 function updateHeaderBreadcrumb(cycleLabel, icon, title) {
@@ -1165,8 +1233,9 @@ function updateHeaderBreadcrumb(cycleLabel, icon, title) {
   if (headerDiscTitle) headerDiscTitle.textContent = title;
 }
 
-function showUploadZone() {
+function showUploadZone(autoSwitch = true) {
   AppState.currentDiscipline = 'upload';
+  setCycle('upload');
   if (DOM.disciplineSelector) DOM.disciplineSelector.value = 'upload';
   DOM.uploadZoneContainer.classList.remove('hidden');
   DOM.readerWrapper.classList.add('hidden');
@@ -1175,8 +1244,12 @@ function showUploadZone() {
   appendAgoraMessage(KNOWLEDGE_BASE.upload.initialPrompt);
   updateHeaderBreadcrumb('Universal', '📁', 'Upload de Material Próprio');
 
-  // Sincroniza item da barra lateral
+  // Sincroniza cards de disciplina
   syncSidebarSelection('upload');
+
+  if (autoSwitch) {
+    switchMainView('agora');
+  }
 }
 
 function renderTextToScriptorium(title, badge, rawText) {
@@ -1203,9 +1276,9 @@ function renderTextToScriptorium(title, badge, rawText) {
   DOM.readerWrapper.classList.remove('hidden');
 }
 
-function loadDiscipline(key) {
+function loadDiscipline(key, autoSwitchView = true) {
   if (key === 'upload') {
-    showUploadZone();
+    showUploadZone(autoSwitchView);
     return;
   }
 
@@ -1238,6 +1311,10 @@ function loadDiscipline(key) {
 
   DOM.chatMessages.innerHTML = '';
   appendAgoraMessage(data.initialPrompt);
+
+  if (autoSwitchView) {
+    switchMainView('agora');
+  }
 }
 
 function appendAgoraMessage(text, allowFlashcard = false) {
@@ -1294,10 +1371,14 @@ function appendUserMessage(text) {
 // 8. TABULAE (FLASHCARDS)
 // ==========================================
 function updateFlashcardBadge() {
-  DOM.flashcardBadge.textContent = AppState.flashcards.length;
-  DOM.trackerCardCount.textContent = AppState.flashcards.length;
+  if (DOM.flashcardBadge) DOM.flashcardBadge.textContent = AppState.flashcards.length;
+  if (DOM.trackerCardCount) DOM.trackerCardCount.textContent = AppState.flashcards.length;
   if (DOM.sidebarTabulaeCount) {
     DOM.sidebarTabulaeCount.textContent = AppState.flashcards.length;
+  }
+  const statCards = document.getElementById('stat-cards-count');
+  if (statCards) {
+    statCards.textContent = `${AppState.flashcards.length} Cartões`;
   }
 }
 
@@ -1381,6 +1462,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Inicia carregando o perfil do estudante ativo e suas preferências do banco
   loadUserAccount('usr-erudito-01');
+
+  // Requisito: Ao entrar no site, a primeira coisa que o usuário vê são as estatísticas de estudo
+  switchMainView('dashboard');
 
   // Seletor de Disciplina / Origem
   DOM.disciplineSelector.addEventListener('change', (e) => {
@@ -1801,43 +1885,54 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ==========================================
-  // 10. EVENTOS DA BARRA LATERAL (SIDEBAR)
+  // 10. EVENTOS DA BARRA LATERAL, ÁGORA & TABULARIUM
   // ==========================================
-  function setSidebarNavActive(btn) {
-    DOM.sidebarNavBtns.forEach(b => {
-      b.classList.remove('active', 'text-white', 'bg-neutral-900', 'border-neutral-700');
-      b.classList.add('text-textSecondary');
-    });
-    if (btn) {
-      btn.classList.add('active', 'text-white', 'bg-neutral-900', 'border-neutral-700');
-      btn.classList.remove('text-textSecondary');
-    }
-  }
-
   const brandLogo = document.getElementById('brand-logo');
   if (brandLogo) {
     brandLogo.addEventListener('click', () => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      switchMainView('dashboard');
     });
   }
 
   const sidebarLogo = document.getElementById('sidebar-logo');
   if (sidebarLogo) {
     sidebarLogo.addEventListener('click', () => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      switchMainView('dashboard');
     });
   }
 
-  if (DOM.sidebarBtnHome) {
-    DOM.sidebarBtnHome.addEventListener('click', () => {
-      setSidebarNavActive(DOM.sidebarBtnHome);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (DOM.sidebarBtnDashboard) {
+    DOM.sidebarBtnDashboard.addEventListener('click', () => {
+      switchMainView('dashboard');
+    });
+  }
+
+  if (DOM.sidebarBtnAgora) {
+    DOM.sidebarBtnAgora.addEventListener('click', () => {
+      switchMainView('agora');
+    });
+  }
+
+  if (DOM.btnDashboardEnterAgora) {
+    DOM.btnDashboardEnterAgora.addEventListener('click', () => {
+      switchMainView('agora');
+    });
+  }
+
+  if (DOM.btnBackToDashboard) {
+    DOM.btnBackToDashboard.addEventListener('click', () => {
+      switchMainView('dashboard');
+    });
+  }
+
+  if (DOM.sidebarBtnTabulae) {
+    DOM.sidebarBtnTabulae.addEventListener('click', () => {
+      DOM.btnOpenTabulae.click();
     });
   }
 
   if (DOM.sidebarBtnPomo) {
     DOM.sidebarBtnPomo.addEventListener('click', () => {
-      setSidebarNavActive(DOM.sidebarBtnPomo);
       const headerPomo = document.getElementById('header-pomo-widget');
       if (headerPomo) {
         headerPomo.classList.add('ring-2', 'ring-white');
@@ -1847,73 +1942,60 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  if (DOM.sidebarBtnScriptorium) {
-    DOM.sidebarBtnScriptorium.addEventListener('click', () => {
-      setSidebarNavActive(DOM.sidebarBtnScriptorium);
-      DOM.studyTrackerCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    });
-  }
-
-  if (DOM.sidebarBtnAgoraChat) {
-    DOM.sidebarBtnAgoraChat.addEventListener('click', () => {
-      setSidebarNavActive(DOM.sidebarBtnAgoraChat);
-      DOM.aiChatCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      DOM.chatInput.focus();
-    });
-  }
-
-  if (DOM.sidebarBtnTabulae) {
-    DOM.sidebarBtnTabulae.addEventListener('click', () => {
-      setSidebarNavActive(DOM.sidebarBtnTabulae);
-      DOM.btnOpenTabulae.click();
-    });
-  }
-
-  if (DOM.sidebarBtnDashboard) {
-    DOM.sidebarBtnDashboard.addEventListener('click', () => {
-      setSidebarNavActive(DOM.sidebarBtnDashboard);
-      DOM.btnOpenTabulae.click();
-    });
-  }
-
   if (DOM.sidebarBtnSettings) {
     DOM.sidebarBtnSettings.addEventListener('click', () => {
       DOM.modalSettings.classList.remove('hidden');
     });
   }
 
-  // Alternador de Ciclo: Superior vs BNCC Escola
-  if (DOM.btnCycleSuperior) {
-    DOM.btnCycleSuperior.addEventListener('click', () => {
-      setCycle('superior');
+  // Cards de Ação Rápida no Dashboard
+  if (DOM.cardActionAgora) {
+    DOM.cardActionAgora.addEventListener('click', () => {
+      switchMainView('agora');
     });
   }
 
-  if (DOM.btnCycleBncc) {
-    DOM.btnCycleBncc.addEventListener('click', () => {
-      setCycle('bncc');
+  if (DOM.cardActionTabulae) {
+    DOM.cardActionTabulae.addEventListener('click', () => {
+      DOM.btnOpenTabulae.click();
     });
   }
 
-  // Seleção de Disciplinas pela Barra Lateral
-  const allDiscItems = document.querySelectorAll('.sidebar-disc-item');
-  allDiscItems.forEach(item => {
-    item.addEventListener('click', () => {
-      const disc = item.dataset.disc;
-      if (!disc) return;
+  if (DOM.cardActionPomo) {
+    DOM.cardActionPomo.addEventListener('click', () => {
+      DOM.sidebarBtnPomo.click();
+    });
+  }
 
-      allDiscItems.forEach(i => {
-        i.classList.remove('active', 'text-white', 'bg-neutral-900/80', 'border-neutral-700');
-        i.classList.add('text-textSecondary');
-      });
-      item.classList.add('active', 'text-white', 'bg-neutral-900/80', 'border-neutral-700');
-      item.classList.remove('text-textSecondary');
-
-      if (DOM.disciplineSelector) {
-        DOM.disciplineSelector.value = disc;
+  // Botões "Estudar na Ágora →" na Tabela Histórica de Sessões
+  document.querySelectorAll('.btn-resume-discipline').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const disc = btn.dataset.disc;
+      if (disc) {
+        loadDiscipline(disc, true);
       }
-      loadDiscipline(disc);
-      DOM.studyTrackerCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  });
+
+  // Alternador de Abas de Ciclo na Seção Ágora (Superior, BNCC, Upload)
+  DOM.agoraCycleTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const cycle = tab.dataset.cycle;
+      setCycle(cycle);
+      if (cycle === 'upload') {
+        showUploadZone(true);
+      }
+    });
+  });
+
+  // Seleção de Disciplinas pelos Cards da Seção Ágora
+  DOM.agoraDiscCards.forEach(card => {
+    card.addEventListener('click', () => {
+      const disc = card.dataset.disc;
+      if (disc) {
+        loadDiscipline(disc, true);
+      }
     });
   });
 });

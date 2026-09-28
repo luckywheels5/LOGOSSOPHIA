@@ -430,3 +430,74 @@ html:not(.dark) ::-webkit-scrollbar-thumb {
 html:not(.dark) ::-webkit-scrollbar-thumb:hover {
   background: #B5AFA0 !important;
 }
+
+/* ==========================================================================
+   CARDS DE DISCIPLINA NA SEÇÃO ÁGORA & TABULARIUM
+   ========================================================================== */
+.agora-disc-card {
+  position: relative;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.agora-disc-card:hover {
+  transform: translateY(-1px);
+}
+
+.agora-disc-card.active {
+  border-color: #FFFFFF !important;
+  background-color: #222222 !important;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.07);
+}
+
+/* Abas de Ciclo na Seção Ágora */
+.agora-cycle-tab {
+  transition: all 0.15s ease;
+}
+
+/* Suporte de Modo Pergaminho Claro para a Ágora e Tabularium */
+html:not(.dark) .agora-disc-card {
+  background-color: #FAF8F2 !important;
+  border-color: #DED7C8 !important;
+}
+
+html:not(.dark) .agora-disc-card:hover {
+  border-color: #8E897E !important;
+  background-color: #F4EFE2 !important;
+}
+
+html:not(.dark) .agora-disc-card.active {
+  background-color: #E6E1D3 !important;
+  border-color: #1C1B18 !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+html:not(.dark) .agora-cycle-tab.active {
+  background-color: #1C1B18 !important;
+  color: #FFFFFF !important;
+  border-color: #1C1B18 !important;
+}
+
+html:not(.dark) #dashboard-sessions-table tr:hover {
+  background-color: #F2EEE3 !important;
+}
+
+html:not(.dark) #dashboard-sessions-table thead,
+html:not(.dark) thead.bg-\[\#121212\] {
+  background-color: #E8E4D7 !important;
+}
+
+html:not(.dark) #card-action-agora:hover,
+html:not(.dark) #card-action-tabulae:hover,
+html:not(.dark) #card-action-pomo:hover {
+  border-color: #8E897E !important;
+  background-color: #F4EFE2 !important;
+}
+
+html:not(.dark) #btn-dashboard-enter-agora {
+  background-color: #1C1B18 !important;
+  color: #FFFFFF !important;
+}
+
+html:not(.dark) #btn-dashboard-enter-agora:hover {
+  background-color: #33312B !important;
+}
