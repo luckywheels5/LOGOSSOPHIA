@@ -96,6 +96,7 @@
 /* Animação Suave do Círculo de Pomodoro */
 #pomo-circle-progress {
   transition: stroke-dashoffset 1s linear;
+  stroke: #EDEDED;
 }
 
 /* Flip 3D dos Flashcards */
@@ -560,18 +561,18 @@ html:not(.dark) #btn-header-login #header-user-name {
    BRILHO ÂMBAR DIFUSO (LUZ DE VELA MONÁSTICA) & ESTADOS DE FOCO
    ========================================================================== */
 html.dark #pomo-toggle {
-  background-color: #0b0b0b;
-  color: #F8E7B9;
-  border-color: rgba(212, 175, 55, 0.45);
-  box-shadow: 0 0 18px -3px rgba(212, 175, 55, 0.22), 0 0 35px -5px rgba(217, 119, 6, 0.12);
+  background-color: #0e0e0e;
+  color: #EDEDED;
+  border-color: #333333;
+  box-shadow: 0 0 16px -3px rgba(0, 0, 0, 0.7);
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 html.dark #pomo-toggle:hover {
-  background-color: #14120c;
+  background-color: #161616;
   color: #FFFFFF;
-  border-color: rgba(212, 175, 55, 0.8);
-  box-shadow: 0 0 24px -1px rgba(212, 175, 55, 0.38), 0 0 50px -5px rgba(245, 158, 11, 0.22);
+  border-color: #555555;
+  box-shadow: 0 0 20px -2px rgba(255, 255, 255, 0.08);
 }
 
 /* Ágora Cards Selecionados na Ágora */
@@ -645,20 +646,20 @@ body.immersion-mode #atrium-actions-grid:hover {
 }
 
 body.immersion-mode #pomodoro-section {
-  border-color: rgba(212, 175, 55, 0.4) !important;
-  box-shadow: 0 0 50px -10px rgba(212, 175, 55, 0.2), 0 0 100px -25px rgba(217, 119, 6, 0.15) !important;
-  transform: scale(1.008);
+  border-color: #333333 !important;
+  box-shadow: 0 0 40px -10px rgba(0, 0, 0, 0.95), 0 0 25px -5px rgba(255, 255, 255, 0.06) !important;
+  transform: scale(1.005);
   transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 body.immersion-mode #pomo-circle-progress {
-  stroke: #D4AF37 !important;
-  filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.6));
+  stroke: #FFFFFF !important;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.45));
 }
 
 body.immersion-mode #pomo-display {
-  color: #F8E7B9 !important;
-  text-shadow: 0 0 25px rgba(212, 175, 55, 0.4);
+  color: #FFFFFF !important;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
 }
 
 /* Logo Oficial: Contraste e Efeitos de Relevo Metálico */
