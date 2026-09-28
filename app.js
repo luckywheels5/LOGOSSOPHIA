@@ -395,7 +395,10 @@ const DOM = {
   btnNextCard: document.getElementById('btn-next-card'),
   deckProgress: document.getElementById('deck-progress'),
   
-  // Configurações & Login
+  // Configurações, Login & Tema
+  btnToggleTheme: document.getElementById('btn-toggle-theme'),
+  themeToggleIcon: document.getElementById('theme-toggle-icon'),
+  settingThemeSelect: document.getElementById('setting-theme-select'),
   btnSettings: document.getElementById('btn-settings'),
   modalSettings: document.getElementById('modal-settings'),
   btnCloseSettings: document.getElementById('btn-close-settings'),
@@ -743,6 +746,43 @@ function resetPomodoro() {
 }
 
 // ==========================================
+// 6.4. GESTÃO DE TEMA (PERGAMINHO CLARO / NOTURNO)
+// ==========================================
+function applyTheme(theme) {
+  const isLight = (theme === 'light');
+  if (isLight) {
+    document.documentElement.classList.remove('dark');
+    document.documentElement.classList.add('light');
+  } else {
+    document.documentElement.classList.add('dark');
+    document.documentElement.classList.remove('light');
+  }
+  try {
+    localStorage.setItem('logossophia_theme', isLight ? 'light' : 'dark');
+  } catch (e) {
+    console.warn("Falha ao salvar tema no localStorage:", e);
+  }
+
+  const icon = document.getElementById('theme-toggle-icon');
+  if (icon) {
+    icon.textContent = isLight ? '🌙' : '☀️';
+  }
+  const btn = document.getElementById('btn-toggle-theme');
+  if (btn) {
+    btn.setAttribute('title', isLight ? 'Mudar para Modo Noturno (Escuro)' : 'Mudar para Modo Claro (Pergaminho Clássico)');
+  }
+  const themeSelect = document.getElementById('setting-theme-select');
+  if (themeSelect) {
+    themeSelect.value = isLight ? 'light' : 'dark';
+  }
+}
+
+function toggleTheme() {
+  const isDark = document.documentElement.classList.contains('dark');
+  applyTheme(isDark ? 'light' : 'dark');
+}
+
+// ==========================================
 // 6.5. GESTÃO DE CONTAS & PERSISTÊNCIA NO BANCO DE DADOS (SQLite Sync)
 // ==========================================
 function getStoredAccounts() {
@@ -805,6 +845,7 @@ function loadUserAccount(userId, skipDisciplineReload = false) {
   if (DOM.settingCourse) DOM.settingCourse.value = user.course;
   if (DOM.settingGoal) DOM.settingGoal.value = user.goal;
   if (DOM.settingDefaultCycle) DOM.settingDefaultCycle.value = user.defaultCycle || 'superior';
+  if (DOM.settingThemeSelect) DOM.settingThemeSelect.value = user.theme || localStorage.getItem('logossophia_theme') || 'dark';
   if (DOM.settingPomoMin) DOM.settingPomoMin.value = focusMin;
   if (DOM.settingAiMode) DOM.settingAiMode.value = user.aiMode || 'socratic_rigorous';
   if (DOM.settingApiKey) DOM.settingApiKey.value = user.apiKey || '';
@@ -833,6 +874,10 @@ function saveUserAccount() {
   user.course = DOM.settingCourse ? DOM.settingCourse.value.trim() : user.course;
   user.goal = DOM.settingGoal ? DOM.settingGoal.value.trim() : user.goal;
   user.defaultCycle = DOM.settingDefaultCycle ? DOM.settingDefaultCycle.value : user.defaultCycle;
+  if (DOM.settingThemeSelect) {
+    user.theme = DOM.settingThemeSelect.value;
+    applyTheme(user.theme);
+  }
   user.pomoMin = parseInt(DOM.settingPomoMin ? DOM.settingPomoMin.value : 25, 10) || 25;
   user.aiMode = DOM.settingAiMode ? DOM.settingAiMode.value : user.aiMode;
   user.apiKey = DOM.settingApiKey ? DOM.settingApiKey.value.trim() : '';
@@ -1170,6 +1215,10 @@ function createFlashcardFromAgora(synthesisText) {
 // 9. INICIALIZAÇÃO & EVENTOS
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
+  // Inicializa Tema (Modo Pergaminho Claro ou Noturno)
+  const savedTheme = localStorage.getItem('logossophia_theme') || 'dark';
+  applyTheme(savedTheme);
+
   // Inicia carregando o perfil do estudante ativo e suas preferências do banco
   loadUserAccount('usr-erudito-01');
 
@@ -1449,6 +1498,16 @@ document.addEventListener('DOMContentLoaded', () => {
         alert("Autenticado com sucesso.");
         DOM.modalAuth.classList.add('hidden');
       }
+    });
+  }
+
+  if (DOM.btnToggleTheme) {
+    DOM.btnToggleTheme.addEventListener('click', toggleTheme);
+  }
+
+  if (DOM.settingThemeSelect) {
+    DOM.settingThemeSelect.addEventListener('change', (e) => {
+      applyTheme(e.target.value);
     });
   }
 

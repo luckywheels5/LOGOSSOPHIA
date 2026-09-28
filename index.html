@@ -368,6 +368,11 @@
             <span id="header-user-name" class="font-medium max-w-[90px] truncate hidden md:inline">Lucas A.</span>
             <span class="text-[10px] text-textMuted font-sans">▾</span>
           </button>
+
+          <!-- BOTÃO ALTERNADOR DE TEMA (CLARO / PERGAMINHO VS ESCURO) -->
+          <button id="btn-toggle-theme" class="text-textSecondary hover:text-white p-2 border border-cardBorder bg-cardBg hover:bg-neutral-800 rounded-full transition shadow-sm flex items-center justify-center w-8 h-8" title="Alternar Modo Claro (Pergaminho) / Noturno">
+            <span id="theme-toggle-icon" class="text-xs">☀️</span>
+          </button>
           
           <!-- Botão de Configurações -->
           <button id="btn-settings" class="text-textSecondary hover:text-white p-2 border border-cardBorder bg-cardBg hover:bg-neutral-800 rounded-full transition" title="Configurações da Conta & SQLite">
@@ -769,18 +774,25 @@
 
         <!-- SEÇÃO 3: PREFERÊNCIAS DO MOTOR & VIGÍLIA -->
         <div class="pt-3 border-t border-cardBorder space-y-3">
-          <span class="font-mono uppercase text-[10px] tracking-wider text-textMuted block font-semibold">Motor Dialético & Vigília</span>
+          <span class="font-mono uppercase text-[10px] tracking-wider text-textMuted block font-semibold">Aparência, Motor Dialético & Vigília</span>
           
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
-              <label class="block text-textSecondary text-[11px] mb-1">Ciclo Padrão de Estudo:</label>
-              <select id="setting-default-cycle" class="w-full bg-cardInner border border-cardBorder rounded p-2 text-white text-xs focus:border-neutral-500 cursor-pointer">
-                <option value="superior">🎓 Ensino Superior (Graduações)</option>
-                <option value="bncc">🏫 Educação Básica (BNCC / ENEM)</option>
+              <label class="block text-textSecondary text-[11px] mb-1">Tema Visual:</label>
+              <select id="setting-theme-select" class="w-full bg-cardInner border border-cardBorder rounded p-2 text-white text-xs focus:border-neutral-500 cursor-pointer">
+                <option value="dark">🌙 Noturno (Dark)</option>
+                <option value="light">☀️ Pergaminho (Claro)</option>
               </select>
             </div>
             <div>
-              <label class="block text-textSecondary text-[11px] mb-1">Vigília Pomodoro (minutos):</label>
+              <label class="block text-textSecondary text-[11px] mb-1">Ciclo Padrão:</label>
+              <select id="setting-default-cycle" class="w-full bg-cardInner border border-cardBorder rounded p-2 text-white text-xs focus:border-neutral-500 cursor-pointer">
+                <option value="superior">🎓 Ensino Superior</option>
+                <option value="bncc">🏫 BNCC / Escolar</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-textSecondary text-[11px] mb-1">Vigília (minutos):</label>
               <input type="number" id="setting-pomo-min" value="30" min="5" max="90" class="w-full bg-cardInner border border-cardBorder rounded p-2 text-white font-mono text-xs focus:border-neutral-500">
             </div>
           </div>
