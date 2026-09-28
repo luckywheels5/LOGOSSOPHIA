@@ -1026,15 +1026,6 @@ function resetUserAccountData() {
   AppState.flashcards = [];
   AppState.currentCardIndex = 0;
 
-  // Sincroniza exclusão no backend SQLite
-  try {
-    fetch('http://localhost:8000/api/user/reset', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ user_id: AppState.currentUserId })
-    }).catch(() => {});
-  } catch (e) {}
-
   loadUserAccount(AppState.currentUserId, true);
   alert("Todos os dados da sua conta foram zerados com sucesso.");
 }
@@ -1127,9 +1118,6 @@ function loadUserAccount(userId, skipDisciplineReload = false) {
     const discToLoad = user.activeDiscipline || (cycle === 'bncc' ? 'bncc_redacao' : 'law');
     loadDiscipline(discToLoad, false);
   }
-
-  // Sincroniza em background se servidor estiver ativo
-  syncUserWithBackend(user.id);
 }
 
 function saveUserAccount() {
@@ -1155,46 +1143,7 @@ function saveUserAccount() {
   saveStoredAccounts(accounts);
   loadUserAccount(userId, false);
 
-  // Envia POST para o servidor Python / SQLite em background
-  try {
-    fetch('http://localhost:8000/api/user/profile', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        user_id: user.id,
-        active_cycle: user.defaultCycle,
-        active_discipline: user.activeDiscipline,
-        institution: user.institution,
-        course_or_grade: user.course,
-        study_goal: user.goal,
-        pomo_focus_min: user.pomoMin,
-        ai_mode: user.aiMode,
-        ai_api_key: user.apiKey
-      })
-    }).then(r => r.json()).then(res => {
-      console.log("[SQLite Sync] Perfil atualizado no banco:", res);
-    }).catch(() => {
-      console.log("[Modo Offline] Perfil salvo no armazenamento local.");
-    });
-  } catch (e) {}
-
-  alert(`Configurações de ${user.name} salvas e vinculadas à conta!`);
-}
-
-function syncUserWithBackend(userId) {
-  try {
-    fetch(`http://localhost:8000/api/user?id=${userId}`)
-      .then(r => {
-        if (!r.ok) throw new Error("Backend offline");
-        return r.json();
-      })
-      .then(data => {
-        if (data && data.user) {
-          console.log("[SQLite Sync] Conexão ativa com banco SQLite:", data.user.name);
-        }
-      })
-      .catch(() => {});
-  } catch (e) {}
+  alert(`Configurações de ${user.name} salvas com sucesso!`);
 }
 
 function recordStudySession(durationSec, type = 'pomodoro') {
@@ -1216,22 +1165,6 @@ function recordStudySession(durationSec, type = 'pomodoro') {
     saveStoredAccounts(accounts);
     loadUserAccount(AppState.currentUserId, true);
   }
-
-  try {
-    fetch('http://localhost:8000/api/sessions', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        user_id: AppState.currentUserId,
-        discipline_key: AppState.currentDiscipline,
-        cycle: AppState.currentCycle,
-        duration_seconds: durationSec,
-        session_type: type
-      })
-    }).then(r => r.json()).then(res => {
-      console.log("[SQLite Sync] Sessão arquivada no banco:", res);
-    }).catch(() => {});
-  } catch (e) {}
 }
 
 // ==========================================

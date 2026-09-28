@@ -233,7 +233,7 @@
           </button>
 
           <!-- Botão de Configurações -->
-          <button id="btn-settings" class="text-textSecondary hover:text-white p-2 border border-cardBorder bg-[#181818] hover:bg-neutral-800 rounded-full transition shadow-sm flex items-center justify-center w-8 h-8" title="Configurações da Conta & SQLite">
+          <button id="btn-settings" class="text-textSecondary hover:text-white p-2 border border-cardBorder bg-[#181818] hover:bg-neutral-800 rounded-full transition shadow-sm flex items-center justify-center w-8 h-8" title="Configurações da Conta">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -383,7 +383,7 @@
             <div class="px-5 py-4 border-b border-cardBorder/70 bg-[#161616] flex items-center justify-between">
               <div class="flex items-center space-x-2">
                 <span class="text-xs uppercase font-mono tracking-wider font-semibold text-textSecondary">HISTÓRICO DE SESSÕES ANTERIORES</span>
-                <span class="text-[10px] font-mono text-textMuted bg-neutral-900 border border-neutral-800 px-2 py-0.5 rounded">SQLite Persistente</span>
+                <span class="text-[10px] font-mono text-textMuted bg-neutral-900 border border-neutral-800 px-2 py-0.5 rounded">Armazenamento Ativo</span>
               </div>
               <span class="text-xs text-textMuted font-mono">Últimas sessões registradas no perfil</span>
             </div>
@@ -831,7 +831,7 @@
           <div class="w-8 h-8 rounded-full bg-neutral-900 border border-neutral-700 flex items-center justify-center text-sm shadow-inner">🏛️</div>
           <div>
             <h3 class="font-cinzel text-base font-bold text-white tracking-wide">Conta & Autenticação</h3>
-            <span class="text-[10px] font-mono text-textMuted uppercase">Ágora Logossophia • SQLite</span>
+            <span class="text-[10px] font-mono text-textMuted uppercase">Ágora Logossophia</span>
           </div>
         </div>
         <button id="btn-close-auth" class="text-textSecondary hover:text-white font-mono text-xl leading-none">&times;</button>
@@ -840,14 +840,14 @@
       <!-- Abas: Perfis Rápidos vs Login Tradicional -->
       <div class="flex border-b border-cardBorder mb-4 text-xs font-mono">
         <button id="tab-btn-profiles" class="flex-1 py-2 text-center text-white border-b-2 border-white font-semibold transition">
-          Perfis de Estudo (SQLite)
+          Perfis de Estudo
         </button>
         <button id="tab-btn-credentials" class="flex-1 py-2 text-center text-textMuted hover:text-white transition">
           Entrar com E-mail
         </button>
       </div>
 
-      <!-- Painel 1: Troca Rápida de Perfil do Banco SQLite -->
+      <!-- Painel 1: Troca Rápida de Perfil -->
       <div id="auth-panel-profiles" class="space-y-3">
         <p class="text-xs text-textSecondary font-sans leading-relaxed">
           Selecione sua conta para carregar automaticamente a matriz curricular, as Tabulae e o tempo de vigília:
@@ -920,7 +920,7 @@
       <div class="mt-5 pt-3 border-t border-cardBorder flex items-center justify-between text-[10px] font-mono text-textMuted">
         <span class="flex items-center space-x-1">
           <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block animate-pulse"></span>
-          <span>SQLite / Local Storage Conectado</span>
+          <span>Armazenamento Sincronizado</span>
         </span>
         <button id="btn-open-settings-from-auth" class="text-neutral-400 hover:text-white underline">
           Configurações Completas ⚙️
@@ -966,7 +966,7 @@
           <span class="text-lg">🏛️</span>
           <div>
             <h3 class="font-cinzel text-base font-bold text-white tracking-wide">Conta & Configurações</h3>
-            <span class="text-[10px] font-mono text-textMuted uppercase">Perfil de Estudo & Banco SQLite</span>
+            <span class="text-[10px] font-mono text-textMuted uppercase">Perfil de Estudo & Preferências</span>
           </div>
         </div>
         <button id="btn-close-settings" class="text-textSecondary hover:text-white font-mono text-xl leading-none">&times;</button>
@@ -974,13 +974,13 @@
 
       <div class="space-y-5 text-xs font-sans">
         
-        <!-- SEÇÃO 1: CONTA & TROCA RÁPIDA DE PERFIL DO BANCO -->
+        <!-- SEÇÃO 1: CONTA & TROCA RÁPIDA DE PERFIL -->
         <div class="p-3.5 bg-cardInner border border-cardBorder rounded-lg space-y-3">
           <div class="flex items-center justify-between">
-            <span class="font-mono uppercase text-[10px] tracking-wider text-textSecondary font-semibold">Conta Ativa (Banco SQLite):</span>
+            <span class="font-mono uppercase text-[10px] tracking-wider text-textSecondary font-semibold">Conta Ativa:</span>
             <span class="text-[9px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-800/80 px-2 py-0.5 rounded-full flex items-center space-x-1">
               <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block animate-pulse"></span>
-              <span>SQLite Conectado</span>
+              <span>Sincronizado</span>
             </span>
           </div>
           
@@ -1077,7 +1077,7 @@
           </button>
           <button id="btn-save-settings" type="button" class="px-4 py-2 bg-white hover:bg-neutral-200 text-black font-semibold rounded text-xs transition shadow-sm flex items-center space-x-1.5">
             <span>💾</span>
-            <span>Salvar no Banco</span>
+            <span>Salvar Alterações</span>
           </button>
         </div>
       </div>
