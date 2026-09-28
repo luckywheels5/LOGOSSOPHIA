@@ -698,3 +698,34 @@ html:not(.dark) img[src*="logo-"] {
   filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4)) contrast(1.1) brightness(0.88);
 }
 
+/* Conteúdo Markdown da Ágora (Modo Aprender & Maiêutica) */
+.agora-content h2, .agora-content h3, .agora-content h4 {
+  font-family: 'Cinzel', serif;
+  letter-spacing: 0.03em;
+}
+
+.agora-content ul, .agora-content ol {
+  padding-left: 1.15rem;
+}
+
+.agora-content li {
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.agora-content blockquote {
+  border-left: 2px solid #d4af37;
+  padding: 0.4rem 0.75rem;
+  margin: 0.6rem 0;
+  font-style: italic;
+  color: #c4c4c4;
+  background-color: rgba(20, 20, 20, 0.6);
+  border-radius: 0 0.375rem 0.375rem 0;
+}
+
+html:not(.dark) .agora-content blockquote {
+  color: #4a453e;
+  background-color: rgba(220, 210, 195, 0.4);
+}
+
+

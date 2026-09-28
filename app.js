@@ -389,7 +389,8 @@ const AppState = {
   currentCardIndex: 0,
   selectedTextForAgora: "",
   uploadedText: "",
-  uploadedFileName: ""
+  uploadedFileName: "",
+  learningMode: 'expository' // 'expository' (explicar/ensinar) ou 'maieutics' (sabatina/desafio)
 };
 
 // ==========================================
@@ -430,6 +431,10 @@ const DOM = {
   chatInput: document.getElementById('chat-input'),
   btnClearChat: document.getElementById('btn-clear-chat'),
   quickPromptBtns: document.querySelectorAll('.quick-prompt-btn'),
+  btnModeExpository: document.getElementById('btn-mode-expository'),
+  btnModeMaieutics: document.getElementById('btn-mode-maieutics'),
+  quickBtnToggleMaieutics: document.getElementById('quick-btn-toggle-maieutics'),
+  agoraModeIndicatorText: document.getElementById('agora-mode-indicator-text'),
   
   // Pomodoro
   pomoDisplay: document.getElementById('pomo-display'),
@@ -547,55 +552,155 @@ class SocraticEngine {
   static evaluateInput(userInput, discipline, contextText = '') {
     const raw = userInput.trim();
     const text = raw.toLowerCase();
+    const mode = AppState.learningMode || 'expository';
 
     // Contexto textual (seja de upload ou de disciplina da base)
     const effectiveContext = contextText || (KNOWLEDGE_BASE[discipline] ? KNOWLEDGE_BASE[discipline].text || '' : '');
     const docKeywords = SocraticEngine.extractSignificantWords(effectiveContext, 6);
     const userKeywords = SocraticEngine.extractSignificantWords(raw, 5);
+    const docTitle = AppState.uploadedFileName || (KNOWLEDGE_BASE[discipline] ? KNOWLEDGE_BASE[discipline].title : 'Tratado em Exame');
 
-    // 1. Recusa Socrática de Resumo Passivo
-    if (text.includes("resumo") || text.includes("resuma") || text.includes("sintetize") || text.includes("faça um resumo") || text.includes("me explica tudo") || text.includes("o que diz ai")) {
-      const topConcept = docKeywords[0] ? `a respeito de *${docKeywords[0]}*` : "apresentada pelo autor";
-      return {
-        type: 'refusal_summary',
-        reply: `Ágora recusa o atalho do resumo passivo. A memorização mecânica da síntese alheia não produz entendimento real.\n\nRetorne ao primeiro parágrafo do texto em exame: qual sentença estabelece a premissa indispensável ${topConcept}? Formule-a em uma única linha.`
-      };
-    }
-
-    // 2. Recusa de Resposta Pronta
-    if (text.includes("qual a resposta") || text.includes("me dê a resposta") || text.includes("qual é a resposta") || text.includes("me diga a resposta") || text.includes("resolva para mim") || text.includes("resolva isso")) {
-      return {
-        type: 'refusal_answer',
-        reply: `Entregar a resposta pronta privaria você do próprio ato de pensar.\n\nDemos um passo atrás na cadeia dedutiva: qual axioma ou dado inicial o autor estabelece como inquestionável para fundamentar a conclusão?`
-      };
-    }
-
-    // 3. Deteção de Aporia / Não Saber
-    if (text === "não sei" || text === "nao sei" || text.includes("não entendi nada") || text.includes("nao faço ideia") || text.includes("estou perdido") || text.includes("muito difícil")) {
-      const focalConcept = docKeywords[0] || "o elemento principal";
-      return {
-        type: 'breakdown',
-        reply: `A aporia — o reconhecimento humilde do não saber — é o ponto exato onde a verdadeira sabedoria tem início.\n\nIsolemos apenas a primeira sentença do documento: qual é a relação que o autor propõe entre *${focalConcept}* e a realidade observada? Diga-me apenas este ponto.`
-      };
-    }
-
-    // 4. Saudações ou Perguntas sobre o Conteúdo do Arquivo
-    if (text === "oi" || text === "olá" || text === "ola" || text.includes("do que se trata") || text.includes("qual o tema") || text.includes("sobre o que") || text.includes("você leu") || text.includes("o que tem no arquivo") || text.includes("começar")) {
-      if (docKeywords.length > 0) {
+    // ==========================================
+    // MODO EXPOSITIVO & DIDÁTICO (APRENDER & EXPLICAR)
+    // ==========================================
+    if (mode === 'expository') {
+      // 1. Pedido de Resumo, Apanhado Geral ou Síntese
+      if (text.includes("resumo") || text.includes("resuma") || text.includes("sintetize") || text.includes("faça um resumo") || text.includes("apanhado") || text.includes("síntese") || text.includes("me explica tudo") || text.includes("do que se trata") || text.includes("qual o tema") || text.includes("sobre o que")) {
         return {
-          type: 'overview_maieutics',
-          reply: `O documento submetido investiga premissas estruturadas em torno de: **${docKeywords.slice(0, 3).join(', ')}**.\n\nPara que o estudo seja ativo: a partir da leitura do primeiro parágrafo no Scriptorium, qual parece ser a hipótese central ou o conflito que o autor pretende solucionar?`,
+          type: 'expository_summary',
+          reply: generateLocalDocOverview(effectiveContext, docTitle),
           allowFlashcard: true
         };
-      } else {
+      }
+
+      // 2. Pedido de Resposta Pronta ou Esclarecimento Direto
+      if (text.includes("qual a resposta") || text.includes("qual é a resposta") || text.includes("me dê a resposta") || text.includes("resolva para mim") || text.includes("qual a conclusão") || text.includes("qual o resultado")) {
+        const topConcepts = docKeywords.slice(0, 3).map(k => `*${k}*`).join(', ');
         return {
-          type: 'greeting',
-          reply: `Estou pronta para examinar o documento convosco. Aponte a primeira proposição que chamou sua atenção no texto para iniciarmos o diálogo socrático.`
+          type: 'expository_answer',
+          reply: `### 💡 Resposta & Resolução Conceitual\n\nNo contexto de **${docTitle}**, a resposta fundamenta-se na articulação entre ${topConcepts || 'as premissas essenciais do texto'}.\n\nO autor estabelece que a conclusão necessária decorre da demonstração das premissas: quando as condições normativas ou empíricas são satisfeitas, o resultado não é arbitrário, mas uma consequência dedutiva obrigatória.\n\n*Deseja que eu detalhe o passo a passo lógico dessa demonstração ou você já se sente seguro para testar sua retenção no Modo Maiêutica?*`,
+          allowFlashcard: true
         };
       }
+
+      // 3. Explicação Didática de Conceitos / "Não entendi" / Dúvidas
+      if (text.includes("não entendi") || text.includes("nao entendi") || text.includes("como funciona") || text.includes("o que significa") || text.includes("me explique") || text.includes("me explica") || text.includes("não sei") || text.includes("difícil")) {
+        const queryTerm = userKeywords[0] || docKeywords[0] || "o ponto em exame";
+        return {
+          type: 'expository_clarification',
+          reply: `### 📖 Esclarecimento Didático: *${queryTerm}*\n\nNão se preocupe: este é exatamente o momento de consolidar o entendimento.\n\n**O que o texto estabelece:**\nO ponto central em torno de **${queryTerm}** funciona como um elo lógico. O autor não propõe uma opinião isolada, mas conecta este elemento aos princípios gerais de *${docTitle}*.\n\n**Em termos práticos:**\nImagine isso como uma cadeia de causa e efeito: se a premissa inicial for verdadeira, a aplicação de ${queryTerm} determina o desfecho do problema.\n\nFicou mais claro? Sinta-se livre para perguntar qualquer outro detalhe do texto!`,
+          allowFlashcard: true
+        };
+      }
+
+      // 4. Saudações ou início
+      if (text === "oi" || text === "olá" || text === "ola" || text.includes("começar") || text.includes("ajuda")) {
+        return {
+          type: 'expository_greeting',
+          reply: `Olá! Estou à sua disposição no **Modo Aprender & Explicar**.\n\nO material ativo é **"${docTitle}"**.\n\nVocê pode me pedir:\n- Um **Apanhado Geral** completo;\n- A explicação de qualquer termo ou parágrafo que ache confuso;\n- A resolução fundamentada das questões do texto.\n\nO que gostaria de examinar primeiro?`,
+          allowFlashcard: false
+        };
+      }
+
+      // 5. Explicação Didática Geral baseada na Disciplina
+      if (discipline === 'law') {
+        return {
+          type: 'expository_law',
+          reply: `### ⚖️ Hermenêutica Jurídica & Devido Processo Legal\n\nNo caso paradigma em exame, o núcleo da questão é o **princípio da proporcionalidade** aplicado à colisão entre *ampla defesa* (Art. 5º, LV) e *razoável duração do processo* (Art. 5º, LXXVIII).\n\n**Explicação Didática:**\n- O direito à prova **não é absoluto**: o magistrado atua como *gestor epistêmico* e tem o poder-dever de indeferir diligências protelatórias ou impertinentes (Art. 370 do CPC / Art. 400 do CPP).\n- O contraditório substancial exige que a parte possa produzir provas *pertinentes* e *úteis*, não infinitas.\n\nFicou claro este balanceamento constitucional? Quando desejar, ative a Maiêutica para ser sabatinado!`,
+          allowFlashcard: true
+        };
+      }
+
+      if (discipline === 'med') {
+        return {
+          type: 'expository_med',
+          reply: `### 🩺 Fisiologia Renal & Mecanismo do ADH\n\n**Explicação dos Mecanismos:**\n1. **Osmorreceptores no OVLT**: Detectam aumento na osmolaridade plasmática (> 295 mOsm/kg) por desidratação ou sobrecarga de solutos.\n2. **Secreção de ADH**: A neuro-hipófise libera vasopressina, que se liga a receptores V2 nas células do túbulo coletor.\n3. **Aquaporinas-2 (AQP2)**: Vesículas intracelulares se fundem na membrana apical, permitindo o influxo de água.\n4. **Papel Crucial da Medula**: O gradiente hiperosmótico gerado pela Alça de Henle atrai a água por osmose. Sem esse gradiente, as aquaporinas estariam abertas, mas a água não seria reabsorvida!\n\nQuer aprofundar na fisiopatologia ou prefere ser sabatinado na Maiêutica?`,
+          allowFlashcard: true
+        };
+      }
+
+      if (discipline === 'cs') {
+        return {
+          type: 'expository_cs',
+          reply: `### 💻 Análise Assintótica: Merge Sort & Big-O\n\n**Entendendo a Complexidade O(n log n):**\n- **Divisão**: O vetor é repartido pela metade a cada nível. A altura da árvore de recursão é exatamente $\\log_2 n$.\n- **Conquista & Intercalação (Merge)**: Em cada um dos $\\log n$ níveis, intercalar todos os subarrays percorre cada elemento uma vez, consumindo trabalho linear $O(n)$.\n- **Cálculo Global**: Multiplicando o custo por nível pelo número de níveis, temos $O(n) \\times O(\\log n) = O(n \\log n)$.\n- **Garantia Teórica**: O Merge Sort atinge o limite inferior teórico para ordenação baseada em comparação (nenhum algoritmo baseado em comparação pode ser assintoticamente mais rápido que $n \\log n$).\n\nDúvida sobre a memória adicional $O(n)$ necessária?`,
+          allowFlashcard: true
+        };
+      }
+
+      if (discipline === 'philosophy') {
+        return {
+          type: 'expository_philosophy',
+          reply: `### 🏛️ Platão: O Mito do Anel de Giges\n\n**Contexto e Significado:**\n- **A Provocação de Glauco**: Glauco argumenta que ninguém é justo por vontade própria, mas apenas por medo da vergonha, reprovação ou castigo social. O anel que confere invisibilidade permite agir sem consequências externas.\n- **A Resposta Platônica de Sócrates**: Sócrates demonstra que a injustiça adoece a alma. A justiça não é valorizada apenas por seus frutos externos, mas porque uma alma harmoniosa e virtuosa é a única que atinge a verdadeira eudaimonia (felicidade plena).\n\nCompreende a distinção entre a moralidade heterônoma (medo da punição) e a virtude autônoma platônica?`,
+          allowFlashcard: true
+        };
+      }
+
+      if (discipline === 'theology') {
+        return {
+          type: 'expository_theology',
+          reply: `### 📜 Romanos 9: Soberania da Graça e Misericórdia\n\n**Síntese Exegética & Teológica:**\n- **A Pergunta do Versículo 14**: "Há injustiça da parte de Deus?". Paulo responde enfaticamente: "De maneira nenhuma".\n- **O Princípio da Misericórdia (v. 15-16)**: A graça não é uma dívida que Deus tem para com o mérito humano, mas uma dádiva soberana ("não depende do que quer, nem do que corre, mas de Deus").\n- **A Metáfora do Oleiro (v. 20-21)**: Ilustra a distinção ontológica radical entre Criador e criatura, ressaltando que o padrão supremo de retidão emana do próprio caráter soberano de Deus.\n\nGostaria de esclarecer o contexto histórico da carta aos Romanos?`,
+          allowFlashcard: true
+        };
+      }
+
+      if (discipline === 'exact') {
+        return {
+          type: 'expository_exact',
+          reply: `### 📐 Teorema de Euclides: A Infinitude dos Primos\n\n**Passo a Passo da Demonstração por Redução ao Absurdo:**\n1. Supõe-se uma lista finita de primos: $A, B, C$.\n2. Constrói-se um novo número $P = (A \\times B \\times C) + 1$.\n3. Se $P$ for primo, achamos um primo fora da lista original.\n4. Se $P$ for composto, ele deve ser divisível por algum primo $G$.\n5. Se $G$ estivesse na lista, ele dividiria o produto $(A \\times B \\times C)$. Como ele também divide $P$, ele teria que dividir a diferença $P - (A \\times B \\times C) = 1$.\n6. Porém, nenhum número primo divide 1! Essa contradição prova que a lista finita original era impossível: logo, os números primos são infinitos.`,
+          allowFlashcard: true
+        };
+      }
+
+      if (discipline === 'admin') {
+        return {
+          type: 'expository_admin',
+          reply: `### 📈 Ronald Coase: A Natureza da Firma e Custos de Transação\n\n**Conceitos Fundamentais:**\n- **O Problema de Coase**: Se os preços do mercado coordenam a economia eficientemente, por que existem empresas hierarquizadas?\n- **Custos de Transação**: Negociar no mercado custa caro (procurar parceiros, negociar minutas de contrato, auditar cumprimento, riscos jurídicos).\n- **A Solução da Firma**: Ao contratar funcionários sob autoridade central, a empresa reduz drasticamente esses custos contratuais repetitivos.\n- **O Limite de Tamanho**: A empresa cresce até o ponto em que o custo de gerenciar uma transação interna se iguala ao custo de contratá-la no mercado livre.`,
+          allowFlashcard: true
+        };
+      }
+
+      // Resposta didática geral para upload ou outras disciplinas
+      const studentConcept = userKeywords[0] || docKeywords[0] || "o ponto abordado";
+      return {
+        type: 'expository_general',
+        reply: `### 📖 Explicação Didática: "${docTitle}"\n\nCom relação ao conceito de **${studentConcept}**:\n\nNo desenvolvimento do texto, esse conceito é estruturado para fundamentar a tese principal. O autor articula argumentos dedutivos conectando as premissas iniciais aos resultados práticos da matéria.\n\n**Resumo Estruturado:**\n1. A premissa central apoia-se em definições rigorosas.\n2. O conceito de *${studentConcept}* atua como catalisador da demonstração.\n3. A conclusão decorre da não-contradição entre os pontos postulados.\n\n*Tem alguma dúvida pontual sobre esse trecho ou deseja que eu aprofunde algum parágrafo específico? Quando estiver pronto, ative o Modo Maiêutica para ser sabatinado!*`,
+        allowFlashcard: true
+      };
     }
 
-    // 5. Se estivermos com Material de Upload Próprio ou Texto Específico
+    // ==========================================
+    // MODO MAIÊUTICA & SABATINA (REFINAR & TESTAR)
+    // ==========================================
+    // 1. Resumo na Maiêutica: desafia o usuário a formular sua própria síntese
+    if (text.includes("resumo") || text.includes("resuma") || text.includes("sintetize") || text.includes("me explica tudo")) {
+      const topConcept = docKeywords[0] ? `a respeito de *${docKeywords[0]}*` : "apresentada pelo autor";
+      return {
+        type: 'maieutics_challenge_summary',
+        reply: `Você está no **Modo Maiêutica** para testar sua retenção!\n\nEm vez de receber uma síntese passiva, formule com suas próprias palavras: qual é a premissa indispensável ${topConcept} que você reteve do estudo? Diga em uma única sentença para testarmos sua precisão.`,
+        allowFlashcard: true
+      };
+    }
+
+    // 2. Resposta Pronta na Maiêutica: instiga dedução ativa
+    if (text.includes("qual a resposta") || text.includes("me dê a resposta") || text.includes("resolva para mim")) {
+      return {
+        type: 'maieutics_challenge_answer',
+        reply: `Na sabatina dialética, o examinador não entrega o resultado pronto; testa a sua capacidade de deduzi-lo.\n\nDemos um passo atrás na cadeia dedutiva: qual axioma ou dado inicial o autor estabelece como inquestionável para fundamentar a conclusão?`,
+        allowFlashcard: true
+      };
+    }
+
+    // 3. Aporia / Dúvida genuína na Maiêutica
+    if (text === "não sei" || text === "nao sei" || text.includes("não entendi nada") || text.includes("estou perdido")) {
+      const focalConcept = docKeywords[0] || "o elemento principal";
+      return {
+        type: 'maieutics_aporia',
+        reply: `A aporia — o reconhecimento humilde do não saber — é o ponto de partida do exame dialético.\n\nIsolemos a proposição inicial: qual é a relação que o autor propõe entre *${focalConcept}* e o problema central? Responda este único ponto para reconstruirmos o raciocínio juntos. *(Ou, se preferir uma explicação direta, volte ao Modo Aprender no botão acima).*`,
+        allowFlashcard: true
+      };
+    }
+
+    // 4. Dialética em Upload Próprio
     if (discipline === 'upload' || (effectiveContext && effectiveContext.length > 50 && discipline !== 'upload' && !KNOWLEDGE_BASE[discipline])) {
       const studentConcept = userKeywords[0] || (userKeywords[1] || "essa sua conclusão");
       const docConcept = docKeywords[0] || (docKeywords[1] || "a tese central");
@@ -615,7 +720,7 @@ class SocraticEngine {
       };
     }
 
-    // 6. Disciplinas do Saber (Base Curricular Superior)
+    // 5. Disciplinas do Saber (Base Curricular Superior)
     if (discipline === 'philosophy') {
       if (text.includes("egoísta") || text.includes("sempre má") || text.includes("ilusão")) {
         return {
@@ -760,6 +865,215 @@ class SocraticEngine {
 }
 
 // ==========================================
+// 4.2. FORMATADOR DE MARKDOWN & GESTÃO DE MODOS
+// ==========================================
+function formatAgoraMarkdown(text) {
+  if (!text) return '';
+  
+  // Escape HTML entities to prevent XSS
+  let safe = text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+
+  // Headers (###, ##, #)
+  safe = safe.replace(/^### (.*$)/gim, '<h4 class="font-cinzel text-amber-300 font-semibold text-sm mt-3 mb-1.5 border-b border-cardBorder/60 pb-1">$1</h4>');
+  safe = safe.replace(/^## (.*$)/gim, '<h3 class="font-cinzel text-white font-bold text-base mt-3 mb-1.5">$1</h3>');
+  safe = safe.replace(/^# (.*$)/gim, '<h2 class="font-cinzel text-white font-bold text-lg mt-3 mb-2">$1</h2>');
+
+  // Bold & Italic
+  safe = safe.replace(/\*\*\*(.*?)\*\*\*/g, '<strong class="text-white font-semibold"><em>$1</em></strong>');
+  safe = safe.replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-semibold">$1</strong>');
+  safe = safe.replace(/\*(.*?)\*/g, '<em class="text-neutral-300">$1</em>');
+
+  // Inline code
+  safe = safe.replace(/`([^`]+)`/g, '<code class="bg-[#181818] border border-neutral-700/60 px-1 py-0.5 rounded text-amber-300 font-mono text-[11px]">$1</code>');
+
+  // Blockquotes (&gt; quote)
+  safe = safe.replace(/^&gt; (.*$)/gim, '<blockquote class="border-l-2 border-amber-500/70 pl-3 py-1.5 my-2 bg-neutral-900/60 text-neutral-300 italic text-xs rounded-r">$1</blockquote>');
+
+  // Bullet items
+  safe = safe.replace(/^\s*[-*]\s+(.*$)/gim, '<li class="ml-4 list-disc text-neutral-200 my-0.5">$1</li>');
+  safe = safe.replace(/((?:<li class="ml-4 list-disc[^"]*">.*?<\/li>\s*)+)/gs, '<ul class="my-2 space-y-1">$1</ul>');
+
+  // Numbered list items
+  safe = safe.replace(/^\s*(\d+)\.\s+(.*$)/gim, '<li class="ml-4 list-decimal text-neutral-200 my-0.5"><span class="font-mono text-amber-400 font-bold">$1.</span> $2</li>');
+  safe = safe.replace(/((?:<li class="ml-4 list-decimal[^"]*">.*?<\/li>\s*)+)/gs, '<ol class="my-2 space-y-1">$1</ol>');
+
+  // Paragraph breaks
+  const paragraphs = safe.split(/\n\s*\n/);
+  return paragraphs.map(p => {
+    const trimmed = p.trim();
+    if (!trimmed) return '';
+    if (trimmed.startsWith('<h') || trimmed.startsWith('<ul') || trimmed.startsWith('<ol') || trimmed.startsWith('<blockquote')) {
+      return trimmed;
+    }
+    return `<p class="leading-relaxed">${trimmed.replace(/\n/g, '<br>')}</p>`;
+  }).filter(Boolean).join('');
+}
+
+function setLearningMode(mode, notify = false) {
+  AppState.learningMode = mode;
+
+  if (DOM.btnModeExpository && DOM.btnModeMaieutics) {
+    if (mode === 'expository') {
+      DOM.btnModeExpository.className = 'px-2.5 py-1 rounded-md transition font-medium text-white bg-neutral-800 border border-neutral-700 shadow-sm flex items-center space-x-1';
+      DOM.btnModeMaieutics.className = 'px-2.5 py-1 rounded-md transition font-medium text-textMuted hover:text-white flex items-center space-x-1';
+    } else {
+      DOM.btnModeMaieutics.className = 'px-2.5 py-1 rounded-md transition font-medium text-amber-300 bg-amber-950/60 border border-amber-500/40 shadow-sm flex items-center space-x-1';
+      DOM.btnModeExpository.className = 'px-2.5 py-1 rounded-md transition font-medium text-textMuted hover:text-white flex items-center space-x-1';
+    }
+  }
+
+  if (DOM.agoraModeIndicatorText) {
+    if (mode === 'expository') {
+      DOM.agoraModeIndicatorText.innerHTML = '📖 <strong class="text-neutral-300">Modo Aprender:</strong> a Ágora responde dúvidas e explica conceitos do texto.';
+    } else {
+      DOM.agoraModeIndicatorText.innerHTML = '⚡ <strong class="text-amber-400">Modo Maiêutica:</strong> a Ágora sabatina e desafia seu raciocínio.';
+    }
+  }
+
+  if (DOM.chatInput) {
+    if (mode === 'expository') {
+      DOM.chatInput.placeholder = 'Tire uma dúvida, peça uma explicação ou um resumo deste texto...';
+    } else {
+      DOM.chatInput.placeholder = 'Responda à sabatina socrática ou defenda sua tese...';
+    }
+  }
+
+  if (notify) {
+    if (mode === 'maieutics') {
+      appendAgoraMessage(
+        `⚡ **Modo Maiêutica Ativado.**\n\nAgora que você teve contato com o material, examinaremos seu raciocínio crítico e testaremos sua retenção.\n\nApresente a tese que você extraiu ou responda: **qual é o ponto central ou a premissa mais vulnerável deste texto?**`,
+        { allowFlashcard: true, showMaieuticsCta: false, badge: 'Sabatina Ativa' }
+      );
+    } else {
+      appendAgoraMessage(
+        `📖 **Modo Expositivo Ativado.**\n\nA Ágora está em modo didático. Você pode me fazer qualquer pergunta sobre o material, pedir explicações de passagens complexas ou solicitar análises conceituais. Do que você tem dúvida?`,
+        { allowFlashcard: false, showMaieuticsCta: false, badge: 'Aprender & Explicar' }
+      );
+    }
+  }
+}
+
+function generateLocalDocOverview(text, fileName) {
+  const paragraphs = (text || '')
+    .split(/\n\s*\n|\n/)
+    .map(p => p.trim())
+    .filter(p => p.length > 25);
+
+  const keywords = SocraticEngine.extractSignificantWords(text, 8);
+  const keyList = keywords.slice(0, 5).map(k => `*${k.charAt(0).toUpperCase() + k.slice(1)}*`).join(', ');
+
+  const firstPara = paragraphs[0] ? paragraphs[0].substring(0, 320) + (paragraphs[0].length > 320 ? '...' : '') : 'O documento apresenta proposições conceituais estruturadas no Scriptorium.';
+  const midPara = paragraphs[Math.floor(paragraphs.length / 2)] ? paragraphs[Math.floor(paragraphs.length / 2)].substring(0, 260) + '...' : null;
+  const lastPara = (paragraphs.length > 2 && paragraphs[paragraphs.length - 1]) ? paragraphs[paragraphs.length - 1].substring(0, 260) + '...' : null;
+
+  let synthesis = `### 📜 Apanhado Geral: "${fileName}"\n\n`;
+  synthesis += `**1. Tese Central & Escopo Geral:**\n`;
+  synthesis += `O material articula noções em torno de ${keyList || 'seus conceitos fundamentais'}. A proposta textual estrutura-se a partir de definições rigorosas e dedução sequencial.\n\n`;
+  synthesis += `> "${firstPara}"\n\n`;
+
+  synthesis += `**2. 🔑 Pilares Conceituais Identificados:**\n`;
+  if (keywords.length > 0) {
+    keywords.slice(0, 4).forEach((kw) => {
+      const cap = kw.charAt(0).toUpperCase() + kw.slice(1);
+      synthesis += `- **${cap}**: Eixo estruturante na argumentação do autor.\n`;
+    });
+  } else {
+    synthesis += `- **Fundamentação Temática**: Desenvolvimento analítico do objeto de estudo.\n`;
+    synthesis += `- **Articulação Lógica**: Demonstração de premissas e dedução consequente.\n`;
+  }
+
+  if (midPara || lastPara) {
+    synthesis += `\n**3. 💡 Linha Argumentativa & Desfecho:**\n`;
+    if (midPara) synthesis += `Ao longo do desenvolvimento, o texto destaca: *"${midPara}"*\n\n`;
+    if (lastPara) synthesis += `Em suas conclusões fundamentais, o texto sustenta: *"${lastPara}"*\n\n`;
+  }
+
+  synthesis += `**4. 🧭 Roteiro Pedagógico:**\n`;
+  synthesis += `- **Modo Aprender Ativo (Atual):** Você pode tirar dúvidas, pedir que eu explique qualquer passagem obscura ou solicitar análises conceituais.\n`;
+  synthesis += `- **Modo Maiêutica:** Assim que assimilar o conteúdo, ative o Modo Maiêutica no botão abaixo para ser sabatinado e testar sua retenção crítica.\n`;
+
+  return synthesis;
+}
+
+async function generateDocOverview(text, fileName, apiKey) {
+  const userApiKey = apiKey || AppState.currentUser?.apiKey;
+  const prompt = `Você é a Ágora, mestra e tutora da plataforma LOGOSSOPHIA. O estudante acabou de carregar o documento "${fileName}".
+Forneça imediatamente um APANHADO GERAL didático, claro, profundo e estruturado do texto para que o estudante compreenda a matéria antes de ser sabatinado.
+
+Estruture rigorosamente sua resposta com:
+### 📜 Apanhado Geral: ${fileName}
+
+**1. Tese Central & Escopo Geral**
+(Explique qual é a ideia central, o propósito do autor e o problema fundamental tratado)
+
+**2. 🔑 Conceitos-Chave & Pilares Fundamentais**
+(Destaque de 3 a 5 pontos centrais do texto com explicação clara e didática de cada um)
+
+**3. 💡 Principais Conclusões & Desdobramentos**
+(O que o autor conclui ou defende como resolução do problema)
+
+**4. 🧭 Orientações para o Estudo**
+(Instrua o estudante a tirar dúvidas e fazer perguntas agora enquanto aprende, e sugira ativar o Modo Maiêutica quando estiver pronto para ser sabatinado)
+
+Texto do documento em exame:
+"""
+${text ? text.substring(0, 14000) : "Documento indexado."}
+"""`;
+
+  if (userApiKey && (userApiKey.startsWith('AIza') || userApiKey.startsWith('sk-'))) {
+    try {
+      if (userApiKey.startsWith('AIza')) {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${userApiKey}`;
+        const resp = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ role: 'user', parts: [{ text: prompt }] }],
+            generationConfig: { maxOutputTokens: 1000, temperature: 0.4 }
+          })
+        });
+        if (resp.ok) {
+          const data = await resp.json();
+          const rep = data.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (rep && rep.trim().length > 50) return rep;
+        }
+      } else if (userApiKey.startsWith('sk-')) {
+        const url = 'https://api.openai.com/v1/chat/completions';
+        const resp = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${userApiKey}`
+          },
+          body: JSON.stringify({
+            model: 'gpt-4o-mini',
+            messages: [
+              { role: 'system', content: 'Você é a Ágora, mestra, tutora e inteligência pedagógica da plataforma LOGOSSOPHIA.' },
+              { role: 'user', content: prompt }
+            ],
+            max_tokens: 1000,
+            temperature: 0.4
+          })
+        });
+        if (resp.ok) {
+          const data = await resp.json();
+          const rep = data.choices?.[0]?.message?.content;
+          if (rep && rep.trim().length > 50) return rep;
+        }
+      }
+    } catch (e) {
+      console.warn("Falha na chamada da API para o apanhado geral, utilizando síntese local:", e);
+    }
+  }
+
+  // Fallback local enriquecido
+  return generateLocalDocOverview(text, fileName);
+}
+
+// ==========================================
 // 4.5. EXTRAÇÃO DE PDF & INTEGRAÇÃO DE IA (ÁGORA)
 // ==========================================
 async function extractTextFromPDF(arrayBuffer) {
@@ -785,9 +1099,12 @@ function showAgoraTyping() {
   const typingDiv = document.createElement('div');
   typingDiv.id = 'agora-typing-indicator';
   typingDiv.className = 'message-agora p-3.5 rounded-lg text-xs flex items-center space-x-2.5 text-neutral-300 animate-pulse';
+  const label = AppState.learningMode === 'expository' 
+    ? 'Ágora está elaborando sua explicação didática...' 
+    : 'Ágora está examinando sua premissa dialética...';
   typingDiv.innerHTML = `
     <span class="text-sm">🏛️</span>
-    <span class="font-mono text-[11px] text-neutral-400">Ágora está examinando sua premissa dialética...</span>
+    <span class="font-mono text-[11px] text-neutral-400">${label}</span>
   `;
   DOM.chatMessages.appendChild(typingDiv);
   DOM.chatMessages.scrollTop = DOM.chatMessages.scrollHeight;
@@ -796,17 +1113,41 @@ function showAgoraTyping() {
 
 async function callExternalAI(userInput, apiKey) {
   const context = AppState.uploadedText || (KNOWLEDGE_BASE[AppState.currentDiscipline] ? KNOWLEDGE_BASE[AppState.currentDiscipline].text : '');
-  const systemPrompt = `Você é a Ágora, a inteligência socrática e dialética da plataforma LOGOSSOPHIA.
-Seu método é a maiêutica socrática estrita:
-1. NUNCA entregue a resposta pronta ou faça resumos passivos.
-2. Desafie as premissas do estudante com perguntas afiadas (elenchos) e aponte contradições.
-3. Use o texto de estudo fornecido abaixo como referência de fundamentação.
-4. Faça uma única pergunta incisiva por vez para manter o diálogo focado e reflexivo.
-5. Tom: sóbrio, instigante, acadêmico, cortês.
+  const mode = AppState.learningMode || 'expository';
+
+  let systemPrompt = '';
+  if (mode === 'expository') {
+    systemPrompt = `Você é a Ágora, mestra, tutora e inteligência pedagógica da plataforma LOGOSSOPHIA.
+Seu modo atual é: MODO EXPOSITIVO & DIDÁTICO (Aprender & Explicar).
+
+DIRETRIZES FUNDAMENTAIS:
+1. Responda DIRETAMENTE, com clareza, erudição e profundidade pedagógica às dúvidas e solicitações do estudante.
+2. Explique conceitos difíceis, forneça resumos estruturados, análises de parágrafos e sínteses sempre que solicitado. NUNCA se recuse a responder nem diga que não entrega respostas prontas.
+3. Baseie-se estritamente no texto em exame fornecido abaixo. Esclareça passagens obscuras, cite trechos do documento e formule analogias didáticas claras.
+4. Tom: generoso, paciente, acadêmico, encorajador e intelectualmente estimulante.
+5. No final da explicação, você pode convidar o estudante a tirar mais dúvidas ou, quando se sentir seguro do domínio do conteúdo, alternar para o Modo Maiêutica para ser sabatinado.
+
 Texto em exame:
 """
-${context ? context.substring(0, 8000) : "Diálogo sobre os fundamentos do conhecimento e virtude."}
+${context ? context.substring(0, 12000) : "Diálogo sobre os fundamentos do conhecimento e virtude."}
 """`;
+  } else {
+    systemPrompt = `Você é a Ágora, examinadora dialética e socrática da plataforma LOGOSSOPHIA.
+Seu modo atual é: MODO MAIÊUTICA & SABATINA (Refinar & Testar Retenção).
+
+DIRETRIZES FUNDAMENTAIS:
+1. O estudante já aprendeu o conteúdo inicial e agora deseja refinar seu domínio através do exame dialético e da sabatina.
+2. Desafie as premissas do estudante com perguntas incisivas (elenchos), aponte contradições e teste a coerência lógica e a retenção do texto.
+3. Não entregue conclusões prontas de imediato: guie o estudante a provar suas afirmações com base nos axiomas do documento.
+4. Faça uma ou duas perguntas pontiagudas por turno para manter o raciocínio focado.
+5. Se o estudante demonstrar dúvida genuína ou erro conceitual grave, dê uma pista orientadora precisa antes de prosseguir no interrogatório.
+6. Tom: sóbrio, instigante, acadêmico, rigoroso e respeitoso.
+
+Texto em exame:
+"""
+${context ? context.substring(0, 12000) : "Diálogo sobre os fundamentos do conhecimento e virtude."}
+"""`;
+  }
 
   if (apiKey.startsWith('AIza')) {
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
@@ -817,7 +1158,7 @@ ${context ? context.substring(0, 8000) : "Diálogo sobre os fundamentos do conhe
         contents: [
           { role: 'user', parts: [{ text: `${systemPrompt}\n\nEstudante formula: "${userInput}"` }] }
         ],
-        generationConfig: { maxOutputTokens: 350, temperature: 0.7 }
+        generationConfig: { maxOutputTokens: 1000, temperature: mode === 'expository' ? 0.4 : 0.7 }
       })
     });
     if (!resp.ok) {
@@ -843,7 +1184,8 @@ ${context ? context.substring(0, 8000) : "Diálogo sobre os fundamentos do conhe
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userInput }
         ],
-        max_tokens: 350
+        max_tokens: 1000,
+        temperature: mode === 'expository' ? 0.4 : 0.7
       })
     });
     if (!resp.ok) {
@@ -1391,8 +1733,12 @@ function showUploadZone(autoSwitch = true) {
   DOM.uploadZoneContainer.classList.remove('hidden');
   DOM.readerWrapper.classList.add('hidden');
   DOM.agoraStatusSubtitle.textContent = 'Ágora • Material Próprio';
+  setLearningMode('expository', false);
   DOM.chatMessages.innerHTML = '';
-  appendAgoraMessage(KNOWLEDGE_BASE.upload.initialPrompt);
+  appendAgoraMessage(
+    `📁 **Scriptorium de Material Próprio.**\n\nArraste um PDF/documento ou cole suas anotações no espaço de upload.\n\nAssim que o texto for indexado, a Ágora apresentará imediatamente um **Apanhado Geral** completo com a tese central e os pilares conceituais para você aprender e tirar dúvidas, mantendo o **Modo Maiêutica** à disposição para quando desejar ser sabatinado.`,
+    { allowFlashcard: false, showMaieuticsCta: false }
+  );
   updateHeaderBreadcrumb('Universal', '📁', 'Upload de Material Próprio');
 
   // Sincroniza cards de disciplina
@@ -1460,32 +1806,65 @@ function loadDiscipline(key, autoSwitchView = true) {
 
   syncSidebarSelection(key);
 
+  setLearningMode('expository', false);
   DOM.chatMessages.innerHTML = '';
-  appendAgoraMessage(data.initialPrompt);
+  appendAgoraMessage(
+    `Tratado de **"${data.title}"** aberto no Scriptorium.\n\n📖 **Modo Aprender Ativo:** você pode me pedir uma explicação didática dos pontos centrais, um resumo estruturado ou tirar dúvidas sobre o texto.\n\n*Provocação Inicial:* ${data.initialPrompt}`,
+    { allowFlashcard: true, showMaieuticsCta: true }
+  );
 
   if (autoSwitchView) {
     switchMainView('agora');
   }
 }
 
-function appendAgoraMessage(text, allowFlashcard = false) {
+function appendAgoraMessage(text, options = {}) {
+  const isBool = typeof options === 'boolean';
+  const allowFlashcard = isBool ? options : (options.allowFlashcard ?? true);
+  const showMaieuticsCta = isBool ? (AppState.learningMode === 'expository') : (options.showMaieuticsCta ?? (AppState.learningMode === 'expository'));
+  const badgeText = (!isBool && options.badge) ? options.badge : (AppState.learningMode === 'expository' ? 'Aprender & Explicar' : 'Exame Maiêutico');
+  const badgeIcon = AppState.learningMode === 'expository' ? '📖' : '⚡';
+
   const msgDiv = document.createElement('div');
-  msgDiv.className = 'message-agora p-4 rounded-lg text-sm leading-relaxed space-y-2';
+  msgDiv.className = 'message-agora p-4 rounded-lg text-sm leading-relaxed space-y-2 border border-cardBorder/60 bg-[#0d0d0d] shadow-sm';
+
+  const formattedContent = formatAgoraMarkdown(text);
 
   let html = `
-    <div class="flex items-center justify-between text-[10px] font-mono text-textSecondary uppercase tracking-wider mb-1">
-      <span class="font-bold text-white">Ágora</span>
-      <span>Maiêutica</span>
+    <div class="flex items-center justify-between text-[10px] font-mono text-textSecondary uppercase tracking-wider mb-1.5 pb-1 border-b border-cardBorder/40">
+      <div class="flex items-center space-x-1.5">
+        <span class="font-bold text-white tracking-wide">Ágora</span>
+        <span class="text-neutral-500">•</span>
+        <span class="text-amber-400 font-semibold">${badgeIcon} ${badgeText}</span>
+      </div>
+      <span class="text-neutral-500 text-[9px]">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
     </div>
-    <div class="text-[#ECECEC]">${text.replace(/\n/g, '<br>')}</div>
+    <div class="text-[#ECECEC] font-sans space-y-2 text-sm leading-relaxed agora-content">${formattedContent}</div>
   `;
 
-  if (allowFlashcard) {
+  const hasButtons = allowFlashcard || showMaieuticsCta || AppState.learningMode === 'maieutics';
+  if (hasButtons) {
     html += `
-      <div class="pt-2 border-t border-cardBorder mt-2 flex justify-end">
-        <button class="btn-create-card-from-chat text-[11px] font-mono text-neutral-400 hover:text-white flex items-center space-x-1 px-2.5 py-1 bg-[#121212] border border-cardBorder rounded hover:border-neutral-500 transition">
-          <span>📝 Cristalizar em Flashcard</span>
-        </button>
+      <div class="pt-2.5 border-t border-cardBorder/50 mt-3 flex flex-wrap items-center justify-between gap-2 text-[11px] font-mono">
+        <div>
+          ${showMaieuticsCta && AppState.learningMode === 'expository' ? `
+            <button class="btn-activate-maieutics px-2.5 py-1 bg-amber-950/40 border border-amber-500/40 hover:border-amber-400 rounded text-amber-300 hover:text-white transition flex items-center space-x-1" title="Mudar para Modo Maiêutica e testar seu domínio">
+              <span>⚡</span>
+              <span>Ativar Maiêutica & Testar Retenção</span>
+            </button>
+          ` : ''}
+          ${AppState.learningMode === 'maieutics' ? `
+            <button class="btn-activate-expository px-2.5 py-1 bg-neutral-900 border border-neutral-700 hover:border-neutral-500 rounded text-neutral-300 hover:text-white transition flex items-center space-x-1" title="Voltar ao Modo Aprender para tirar dúvidas">
+              <span>📖</span>
+              <span>Voltar ao Modo Aprender</span>
+            </button>
+          ` : ''}
+        </div>
+        ${allowFlashcard ? `
+          <button class="btn-create-card-from-chat text-neutral-400 hover:text-white flex items-center space-x-1 px-2.5 py-1 bg-[#141414] border border-cardBorder rounded hover:border-neutral-500 transition">
+            <span>📝 Cristalizar em Flashcard</span>
+          </button>
+        ` : ''}
       </div>
     `;
   }
@@ -1493,6 +1872,20 @@ function appendAgoraMessage(text, allowFlashcard = false) {
   msgDiv.innerHTML = html;
   DOM.chatMessages.appendChild(msgDiv);
   DOM.chatMessages.scrollTop = DOM.chatMessages.scrollHeight;
+
+  const maieuticsBtn = msgDiv.querySelector('.btn-activate-maieutics');
+  if (maieuticsBtn) {
+    maieuticsBtn.addEventListener('click', () => {
+      setLearningMode('maieutics', true);
+    });
+  }
+
+  const expositoryBtn = msgDiv.querySelector('.btn-activate-expository');
+  if (expositoryBtn) {
+    expositoryBtn.addEventListener('click', () => {
+      setLearningMode('expository', true);
+    });
+  }
 
   if (allowFlashcard) {
     const cardBtn = msgDiv.querySelector('.btn-create-card-from-chat');
@@ -1724,6 +2117,29 @@ document.addEventListener('DOMContentLoaded', () => {
   // Requisito: Ao entrar no site, a primeira coisa que o usuário vê são as estatísticas de estudo
   switchMainView('dashboard');
 
+  // Alternador de Modo de Aprendizado (Expositivo vs Maiêutica)
+  if (DOM.btnModeExpository) {
+    DOM.btnModeExpository.addEventListener('click', () => {
+      setLearningMode('expository', true);
+    });
+  }
+
+  if (DOM.btnModeMaieutics) {
+    DOM.btnModeMaieutics.addEventListener('click', () => {
+      setLearningMode('maieutics', true);
+    });
+  }
+
+  if (DOM.quickBtnToggleMaieutics) {
+    DOM.quickBtnToggleMaieutics.addEventListener('click', () => {
+      setLearningMode('maieutics', true);
+    });
+  }
+
+  // Inicializa o modo expositivo (Aprender & Explicar)
+  setLearningMode('expository', false);
+
+
   // Seletor de Disciplina / Origem
   DOM.disciplineSelector.addEventListener('change', (e) => {
     loadDiscipline(e.target.value);
@@ -1833,9 +2249,26 @@ document.addEventListener('DOMContentLoaded', () => {
       if (DOM.disciplineSelector) DOM.disciplineSelector.value = 'upload';
       DOM.agoraStatusSubtitle.textContent = `Ágora • ${fileName.length > 20 ? fileName.substring(0, 17) + '...' : fileName}`;
 
+      // Configura modo expositivo por padrão para o usuário aprender primeiro
+      setLearningMode('expository', false);
+
       DOM.chatMessages.innerHTML = '';
-      const initialGreeting = SocraticEngine.getInitialDocGreeting(fileName, extractedText);
-      appendAgoraMessage(initialGreeting);
+      const typingElem = showAgoraTyping();
+      if (typingElem) {
+        const lbl = typingElem.querySelector('.text-neutral-400');
+        if (lbl) lbl.textContent = 'Ágora está elaborando o Apanhado Geral do documento...';
+      }
+
+      try {
+        const overview = await generateDocOverview(extractedText, fileName, AppState.currentUser?.apiKey);
+        if (typingElem && typingElem.parentNode) typingElem.remove();
+        appendAgoraMessage(overview, { allowFlashcard: true, showMaieuticsCta: true });
+      } catch (genErr) {
+        console.error("Erro ao gerar overview com IA:", genErr);
+        if (typingElem && typingElem.parentNode) typingElem.remove();
+        const localOverview = generateLocalDocOverview(extractedText, fileName);
+        appendAgoraMessage(localOverview, { allowFlashcard: true, showMaieuticsCta: true });
+      }
 
     } catch (err) {
       console.error("Erro ao processar arquivo:", err);
@@ -1845,7 +2278,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Upload: Colar Texto Diretamente
   if (DOM.btnSubmitPastedText) {
-    DOM.btnSubmitPastedText.addEventListener('click', () => {
+    DOM.btnSubmitPastedText.addEventListener('click', async () => {
       const text = DOM.pasteTextInput.value.trim();
       if (!text) {
         alert("Cole algum texto antes de submeter ao Scriptorium.");
@@ -1860,9 +2293,24 @@ document.addEventListener('DOMContentLoaded', () => {
       syncSidebarSelection('upload');
       if (DOM.disciplineSelector) DOM.disciplineSelector.value = 'upload';
 
+      setLearningMode('expository', false);
+
       DOM.chatMessages.innerHTML = '';
-      const initialGreeting = SocraticEngine.getInitialDocGreeting("Texto Pessoal", text);
-      appendAgoraMessage(initialGreeting);
+      const typingElem = showAgoraTyping();
+      if (typingElem) {
+        const lbl = typingElem.querySelector('.text-neutral-400');
+        if (lbl) lbl.textContent = 'Ágora está elaborando o Apanhado Geral do texto...';
+      }
+
+      try {
+        const overview = await generateDocOverview(text, "Texto Pessoal", AppState.currentUser?.apiKey);
+        if (typingElem && typingElem.parentNode) typingElem.remove();
+        appendAgoraMessage(overview, { allowFlashcard: true, showMaieuticsCta: true });
+      } catch (e) {
+        if (typingElem && typingElem.parentNode) typingElem.remove();
+        const localOverview = generateLocalDocOverview(text, "Texto Pessoal");
+        appendAgoraMessage(localOverview, { allowFlashcard: true, showMaieuticsCta: true });
+      }
     });
   }
 

@@ -1070,12 +1070,24 @@
 
           <!-- CARD DIREITO: ÁGORA DIALÉTICA (CHAT MAIÊUTICO) -->
           <section id="ai-chat-card" class="bg-cardBg border border-cardBorder rounded-xl overflow-hidden flex flex-col shadow-lg h-full">
-            <div class="px-5 py-3 border-b border-cardBorder bg-[#0e0e0e] flex items-center justify-between shrink-0">
+            <div class="px-4 sm:px-5 py-2.5 border-b border-cardBorder bg-[#0e0e0e] flex flex-wrap items-center justify-between gap-2 shrink-0">
               <div class="flex items-center space-x-2">
-                <span class="font-cinzel text-xs uppercase tracking-wider font-semibold text-textSecondary">ÁGORA DIALÉTICA</span>
+                <span class="font-cinzel text-xs uppercase tracking-wider font-semibold text-textSecondary">ÁGORA</span>
                 <span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.7)]"></span>
+                <span id="agora-status-subtitle" class="text-[10px] font-mono text-textMuted uppercase tracking-wider hidden sm:inline">Tratado Ativo</span>
               </div>
-              <span id="agora-status-subtitle" class="text-[10px] font-mono text-textMuted uppercase tracking-wider">Ágora • Maiêutica</span>
+
+              <!-- ALTERNADOR DE MODO: EXPOSITIVO (APRENDER) VS MAIÊUTICA (REFINAR) -->
+              <div class="inline-flex items-center p-0.5 rounded-lg bg-[#050505] border border-cardBorder text-[10px] font-mono select-none">
+                <button id="btn-mode-expository" type="button" class="px-2.5 py-1 rounded-md transition font-medium text-white bg-neutral-800 border border-neutral-700 shadow-sm flex items-center space-x-1" title="Modo Expositivo: a Ágora ensina, explica e responde todas as dúvidas">
+                  <span>📖</span>
+                  <span>Aprender & Explicar</span>
+                </button>
+                <button id="btn-mode-maieutics" type="button" class="px-2.5 py-1 rounded-md transition font-medium text-textMuted hover:text-white flex items-center space-x-1" title="Modo Maiêutica: ative para testar retenção e ser sabatinado pela Ágora">
+                  <span>⚡</span>
+                  <span>Modo Maiêutica</span>
+                </button>
+              </div>
             </div>
 
             <div id="chat-messages" class="flex-1 p-5 overflow-y-auto space-y-4 font-sans text-sm bg-cardInner">
@@ -1083,31 +1095,32 @@
             </div>
 
             <div class="px-4 py-2 bg-[#0b0b0b] border-t border-cardBorder flex items-center space-x-2 overflow-x-auto text-[11px] font-mono text-textSecondary">
-              <span class="text-textMuted uppercase whitespace-nowrap">Testes Rápidos:</span>
-              <button class="quick-prompt-btn px-2.5 py-1 bg-cardBg border border-cardBorder hover:border-neutral-500 rounded text-neutral-300 hover:text-white whitespace-nowrap transition" data-text="Me dê o resumo pronto deste capítulo.">
-                "Pedir Resumo"
+              <span class="text-textMuted uppercase whitespace-nowrap">Ações:</span>
+              <button class="quick-prompt-btn px-2.5 py-1 bg-cardBg border border-cardBorder hover:border-neutral-500 rounded text-neutral-300 hover:text-white whitespace-nowrap transition" data-text="Faça um apanhado geral deste documento, explicando a tese central e os pontos fundamentais.">
+                "📜 Apanhado Geral"
               </button>
-              <button class="quick-prompt-btn px-2.5 py-1 bg-cardBg border border-cardBorder hover:border-neutral-500 rounded text-neutral-300 hover:text-white whitespace-nowrap transition" data-text="Não entendi nada, qual é a resposta final?">
-                "Qual a resposta?"
+              <button class="quick-prompt-btn px-2.5 py-1 bg-cardBg border border-cardBorder hover:border-neutral-500 rounded text-neutral-300 hover:text-white whitespace-nowrap transition" data-text="Me explique de forma didática e detalhada os conceitos centrais deste texto.">
+                "💡 Explicar Conceitos"
               </button>
-              <button class="quick-prompt-btn px-2.5 py-1 bg-cardBg border border-cardBorder hover:border-neutral-500 rounded text-neutral-300 hover:text-white whitespace-nowrap transition" data-text="A conclusão óbvia do texto é que o homem não tem escolha nenhuma.">
-                "Tese precipitada"
+              <button id="quick-btn-toggle-maieutics" type="button" class="px-2.5 py-1 bg-cardBg border border-amber-500/40 hover:border-amber-400 rounded text-amber-300 hover:text-white whitespace-nowrap transition flex items-center space-x-1" title="Alternar para Modo Maiêutica e testar seu domínio">
+                <span>⚡</span>
+                <span>Iniciar Sabatina</span>
               </button>
             </div>
 
             <div class="p-4 border-t border-cardBorder bg-[#161616]">
               <form id="chat-form" class="relative">
-                <textarea id="chat-input" rows="2" placeholder="Responda à Ágora ou apresente sua dedução sobre o texto..." 
+                <textarea id="chat-input" rows="2" placeholder="Tire uma dúvida, peça uma explicação ou responda à Ágora..." 
                   class="w-full bg-[#121212] border border-cardBorder focus:border-neutral-500 focus:outline-none rounded-lg p-3 pr-12 text-sm text-textPrimary placeholder-textMuted resize-none font-sans leading-relaxed"></textarea>
-                <button type="submit" id="chat-submit" class="absolute right-3 bottom-3 p-1.5 bg-neutral-800 hover:bg-neutral-700 text-white rounded-md transition border border-neutral-700" title="Enviar resposta socrática">
+                <button type="submit" id="chat-submit" class="absolute right-3 bottom-3 p-1.5 bg-neutral-800 hover:bg-neutral-700 text-white rounded-md transition border border-neutral-700" title="Enviar mensagem à Ágora">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
                   </svg>
                 </button>
               </form>
               <div class="mt-2 flex items-center justify-between text-[11px] font-mono text-textMuted">
-                <span>Ágora nunca entrega respostas prontas.</span>
-                <button id="btn-clear-chat" class="hover:text-white underline">Reiniciar Exame</button>
+                <span id="agora-mode-indicator-text" class="text-neutral-400">📖 Modo Aprender: a Ágora responde dúvidas e explica conceitos.</span>
+                <button id="btn-clear-chat" class="hover:text-white underline">Limpar Chat</button>
               </div>
             </div>
           </section>
