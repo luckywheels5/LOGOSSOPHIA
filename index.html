@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LOGOSSOPHIA — Socratic Study & Focus Platform</title>
+  
+  <!-- Fontes: Cinzel, EB Garamond, Inter, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800;900&family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            appBg: '#141414',
+            sidebarBg: '#0F0F0F',
+            cardBg: '#1A1A1A',
+            cardInner: '#161616',
+            cardBorder: '#282828',
+            cardBorderHover: '#3A3A3A',
+            textPrimary: '#EEEEEE',
+            textSecondary: '#8E8E8E',
+            textMuted: '#555555',
+            accentWhite: '#FFFFFF'
+          },
+          fontFamily: {
+            cinzel: ['Cinzel', 'serif'],
+            garamond: ['"EB Garamond"', 'serif'],
+            sans: ['Inter', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-appBg text-textPrimary min-h-screen font-sans antialiased selection:bg-neutral-700 selection:text-white">
+
+  <!-- LAYOUT PRINCIPAL: SIDEBAR NA ESQUERDA + CONTEÚDO PRINCIPAL NA DIREITA -->
+  <div class="flex min-h-screen">
+
+    <!-- ========================================================================= -->
+    <!-- BARRA LATERAL ESQUERDA (SIDEBAR DE FUNCIONALIDADES)                       -->
+    <!-- ========================================================================= -->
+    <aside id="app-sidebar" class="w-64 bg-sidebarBg border-r border-cardBorder flex flex-col shrink-0 sticky top-0 h-screen select-none z-30 transition-all duration-300">
+      
+      <!-- Topo da Barra Lateral: Logo Ícone + Nome -->
+      <div class="p-5 border-b border-cardBorder/70 flex items-center space-x-3 cursor-pointer" id="sidebar-logo">
+        <div class="w-8 h-8 flex items-center justify-center text-white shrink-0">
+          <!-- Ícone Compacto: Coruja + Ampulheta -->
+          <svg class="w-7 h-7" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M43 32 L40 24 L48 27 L50 28 L52 27 L60 24 L57 32 Z" fill="#1C1C1C" />
+            <circle cx="45" cy="35" r="4" stroke="currentColor" />
+            <circle cx="55" cy="35" r="4" stroke="currentColor" />
+            <polygon points="50,38 48,42 52,42" fill="currentColor" />
+            <path d="M41 35 C32 30, 20 23, 14 26 C13 32, 22 40, 31 43 C22 45, 18 52, 26 53 C33 53, 38 48, 42 46" />
+            <path d="M59 35 C68 30, 80 23, 86 26 C87 32, 78 40, 69 43 C78 45, 82 52, 74 53 C67 53, 62 48, 58 46" />
+            <!-- Ampulheta -->
+            <line x1="38" y1="52" x2="62" y2="52" stroke-width="2.5" />
+            <path d="M40 53 C40 63, 48 64, 49 67 C48 70, 40 71, 40 81" />
+            <path d="M60 53 C60 63, 52 64, 51 67 C52 70, 60 71, 60 81" />
+            <line x1="38" y1="82" x2="62" y2="82" stroke-width="2.5" />
+          </svg>
+        </div>
+        <div class="overflow-hidden">
+          <span class="font-cinzel text-base font-bold tracking-widest text-white block leading-none">LOGOSSOPHIA</span>
+          <span class="text-[9px] font-mono text-textMuted uppercase tracking-wider block mt-1">Socratic Engine</span>
+        </div>
+      </div>
+
+      <!-- Card da Conta do Estudante Vinculada -->
+      <div class="px-3 pt-3">
+        <div id="sidebar-user-card" class="p-2.5 bg-[#121212] border border-cardBorder rounded-lg flex items-center justify-between cursor-pointer hover:border-neutral-500 transition group select-none" title="Clique para gerenciar sua conta e configurações">
+          <div class="flex items-center space-x-2.5 min-w-0">
+            <div id="user-avatar" class="w-8 h-8 rounded-full bg-neutral-800 border border-neutral-700 flex items-center justify-center text-sm shadow-inner shrink-0">🏛️</div>
+            <div class="min-w-0">
+              <div id="user-display-name" class="text-xs font-semibold text-white truncate">Lucas Almeida</div>
+              <div id="user-display-info" class="text-[10px] font-mono text-textMuted truncate">Direito • USP</div>
+            </div>
+          </div>
+          <span class="text-xs text-textSecondary group-hover:text-white transition">⚙️</span>
+        </div>
+      </div>
+
+      <!-- Menu de Navegação / Funcionalidades -->
+      <div class="flex-1 overflow-y-auto py-4 px-3 space-y-5">
+        
+        <!-- Bloco 1: AMBIENTES & FERRAMENTAS -->
+        <div>
+          <span class="px-3 text-[10px] font-mono uppercase tracking-widest text-textMuted block mb-2 font-semibold">Funcionalidades</span>
+          <nav class="space-y-1 text-xs">
+            <button id="sidebar-btn-home" class="sidebar-nav-btn active w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-white bg-neutral-900 border border-neutral-700 transition">
+              <span class="flex items-center space-x-2.5">
+                <span class="text-sm">🏛️</span>
+                <span class="font-medium font-sans">Ágora Geral</span>
+              </span>
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+            </button>
+            
+            <button id="sidebar-btn-pomo" class="sidebar-nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-textSecondary hover:text-white hover:bg-neutral-900/60 transition">
+              <span class="flex items-center space-x-2.5">
+                <span class="text-sm">⏳</span>
+                <span class="font-medium font-sans">Pomodoro & Vigília</span>
+              </span>
+              <span class="text-[10px] font-mono text-textMuted" id="sidebar-pomo-status">25:00</span>
+            </button>
+
+            <button id="sidebar-btn-scriptorium" class="sidebar-nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-textSecondary hover:text-white hover:bg-neutral-900/60 transition">
+              <span class="flex items-center space-x-2.5">
+                <span class="text-sm">📜</span>
+                <span class="font-medium font-sans">Scriptorium (Leitor)</span>
+              </span>
+              <span class="text-[9px] font-mono bg-neutral-900 text-neutral-400 px-1.5 py-0.5 rounded border border-neutral-800">ACF</span>
+            </button>
+
+            <button id="sidebar-btn-agora-chat" class="sidebar-nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-textSecondary hover:text-white hover:bg-neutral-900/60 transition">
+              <span class="flex items-center space-x-2.5">
+                <span class="text-sm">⚡</span>
+                <span class="font-medium font-sans">Tutora Ágora (IA)</span>
+              </span>
+              <span class="text-[9px] font-mono text-emerald-400">Maiêutica</span>
+            </button>
+
+            <button id="sidebar-btn-tabulae" class="sidebar-nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-textSecondary hover:text-white hover:bg-neutral-900/60 transition">
+              <span class="flex items-center space-x-2.5">
+                <span class="text-sm">📝</span>
+                <span class="font-medium font-sans">Tabulae (Flashcards)</span>
+              </span>
+              <span id="sidebar-tabulae-count" class="text-[10px] font-mono bg-neutral-900 text-white px-2 py-0.5 rounded-full border border-neutral-700">2</span>
+            </button>
+
+            <button id="sidebar-btn-dashboard" class="sidebar-nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-textSecondary hover:text-white hover:bg-neutral-900/60 transition">
+              <span class="flex items-center space-x-2.5">
+                <span class="text-sm">📊</span>
+                <span class="font-medium font-sans">Tabularium (Métricas)</span>
+              </span>
+              <span class="text-[9px] font-mono text-textMuted">70d</span>
+            </button>
+          </nav>
+        </div>
+
+        <!-- Bloco 2: DISCIPLINAS DO SABER (Seleção Direta na Barra Lateral) -->
+        <div class="space-y-2">
+          <div class="px-2 flex items-center justify-between">
+            <span class="text-[10px] font-mono uppercase tracking-widest text-textMuted font-semibold">Disciplinas</span>
+            <span id="active-cycle-badge" class="text-[9px] font-mono text-neutral-400 bg-neutral-900 px-1.5 py-0.5 rounded border border-neutral-800">Superior</span>
+          </div>
+
+          <!-- Alternador de Ciclo: Superior vs BNCC Escola -->
+          <div class="grid grid-cols-2 gap-1 p-1 bg-[#101010] border border-cardBorder rounded-lg text-[11px] font-sans">
+            <button id="btn-cycle-superior" type="button" class="py-1 px-2 rounded font-medium text-white bg-neutral-800 border border-neutral-700 text-center transition flex items-center justify-center space-x-1" data-cycle="superior">
+              <span>🎓</span>
+              <span>Superior</span>
+            </button>
+            <button id="btn-cycle-bncc" type="button" class="py-1 px-2 rounded font-medium text-textSecondary hover:text-white text-center transition flex items-center justify-center space-x-1" data-cycle="bncc">
+              <span>🏫</span>
+              <span>BNCC</span>
+            </button>
+          </div>
+
+          <!-- Botão Fixo Universal: Upload de Material -->
+          <button class="sidebar-disc-item active w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-white bg-neutral-900/80 border border-neutral-700 font-sans transition text-xs" data-disc="upload">
+            <span>📁</span>
+            <span class="truncate">Upload / Próprio</span>
+          </button>
+
+          <!-- Lista do Ciclo Superior -->
+          <div id="list-cycle-superior" class="space-y-1 text-xs">
+            <button class="sidebar-disc-item w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-textSecondary hover:text-white hover:bg-neutral-900/60 font-sans transition" data-disc="law">
+              <span>⚖️</span>
+              <span class="truncate">Direito & Jurisprudência</span>
+            </button>
+            <button class="sidebar-disc-item w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-textSecondary hover:text-white hover:bg-neutral-900/60 font-sans transition" data-disc="med">
+              <span>🩺</span>
+              <span class="truncate">Medicina & Fisiologia</span>
+            </button>
+            <button class="sidebar-disc-item w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-textSecondary hover:text-white hover:bg-neutral-900/60 font-sans transition" data-disc="cs">
+              <span>💻</span>
+              <span class="truncate">Computação & Algoritmos</span>
+            </button>
+            <button class="sidebar-disc-item w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-textSecondary hover:text-white hover:bg-neutral-900/60 font-sans transition" data-disc="philosophy">
+              <span>🏛️</span>
+              <span class="truncate">Filosofia & Dialética</span>
+            </button>
+            <button class="sidebar-disc-item w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-textSecondary hover:text-white hover:bg-neutral-900/60 font-sans transition" data-disc="exact">
+              <span>📐</span>
+              <span class="truncate">Cálculo & Exatas Univ.</span>
+            </button>
+            <button class="sidebar-disc-item w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-textSecondary hover:text-white hover:bg-neutral-900/60 font-sans transition" data-disc="admin">
+              <span>📈</span>
+              <span class="truncate">Economia & Gestão</span>
+            </button>
+            <button class="sidebar-disc-item w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-textSecondary hover:text-white hover:bg-neutral-900/60 font-sans transition" data-disc="history">
+              <span>⏳</span>
+              <span class="truncate">História & Fontes</span>
+            </button>
+            <button class="sidebar-disc-item w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-textSecondary hover:text-white hover:bg-neutral-900/60 font-sans transition" data-disc="theology">
+              <span>📜</span>
+              <span class="truncate">Teologia & Escrituras</span>
+            </button>
+          </div>
+
+          <!-- Lista do Ciclo BNCC (Escola / Vestibulares / ENEM) -->
+          <div id="list-cycle-bncc" class="space-y-1 text-xs hidden">
+            <button class="sidebar-disc-item w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-textSecondary hover:text-white hover:bg-neutral-900/60 font-sans transition" data-disc="bncc_redacao">
+              <span>✍️</span>
+              <span class="truncate">Redação ENEM (Teses)</span>
+            </button>
+            <button class="sidebar-disc-item w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-textSecondary hover:text-white hover:bg-neutral-900/60 font-sans transition" data-disc="bncc_portugues">
+              <span>📖</span>
+              <span class="truncate">Língua Portuguesa</span>
+            </button>
+            <button class="sidebar-disc-item w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-textSecondary hover:text-white hover:bg-neutral-900/60 font-sans transition" data-disc="bncc_matematica">
+              <span>🔢</span>
+              <span class="truncate">Matemática (BNCC)</span>
+            </button>
+            <button class="sidebar-disc-item w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-textSecondary hover:text-white hover:bg-neutral-900/60 font-sans transition" data-disc="bncc_biologia">
+              <span>🧬</span>
+              <span class="truncate">Biologia & Ecologia</span>
+            </button>
+            <button class="sidebar-disc-item w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-textSecondary hover:text-white hover:bg-neutral-900/60 font-sans transition" data-disc="bncc_fisica">
+              <span>⚡</span>
+              <span class="truncate">Física (Leis & Movimento)</span>
+            </button>
+            <button class="sidebar-disc-item w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-textSecondary hover:text-white hover:bg-neutral-900/60 font-sans transition" data-disc="bncc_quimica">
+              <span>🧪</span>
+              <span class="truncate">Química & Matéria</span>
+            </button>
+            <button class="sidebar-disc-item w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-textSecondary hover:text-white hover:bg-neutral-900/60 font-sans transition" data-disc="bncc_historia">
+              <span>🏛️</span>
+              <span class="truncate">História (BNCC)</span>
+            </button>
+            <button class="sidebar-disc-item w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-textSecondary hover:text-white hover:bg-neutral-900/60 font-sans transition" data-disc="bncc_geografia">
+              <span>🌍</span>
+              <span class="truncate">Geografia & Geopolítica</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Rodapé da Barra Lateral: Estatísticas de Vigília & Configurações -->
+      <div class="p-4 border-t border-cardBorder/70 bg-[#0A0A0A] text-xs font-mono space-y-3">
+        <div class="flex items-center justify-between text-textSecondary">
+          <span class="flex items-center space-x-1.5">
+            <span>🔥</span>
+            <span>19 Dias Streak</span>
+          </span>
+          <span class="text-white font-bold">32h Total</span>
+        </div>
+        <div class="pt-2 border-t border-cardBorder/40 flex items-center justify-between">
+          <button id="sidebar-btn-settings" class="flex items-center space-x-2 text-textSecondary hover:text-white transition">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+            <span class="font-sans text-[11px]">Configurações</span>
+          </button>
+          <span class="text-[10px] text-textMuted uppercase font-mono">v1.2</span>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- ========================================================================= -->
+    <!-- ÁREA DE CONTEÚDO PRINCIPAL (DIREITA)                                      -->
+    <!-- ========================================================================= -->
+    <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+
+      <!-- TOP HEADER: Central Brand com Coruja de Atena + Ampulheta + LOGOSSOPHIA -->
+      <header class="w-full bg-[#121212] border-b border-cardBorder py-6 px-4 flex flex-col items-center justify-center relative shadow-sm">
+        <div class="flex items-center space-x-4 cursor-pointer select-none" id="brand-logo">
+          <!-- Ícone Vetorial Autêntico: Coruja com Asas Abertas pousada sobre a Ampulheta -->
+          <div class="w-16 h-16 flex items-center justify-center text-white">
+            <svg class="w-14 h-14" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M43 32 L40 24 L48 27 L50 28 L52 27 L60 24 L57 32 Z" fill="#1C1C1C" />
+              <circle cx="45" cy="35" r="4.5" stroke="currentColor" fill="#141414" />
+              <circle cx="55" cy="35" r="4.5" stroke="currentColor" fill="#141414" />
+              <circle cx="45" cy="35" r="1.5" fill="currentColor" />
+              <circle cx="55" cy="35" r="1.5" fill="currentColor" />
+              <polygon points="50,38 48,42 52,42" fill="currentColor" />
+              <path d="M41 35 C32 30, 20 23, 14 26 C13 32, 22 40, 31 43 C22 45, 18 52, 26 53 C33 53, 38 48, 42 46" />
+              <path d="M22 34 C28 38, 35 41, 41 41" stroke-width="1.2" />
+              <path d="M28 44 C34 46, 38 46, 42 46" stroke-width="1.2" />
+              <path d="M59 35 C68 30, 80 23, 86 26 C87 32, 78 40, 69 43 C78 45, 82 52, 74 53 C67 53, 62 48, 58 46" />
+              <path d="M78 34 C72 38, 65 41, 59 41" stroke-width="1.2" />
+              <path d="M72 44 C66 46, 62 46, 58 46" stroke-width="1.2" />
+              <path d="M44 43 C44 48, 47 51, 50 51 C53 51, 56 48, 56 43" />
+              <!-- Ampulheta -->
+              <line x1="38" y1="52" x2="62" y2="52" stroke-width="2.5" />
+              <rect x="36" y="50" width="28" height="3" rx="1" fill="#222222" />
+              <path d="M40 53 C40 63, 48 64, 49 67 C48 70, 40 71, 40 81" />
+              <path d="M60 53 C60 63, 52 64, 51 67 C52 70, 60 71, 60 81" />
+              <polygon points="43,56 57,56 50,65" fill="#333333" stroke="none" />
+              <polygon points="42,80 58,80 55,73 45,73" fill="currentColor" stroke="none" />
+              <line x1="50" y1="65" x2="50" y2="73" stroke-dasharray="1 1.5" />
+              <line x1="38" y1="82" x2="62" y2="82" stroke-width="2.5" />
+              <rect x="36" y="81" width="28" height="3" rx="1" fill="#222222" />
+              <line x1="39" y1="53" x2="39" y2="81" stroke-width="1.2" />
+              <line x1="61" y1="53" x2="61" y2="81" stroke-width="1.2" />
+            </svg>
+          </div>
+
+          <h1 class="font-cinzel text-3xl md:text-4xl font-semibold tracking-[0.22em] text-white">LOGOSSOPHIA</h1>
+        </div>
+
+        <!-- Ações no Topo Direito -->
+        <div class="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 flex items-center space-x-3">
+          <button id="btn-open-tabulae" class="flex items-center space-x-1.5 text-xs font-mono bg-cardBg hover:bg-neutral-800 border border-cardBorder px-3 py-1.5 rounded-full transition text-neutral-300">
+            <span>Tabulae</span>
+            <span id="flashcard-badge" class="bg-neutral-900 text-white px-2 py-0.5 rounded-full text-[10px] border border-neutral-700">2</span>
+          </button>
+          <button id="btn-settings" class="text-textSecondary hover:text-white p-2 border border-cardBorder bg-cardBg rounded-full transition" title="Configurações">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- CONTAINER PRINCIPAL DO LAYOUT -->
+      <main class="max-w-6xl w-full mx-auto px-4 mt-6 space-y-6 pb-12" id="main-view-container">
+
+        <!-- ========================================================================= -->
+        <!-- CARD HERO: POMODORO TIMER (EXATAMENTE COMO NO SCREENSHOT)                  -->
+        <!-- ========================================================================= -->
+        <section id="pomodoro-section" class="bg-cardBg border border-cardBorder rounded-xl overflow-hidden shadow-lg">
+          <div class="px-6 py-3 border-b border-cardBorder/60 bg-[#161616]">
+            <span class="text-xs uppercase font-mono tracking-wider font-semibold text-textSecondary">POMODORO TIMER</span>
+          </div>
+
+          <div class="px-8 py-8 flex flex-col md:flex-row items-center justify-around gap-6">
+            <!-- Botão START FOCUS -->
+            <div class="w-full md:w-48 flex justify-center md:justify-start">
+              <button id="pomo-toggle" class="w-44 py-2.5 px-6 rounded-full border border-neutral-300 hover:bg-white hover:text-black font-mono font-medium text-xs tracking-wider transition-all duration-200 text-center uppercase shadow-sm">
+                START FOCUS
+              </button>
+            </div>
+
+            <!-- Timer Circular Central -->
+            <div class="relative flex items-center justify-center select-none">
+              <svg class="w-48 h-48 transform -rotate-90" viewBox="0 0 180 180">
+                <circle cx="90" cy="90" r="76" stroke="#2B2B2B" stroke-width="7" fill="none" />
+                <circle id="pomo-circle-progress" cx="90" cy="90" r="76" stroke="#FFFFFF" stroke-width="7" fill="none" 
+                  stroke-linecap="round" stroke-dasharray="477.5" stroke-dashoffset="0" class="transition-all duration-1000 ease-linear" />
+              </svg>
+              <div class="absolute inset-0 flex flex-col items-center justify-center">
+                <span id="pomo-display" class="font-mono text-3xl lg:text-4xl font-bold tracking-tight text-white">25:00</span>
+                <span id="pomo-status-label" class="text-[10px] font-mono uppercase tracking-widest text-textMuted mt-1">Foco</span>
+              </div>
+            </div>
+
+            <!-- Botão RESET -->
+            <div class="w-full md:w-48 flex justify-center md:justify-end">
+              <button id="pomo-reset" class="w-36 py-2.5 px-6 rounded-full border border-cardBorder hover:border-neutral-500 font-mono font-medium text-xs tracking-wider text-textSecondary hover:text-white transition-all duration-200 text-center uppercase">
+                RESET
+              </button>
+            </div>
+          </div>
+
+          <div class="px-6 py-2.5 border-t border-cardBorder/60 bg-[#161616] flex justify-center space-x-6 text-xs font-mono text-textSecondary">
+            <button class="pomo-mode-btn text-white font-semibold underline decoration-2 underline-offset-4" data-mins="25">Vigília (25m)</button>
+            <button class="pomo-mode-btn hover:text-white transition" data-mins="5">Pausa Breve (5m)</button>
+            <button class="pomo-mode-btn hover:text-white transition" data-mins="15">Contemplação (15m)</button>
+          </div>
+        </section>
+
+        <!-- ========================================================================= -->
+        <!-- ROW INFERIOR: STUDY TRACKER (ESQUERDA) & AI CHAT INTERFACE (DIREITA)      -->
+        <!-- ========================================================================= -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+          <!-- CARD ESQUERDO: STUDY TRACKER -->
+          <section id="study-tracker-card" class="bg-cardBg border border-cardBorder rounded-xl overflow-hidden flex flex-col shadow-lg h-[620px]">
+            <div class="px-6 py-3 border-b border-cardBorder/60 bg-[#161616] flex items-center justify-between">
+              <span class="text-xs uppercase font-mono tracking-wider font-semibold text-textSecondary">STUDY TRACKER</span>
+              <span class="text-[10px] font-mono text-textMuted uppercase" id="tracker-summary">32h Vigília • 19d Streak</span>
+            </div>
+
+            <div class="p-4 border-b border-cardBorder bg-[#141414] flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center space-x-2">
+                <span class="text-[11px] font-mono text-textSecondary uppercase">Origem:</span>
+                <select id="discipline-selector" class="bg-cardBg border border-cardBorder text-xs text-white rounded px-2.5 py-1.5 focus:outline-none focus:border-neutral-500 font-sans cursor-pointer">
+                  <option value="upload" selected>📁 Upload de Material Próprio (Universal)</option>
+                  <optgroup label="🎓 Ensino Superior (Graduações)">
+                    <option value="law">⚖️ Direito & Jurisprudência</option>
+                    <option value="med">🩺 Medicina & Fisiologia Humana</option>
+                    <option value="cs">💻 Computação & Algoritmos</option>
+                    <option value="philosophy">🏛️ Filosofia & Dialética Clássica</option>
+                    <option value="exact">📐 Cálculo & Exatas Universitárias</option>
+                    <option value="admin">📈 Economia & Gestão Estratégica</option>
+                    <option value="history">⏳ História & Fontes Documentais</option>
+                    <option value="theology">📜 Teologia & Escrituras (ACF)</option>
+                  </optgroup>
+                  <optgroup label="🏫 Educação Básica (BNCC & ENEM)">
+                    <option value="bncc_redacao">✍️ Redação ENEM (Teses & Proposta)</option>
+                    <option value="bncc_portugues">📖 Língua Portuguesa & Sintaxe</option>
+                    <option value="bncc_matematica">🔢 Matemática & Geometria</option>
+                    <option value="bncc_biologia">🧬 Biologia & Ecologia</option>
+                    <option value="bncc_fisica">⚡ Física (Mecânica & Leis de Newton)</option>
+                    <option value="bncc_quimica">🧪 Química & Cinética</option>
+                    <option value="bncc_historia">🏛️ História Geral & do Brasil</option>
+                    <option value="bncc_geografia">🌍 Geografia & Geopolítica</option>
+                  </optgroup>
+                </select>
+              </div>
+              <button id="btn-trigger-upload" class="text-[11px] font-mono text-white bg-neutral-800 hover:bg-neutral-700 px-2.5 py-1 border border-neutral-600 rounded transition flex items-center space-x-1">
+                <span>↑</span>
+                <span>Novo Upload</span>
+              </button>
+            </div>
+
+            <!-- Área de Conteúdo: Espaço de Upload OU Leitor do Scriptorium -->
+            <div class="flex-1 p-6 overflow-y-auto bg-cardInner select-text" id="scriptorium-scroll">
+              
+              <!-- 1. ESPAÇO DE UPLOAD DE MATERIAL (PADRÃO) -->
+              <div id="upload-zone-container" class="space-y-4 py-2">
+                <!-- Dropzone de Arquivos -->
+                <div id="drop-zone" class="border-2 border-dashed border-neutral-700 hover:border-neutral-400 bg-[#161616] hover:bg-[#1a1a1a] rounded-xl p-8 text-center cursor-pointer transition flex flex-col items-center justify-center space-y-3">
+                  <input type="file" id="study-file-input" accept=".txt,.md,.pdf,.docx,.doc,.epub" class="hidden">
+                  
+                  <div class="w-12 h-12 rounded-full bg-neutral-900 border border-neutral-700 flex items-center justify-center text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <h4 class="font-cinzel text-base font-semibold text-white tracking-wide">CARREGAR MATERIAL DE ESTUDO</h4>
+                    <p class="text-xs text-textSecondary font-sans mt-1">Arraste seus tratados, artigos, PDFs ou anotações aqui</p>
+                  </div>
+                  <div class="flex items-center space-x-2 text-[10px] font-mono text-textMuted pt-1">
+                    <span class="px-2 py-0.5 rounded bg-neutral-900 border border-neutral-800">PDF</span>
+                    <span class="px-2 py-0.5 rounded bg-neutral-900 border border-neutral-800">TXT</span>
+                    <span class="px-2 py-0.5 rounded bg-neutral-900 border border-neutral-800">MARKDOWN</span>
+                    <span class="px-2 py-0.5 rounded bg-neutral-900 border border-neutral-800">EPUB</span>
+                  </div>
+                  <button type="button" id="btn-browse-file" class="px-5 py-2 bg-white hover:bg-neutral-200 text-black font-semibold text-xs font-mono rounded-full transition shadow-sm">
+                    Selecionar Arquivo
+                  </button>
+                </div>
+
+                <!-- Separador OU -->
+                <div class="flex items-center space-x-3 text-[11px] text-textMuted font-mono">
+                  <div class="flex-1 border-t border-cardBorder"></div>
+                  <span>OU COLE O TEXTO DIRETAMENTE</span>
+                  <div class="flex-1 border-t border-cardBorder"></div>
+                </div>
+
+                <!-- Área de Colar Texto -->
+                <div class="space-y-2">
+                  <textarea id="paste-text-input" rows="4" class="w-full bg-[#161616] border border-cardBorder focus:border-neutral-500 focus:outline-none rounded-lg p-3 text-sm text-[#DCDCDC] placeholder-textMuted font-garamond text-base leading-relaxed resize-none" placeholder="Cole aqui o parágrafo ou trecho para iniciar o exame socrático com a Ágora..."></textarea>
+                  <div class="flex justify-end">
+                    <button id="btn-submit-pasted-text" class="px-4 py-2 bg-neutral-800 hover:bg-neutral-700 text-white font-mono text-xs border border-cardBorder rounded-lg transition">
+                      Carregar no Scriptorium →
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 2. LEITOR DO SCRIPTORIUM (EXIBIDO APÓS CARREGAR) -->
+              <div id="reader-wrapper" class="hidden">
+                <div class="mb-3 flex items-center justify-between border-b border-cardBorder pb-2">
+                  <div class="flex items-center space-x-2">
+                    <h3 id="doc-title" class="font-cinzel text-sm font-bold text-white tracking-wide">Material Carregado</h3>
+                    <span id="doc-version-badge" class="text-[10px] font-mono bg-cardBg border border-cardBorder px-2 py-0.5 rounded text-neutral-400">PRÓPRIO</span>
+                  </div>
+                  <button id="btn-change-doc" class="text-[11px] font-mono text-textSecondary hover:text-white px-2 py-1 border border-cardBorder rounded hover:border-neutral-600 transition">
+                    + Substituir Material
+                  </button>
+                </div>
+
+                <article id="reader-content" class="font-garamond text-lg leading-relaxed text-[#DCDCDC] space-y-4">
+                  <!-- Conteúdo dinâmico do documento -->
+                </article>
+
+                <!-- Popover de Seleção -->
+                <div id="selection-popover" class="hidden absolute z-50 bg-[#222222] border border-neutral-600 rounded-md shadow-2xl p-1 flex items-center space-x-1 font-mono text-xs">
+                  <button id="btn-interrogate-selection" class="flex items-center space-x-1 px-2.5 py-1.5 bg-black hover:bg-neutral-900 text-white rounded transition">
+                    <span>⚡ Interrogar com Ágora</span>
+                  </button>
+                  <button id="btn-flashcard-selection" class="flex items-center space-x-1 px-2.5 py-1.5 hover:bg-neutral-800 text-textSecondary hover:text-white rounded transition">
+                    <span>📝 Criar Tabula</span>
+                  </button>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="px-6 py-3 border-t border-cardBorder/60 bg-[#161616] flex items-center justify-between text-xs font-mono text-textSecondary">
+              <div class="flex items-center space-x-3">
+                <span>Retenção: <strong class="text-white">89%</strong></span>
+                <span>Tabulae: <strong class="text-white" id="tracker-card-count">2</strong></span>
+              </div>
+              <button id="btn-view-dashboard-tab" class="hover:text-white underline text-[11px]">
+                Ver Estatísticas Detalhadas →
+              </button>
+            </div>
+          </section>
+
+          <!-- CARD DIREITO: AI CHAT INTERFACE (ÁGORA) -->
+          <section id="ai-chat-card" class="bg-cardBg border border-cardBorder rounded-xl overflow-hidden flex flex-col shadow-lg h-[620px]">
+            <div class="px-6 py-3 border-b border-cardBorder/60 bg-[#161616] flex items-center justify-between">
+              <div class="flex items-center space-x-2">
+                <span class="text-xs uppercase font-mono tracking-wider font-semibold text-textSecondary">AI CHAT INTERFACE</span>
+                <span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.7)]"></span>
+              </div>
+              <span id="agora-status-subtitle" class="text-[10px] font-mono text-textMuted uppercase tracking-wider">Ágora • Maiêutica</span>
+            </div>
+
+            <div id="chat-messages" class="flex-1 p-5 overflow-y-auto space-y-4 font-sans text-sm bg-cardInner">
+              <!-- Mensagens renderizadas via app.js -->
+            </div>
+
+            <div class="px-4 py-2 bg-[#141414] border-t border-cardBorder flex items-center space-x-2 overflow-x-auto text-[11px] font-mono text-textSecondary">
+              <span class="text-textMuted uppercase whitespace-nowrap">Testes Rápidos:</span>
+              <button class="quick-prompt-btn px-2.5 py-1 bg-cardBg border border-cardBorder hover:border-neutral-500 rounded text-neutral-300 hover:text-white whitespace-nowrap transition" data-text="Me dê o resumo pronto deste capítulo.">
+                "Pedir Resumo"
+              </button>
+              <button class="quick-prompt-btn px-2.5 py-1 bg-cardBg border border-cardBorder hover:border-neutral-500 rounded text-neutral-300 hover:text-white whitespace-nowrap transition" data-text="Não entendi nada, qual é a resposta final?">
+                "Qual a resposta?"
+              </button>
+              <button class="quick-prompt-btn px-2.5 py-1 bg-cardBg border border-cardBorder hover:border-neutral-500 rounded text-neutral-300 hover:text-white whitespace-nowrap transition" data-text="A conclusão óbvia do texto é que o homem não tem escolha nenhuma.">
+                "Tese precipitada"
+              </button>
+            </div>
+
+            <div class="p-4 border-t border-cardBorder bg-[#161616]">
+              <form id="chat-form" class="relative">
+                <textarea id="chat-input" rows="2" placeholder="Responda à Ágora ou apresente sua dedução sobre o texto..." 
+                  class="w-full bg-[#121212] border border-cardBorder focus:border-neutral-500 focus:outline-none rounded-lg p-3 pr-12 text-sm text-textPrimary placeholder-textMuted resize-none font-sans leading-relaxed"></textarea>
+                <button type="submit" id="chat-submit" class="absolute right-3 bottom-3 p-1.5 bg-neutral-800 hover:bg-neutral-700 text-white rounded-md transition border border-neutral-700" title="Enviar resposta socrática">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                  </svg>
+                </button>
+              </form>
+              <div class="mt-2 flex items-center justify-between text-[11px] font-mono text-textMuted">
+                <span>Ágora nunca entrega respostas prontas.</span>
+                <button id="btn-clear-chat" class="hover:text-white underline">Reiniciar Exame</button>
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+      </main>
+
+    </div>
+
+  </div>
+
+  <!-- MODAL: TABULAE (FLASHCARDS COM REPETIÇÃO ESPAÇADA & 3D FLIP) -->
+  <div id="modal-tabulae" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-cardBg border border-cardBorder rounded-xl max-w-xl w-full p-6 shadow-2xl relative flex flex-col max-h-[85vh]">
+      <div class="flex items-center justify-between border-b border-cardBorder pb-4 mb-4">
+        <div class="flex items-center space-x-2">
+          <span class="font-cinzel text-lg font-bold text-white tracking-wider">TABULAE DE ESTUDO</span>
+          <span class="text-xs font-mono text-textSecondary uppercase">[Memória & Síntese]</span>
+        </div>
+        <button id="btn-close-tabulae" class="text-textSecondary hover:text-white font-mono text-xl">&times;</button>
+      </div>
+
+      <div id="flashcard-deck" class="flex-1 flex flex-col justify-center items-center py-4">
+        <!-- Renderizado dinamicamente via JS -->
+      </div>
+
+      <div class="border-t border-cardBorder pt-4 flex justify-between items-center text-xs font-mono">
+        <button id="btn-prev-card" class="px-3 py-1.5 bg-cardInner border border-cardBorder rounded hover:border-neutral-500">
+          ← Anterior
+        </button>
+        <span id="deck-progress" class="text-textSecondary">Cartão 1 de 2</span>
+        <button id="btn-next-card" class="px-3 py-1.5 bg-cardInner border border-cardBorder rounded hover:border-neutral-500">
+          Próximo →
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: CONTA & CONFIGURAÇÕES -->
+  <div id="modal-settings" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-cardBg border border-cardBorder rounded-xl max-w-lg w-full p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
+      
+      <!-- Cabeçalho do Modal -->
+      <div class="flex items-center justify-between border-b border-cardBorder pb-3 mb-5">
+        <div class="flex items-center space-x-2">
+          <span class="text-lg">🏛️</span>
+          <div>
+            <h3 class="font-cinzel text-base font-bold text-white tracking-wide">Conta & Configurações</h3>
+            <span class="text-[10px] font-mono text-textMuted uppercase">Perfil de Estudo & Banco SQLite</span>
+          </div>
+        </div>
+        <button id="btn-close-settings" class="text-textSecondary hover:text-white font-mono text-xl leading-none">&times;</button>
+      </div>
+
+      <div class="space-y-5 text-xs font-sans">
+        
+        <!-- SEÇÃO 1: CONTA & TROCA RÁPIDA DE PERFIL DO BANCO -->
+        <div class="p-3.5 bg-cardInner border border-cardBorder rounded-lg space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="font-mono uppercase text-[10px] tracking-wider text-textSecondary font-semibold">Conta Ativa (Banco SQLite):</span>
+            <span class="text-[9px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-800/80 px-2 py-0.5 rounded-full flex items-center space-x-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block animate-pulse"></span>
+              <span>SQLite Conectado</span>
+            </span>
+          </div>
+          
+          <select id="setting-user-select" class="w-full bg-[#111111] border border-cardBorder rounded p-2 text-white font-sans text-xs focus:border-neutral-500 cursor-pointer">
+            <option value="usr-erudito-01">🏛️ Lucas Almeida — Bacharelado em Direito (Superior • USP)</option>
+            <option value="usr-vestibulanda-02">✍️ Beatriz Silveira — 3º Ano Médio (BNCC • Sto. Agostinho)</option>
+            <option value="usr-medico-03">🩺 Dr. André Valério — Medicina (Superior • UFRJ)</option>
+          </select>
+        </div>
+
+        <!-- SEÇÃO 2: DADOS DO PERFIL DE ESTUDO -->
+        <div class="space-y-3">
+          <span class="font-mono uppercase text-[10px] tracking-wider text-textMuted block font-semibold">Identidade Acadêmica & Escolar</span>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-textSecondary text-[11px] mb-1">Nome do Estudante:</label>
+              <input type="text" id="setting-user-name" class="w-full bg-cardInner border border-cardBorder rounded p-2 text-white text-xs focus:border-neutral-500" value="Lucas Almeida">
+            </div>
+            <div>
+              <label class="block text-textSecondary text-[11px] mb-1">E-mail Cadastrado:</label>
+              <input type="email" id="setting-user-email" class="w-full bg-cardInner border border-cardBorder rounded p-2 text-white text-xs focus:border-neutral-500" value="lucas@logossophia.org">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-textSecondary text-[11px] mb-1">Instituição / Colégio / Univ.:</label>
+              <input type="text" id="setting-institution" class="w-full bg-cardInner border border-cardBorder rounded p-2 text-white text-xs focus:border-neutral-500" value="USP - Largo São Francisco">
+            </div>
+            <div>
+              <label class="block text-textSecondary text-[11px] mb-1">Curso / Série / Grau:</label>
+              <input type="text" id="setting-course" class="w-full bg-cardInner border border-cardBorder rounded p-2 text-white text-xs focus:border-neutral-500" value="Direito (6º Semestre)">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-textSecondary text-[11px] mb-1">Meta Principal de Estudo:</label>
+            <input type="text" id="setting-goal" class="w-full bg-cardInner border border-cardBorder rounded p-2 text-white text-xs focus:border-neutral-500" value="Aprovação OAB e Carreira da Magistratura">
+          </div>
+        </div>
+
+        <!-- SEÇÃO 3: PREFERÊNCIAS DO MOTOR & VIGÍLIA -->
+        <div class="pt-3 border-t border-cardBorder space-y-3">
+          <span class="font-mono uppercase text-[10px] tracking-wider text-textMuted block font-semibold">Motor Dialético & Vigília</span>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-textSecondary text-[11px] mb-1">Ciclo Padrão de Estudo:</label>
+              <select id="setting-default-cycle" class="w-full bg-cardInner border border-cardBorder rounded p-2 text-white text-xs focus:border-neutral-500 cursor-pointer">
+                <option value="superior">🎓 Ensino Superior (Graduações)</option>
+                <option value="bncc">🏫 Educação Básica (BNCC / ENEM)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-textSecondary text-[11px] mb-1">Vigília Pomodoro (minutos):</label>
+              <input type="number" id="setting-pomo-min" value="30" min="5" max="90" class="w-full bg-cardInner border border-cardBorder rounded p-2 text-white font-mono text-xs focus:border-neutral-500">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-textSecondary text-[11px] mb-1">Modo Operacional da Ágora:</label>
+            <select id="setting-ai-mode" class="w-full bg-cardInner border border-cardBorder rounded p-2 text-white text-xs focus:border-neutral-500 cursor-pointer">
+              <option value="socratic_rigorous" selected>Ágora Dialética Integrada (Maiêutica Rigorosa)</option>
+              <option value="socratic_gentle">Ágora Pedagógica (Maiêutica Adaptativa BNCC)</option>
+              <option value="custom-api">Chave de API Própria (Gemini / OpenAI API)</option>
+            </select>
+          </div>
+
+          <div id="api-key-container" class="hidden">
+            <label class="block text-textSecondary text-[11px] mb-1">Chave de API:</label>
+            <input type="password" id="setting-api-key" placeholder="Insira sua chave de API..." class="w-full bg-cardInner border border-cardBorder rounded p-2 text-white font-mono text-xs focus:border-neutral-500">
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Rodapé do Modal com Ações -->
+      <div class="mt-6 pt-4 border-t border-cardBorder flex items-center justify-between">
+        <span class="text-[10px] font-mono text-textMuted">Persistência local & SQLite</span>
+        <div class="flex items-center space-x-2">
+          <button id="btn-cancel-settings" type="button" class="px-3 py-1.5 text-textSecondary hover:text-white rounded text-xs transition">
+            Cancelar
+          </button>
+          <button id="btn-save-settings" type="button" class="px-4 py-2 bg-white hover:bg-neutral-200 text-black font-semibold rounded text-xs transition shadow-sm flex items-center space-x-1.5">
+            <span>💾</span>
+            <span>Salvar no Banco</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
