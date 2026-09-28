@@ -1046,7 +1046,10 @@ function loadUserAccount(userId, skipDisciplineReload = false) {
   // Atualiza Sidebar User Card
   if (DOM.userAvatar) DOM.userAvatar.textContent = user.avatar || '🏛️';
   if (DOM.userDisplayName) DOM.userDisplayName.textContent = user.name;
-  if (DOM.userDisplayInfo) DOM.userDisplayInfo.textContent = `${user.course} • ${user.institution.split(' ')[0]}`;
+  if (DOM.userDisplayInfo) {
+    const instShort = user.institution.includes('—') ? user.institution.split('—')[0].trim() : user.institution.split(' ')[0];
+    DOM.userDisplayInfo.textContent = `${user.course} • ${instShort}`;
+  }
 
   // Atualiza Header User Login Button
   const headerUserAvatar = document.getElementById('header-user-avatar');
@@ -2148,16 +2151,181 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Formulário de Criação de Conta na Landing Page
+  // ==========================================
+  // AUTENTICAÇÃO COM GOOGLE & ESCOLHA DE FACULDADE / CURSO
+  // ==========================================
+  const modalGoogleAuth = document.getElementById('modal-google-auth');
+  const btnLandingGoogleLogin = document.getElementById('btn-landing-google-login');
+  const btnLandingGoogleReg = document.getElementById('btn-landing-google-reg');
+  const btnModalGoogleLogin = document.getElementById('btn-modal-google-login');
+  const btnCloseGoogleModal = document.getElementById('btn-close-google-modal');
+  const formGoogleSetup = document.getElementById('form-google-setup');
+
+  const googleSelectInst = document.getElementById('google-select-institution');
+  const googleCustomInst = document.getElementById('google-custom-institution');
+  const googleSelectCourse = document.getElementById('google-select-course');
+  const googleCustomCourse = document.getElementById('google-custom-course');
+
+  // Alternador de campos customizados do Google
+  if (googleSelectInst && googleCustomInst) {
+    googleSelectInst.addEventListener('change', () => {
+      if (googleSelectInst.value === '__other__') {
+        googleCustomInst.classList.remove('hidden');
+        googleCustomInst.focus();
+      } else {
+        googleCustomInst.classList.add('hidden');
+      }
+    });
+  }
+
+  if (googleSelectCourse && googleCustomCourse) {
+    googleSelectCourse.addEventListener('change', () => {
+      if (googleSelectCourse.value === '__other__') {
+        googleCustomCourse.classList.remove('hidden');
+        googleCustomCourse.focus();
+      } else {
+        googleCustomCourse.classList.add('hidden');
+      }
+    });
+  }
+
+  const openGoogleAuthModal = () => {
+    if (modalGoogleAuth) {
+      modalGoogleAuth.classList.remove('hidden');
+      if (DOM.modalAuth) DOM.modalAuth.classList.add('hidden');
+    }
+  };
+
+  const closeGoogleAuthModal = () => {
+    if (modalGoogleAuth) {
+      modalGoogleAuth.classList.add('hidden');
+    }
+  };
+
+  if (btnLandingGoogleLogin) btnLandingGoogleLogin.addEventListener('click', openGoogleAuthModal);
+  if (btnLandingGoogleReg) btnLandingGoogleReg.addEventListener('click', openGoogleAuthModal);
+  if (btnModalGoogleLogin) btnModalGoogleLogin.addEventListener('click', openGoogleAuthModal);
+  if (btnCloseGoogleModal) btnCloseGoogleModal.addEventListener('click', closeGoogleAuthModal);
+
+  if (modalGoogleAuth) {
+    modalGoogleAuth.addEventListener('click', (e) => {
+      if (e.target === modalGoogleAuth) closeGoogleAuthModal();
+    });
+  }
+
+  // Mapeamento Inteligente de Curso -> Disciplina da Ágora
+  const getDisciplineForCourse = (courseStr) => {
+    const c = (courseStr || '').toLowerCase();
+    if (c.includes('direito') || c.includes('oab') || c.includes('magistratura') || c.includes('jurídic')) return 'law';
+    if (c.includes('medicin') || c.includes('saúde') || c.includes('clínic') || c.includes('cirurg')) return 'med';
+    if (c.includes('computa') || c.includes('software') || c.includes('engenh') || c.includes('sistemas')) return 'cs';
+    if (c.includes('filosof') || c.includes('human') || c.includes('histór') || c.includes('letras')) return 'philosophy';
+    if (c.includes('psicol') || c.includes('neuro')) return 'psychology';
+    if (c.includes('médio') || c.includes('enem') || c.includes('vestibular')) return 'enem_redacao';
+    return 'law';
+  };
+
+  // Submissão do formulário do Google
+  if (formGoogleSetup) {
+    formGoogleSetup.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('google-input-name')?.value.trim() || 'Lucas Almeida';
+      const email = document.getElementById('google-input-email')?.value.trim() || 'lucas.almeida@gmail.com';
+      
+      let inst = googleSelectInst ? googleSelectInst.value : 'USP — Universidade de São Paulo';
+      if (inst === '__other__' && googleCustomInst) {
+        inst = googleCustomInst.value.trim() || 'Universidade Acadêmica';
+      }
+
+      let course = googleSelectCourse ? googleSelectCourse.value : 'Direito';
+      if (course === '__other__' && googleCustomCourse) {
+        course = googleCustomCourse.value.trim() || 'Estudos Superiores';
+      }
+
+      const period = document.getElementById('google-select-period')?.value || '6º Semestre';
+      const goal = document.getElementById('google-input-goal')?.value.trim() || 'Erudição & Raciocínio Profundo';
+
+      const userId = 'usr-google-' + Math.abs(email.split('').reduce((a, b) => { a = ((a << 5) - a) + b.charCodeAt(0); return a & a }, 0));
+      const accounts = getStoredAccounts();
+      const activeDisc = getDisciplineForCourse(course);
+
+      accounts[userId] = {
+        id: userId,
+        name: name,
+        email: email,
+        avatar: '🏛️',
+        institution: inst,
+        course: `${course} (${period})`,
+        goal: goal,
+        defaultCycle: (course.includes('Médio') || course.includes('ENEM')) ? 'bncc' : 'superior',
+        activeDiscipline: activeDisc,
+        streakDays: accounts[userId]?.streakDays || 1,
+        totalHours: accounts[userId]?.totalHours || 0,
+        theme: localStorage.getItem('logossophia_theme') || 'dark',
+        pomoMin: accounts[userId]?.pomoMin || 25,
+        aiMode: accounts[userId]?.aiMode || 'socratic_rigorous',
+        apiKey: accounts[userId]?.apiKey || '',
+        flashcards: accounts[userId]?.flashcards || [],
+        sessions: accounts[userId]?.sessions || [],
+        isGoogle: true
+      };
+
+      saveStoredAccounts(accounts);
+      closeGoogleAuthModal();
+      alert(`Login com Google autenticado! Bem-vindo(a), ${name} (${course} • ${inst.split('—')[0].trim()}).`);
+      loginUser(userId);
+    });
+  }
+
+  // Alternadores de campos customizados no Cadastro Tradicional da Landing
+  const regSelectInst = document.getElementById('reg-select-institution');
+  const regCustomInst = document.getElementById('reg-custom-institution');
+  const regSelectCourse = document.getElementById('reg-select-course');
+  const regCustomCourse = document.getElementById('reg-custom-course');
+
+  if (regSelectInst && regCustomInst) {
+    regSelectInst.addEventListener('change', () => {
+      if (regSelectInst.value === '__other__') {
+        regCustomInst.classList.remove('hidden');
+        regCustomInst.focus();
+      } else {
+        regCustomInst.classList.add('hidden');
+      }
+    });
+  }
+
+  if (regSelectCourse && regCustomCourse) {
+    regSelectCourse.addEventListener('change', () => {
+      if (regSelectCourse.value === '__other__') {
+        regCustomCourse.classList.remove('hidden');
+        regCustomCourse.focus();
+      } else {
+        regCustomCourse.classList.add('hidden');
+      }
+    });
+  }
+
+  // Formulário de Criação de Conta na Landing Page com Seleção de Faculdade e Curso
   const formLandingRegister = document.getElementById('landing-form-register');
   if (formLandingRegister) {
     formLandingRegister.addEventListener('submit', (e) => {
       e.preventDefault();
       const name = document.getElementById('reg-name')?.value.trim() || 'Novo Estudante';
       const email = document.getElementById('reg-email')?.value.trim() || 'estudante@logossophia.org';
-      const inst = document.getElementById('reg-institution')?.value.trim() || 'Universidade Clássica';
-      const course = document.getElementById('reg-course')?.value.trim() || 'Estudos Acadêmicos';
+
+      let inst = regSelectInst ? regSelectInst.value : 'USP — Universidade de São Paulo';
+      if (inst === '__other__' && regCustomInst) {
+        inst = regCustomInst.value.trim() || 'Universidade Acadêmica';
+      }
+
+      let course = regSelectCourse ? regSelectCourse.value : 'Direito';
+      if (course === '__other__' && regCustomCourse) {
+        course = regCustomCourse.value.trim() || 'Estudos Superiores';
+      }
+
+      const period = document.getElementById('reg-select-period')?.value || '6º Semestre';
       const goal = document.getElementById('reg-goal')?.value.trim() || 'Erudição & Raciocínio Profundo';
+      const activeDisc = getDisciplineForCourse(course);
 
       const newId = 'usr-' + Date.now();
       const accounts = getStoredAccounts();
@@ -2167,10 +2335,10 @@ document.addEventListener('DOMContentLoaded', () => {
         email: email,
         avatar: '🏛️',
         institution: inst,
-        course: course,
+        course: `${course} (${period})`,
         goal: goal,
-        defaultCycle: 'superior',
-        activeDiscipline: 'law',
+        defaultCycle: (course.includes('Médio') || course.includes('ENEM')) ? 'bncc' : 'superior',
+        activeDiscipline: activeDisc,
         streakDays: 1,
         totalHours: 0,
         theme: localStorage.getItem('logossophia_theme') || 'dark',
@@ -2181,7 +2349,7 @@ document.addEventListener('DOMContentLoaded', () => {
         sessions: []
       };
       saveStoredAccounts(accounts);
-      alert(`Conta criada com sucesso! Bem-vindo ao Logossophia, ${name}.`);
+      alert(`Conta criada com sucesso! Bem-vindo(a) ao Logossophia, ${name} (${course} • ${inst.split('—')[0].trim()}).`);
       loginUser(newId);
     });
   }
