@@ -540,18 +540,6 @@ html:not(.dark) #brand-logo span {
   color: #1C1B18 !important;
 }
 
-html:not(.dark) #btn-open-tabulae {
-  background-color: #FFFFFF !important;
-  border-color: #DED7C8 !important;
-  color: #1C1B18 !important;
-}
-
-html:not(.dark) #flashcard-badge {
-  background-color: #E2DDD2 !important;
-  color: #1C1B18 !important;
-  border-color: #C5BFB0 !important;
-}
-
 html:not(.dark) #btn-settings {
   background-color: #FFFFFF !important;
   border-color: #DED7C8 !important;

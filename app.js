@@ -1806,10 +1806,14 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Modais Tabulae & Config
-  DOM.btnOpenTabulae.addEventListener('click', () => {
+  const openFlashcardsModal = () => {
     renderFlashcardDeck();
     DOM.modalTabulae.classList.remove('hidden');
-  });
+  };
+
+  if (DOM.btnOpenTabulae) {
+    DOM.btnOpenTabulae.addEventListener('click', openFlashcardsModal);
+  }
 
   DOM.btnCloseTabulae.addEventListener('click', () => {
     DOM.modalTabulae.classList.add('hidden');
@@ -1963,7 +1967,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (DOM.btnViewDashboardTab) {
     DOM.btnViewDashboardTab.addEventListener('click', () => {
-      DOM.btnOpenTabulae.click();
+      openFlashcardsModal();
     });
   }
 
@@ -2010,7 +2014,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (DOM.sidebarBtnTabulae) {
     DOM.sidebarBtnTabulae.addEventListener('click', () => {
-      DOM.btnOpenTabulae.click();
+      openFlashcardsModal();
     });
   }
 
@@ -2042,7 +2046,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (DOM.cardActionTabulae) {
     DOM.cardActionTabulae.addEventListener('click', () => {
-      DOM.btnOpenTabulae.click();
+      openFlashcardsModal();
     });
   }
 
