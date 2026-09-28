@@ -304,6 +304,40 @@ const ACCOUNTS_DATABASE = {
         status: "cristalizado"
       }
     ]
+  },
+  "usr-teologo-04": {
+    id: "usr-teologo-04",
+    name: "Gabriel Medeiros",
+    email: "gabriel@ficv.edu.br",
+    avatar: "📜",
+    institution: "FICV — Faculdade Internacional da Cidade Viva",
+    course: "Teologia & Direito (6º Semestre)",
+    goal: "Exegese Bíblica e Hermenêutica Jurídico-Constitucional",
+    defaultCycle: "superior",
+    activeDiscipline: "theology",
+    pomoMin: 30,
+    aiMode: "socratic_rigorous",
+    apiKey: "",
+    streakDays: 15,
+    totalHours: 42,
+    sessions: [],
+    disciplines: ["theology", "law", "philosophy", "history"],
+    flashcards: [
+      {
+        id: "crd-ficv-01",
+        discipline: "theology",
+        front: "Qual a distinção hermenêutica fundamental entre exegese e eisegese?",
+        back: "A exegese extrai o sentido original e intrínseco do texto em seu contexto histórico-gramatical; a eisegese projeta pressuposições ou preconceitos subjetivos do leitor sobre o texto sagrado.",
+        status: "cristalizado"
+      },
+      {
+        id: "crd-ficv-02",
+        discipline: "law",
+        front: "Qual a função do princípio da proporcionalidade na colisão de direitos fundamentais?",
+        back: "Atua como postulado normativo aplicativo estruturado em três subprincípios (adequação, necessidade e proporcionalidade em sentido estrito/ponderação).",
+        status: "cristalizado"
+      }
+    ]
   }
 };
 
@@ -953,7 +987,14 @@ function getStoredAccounts() {
       localStorage.removeItem('logossophia_accounts_v1');
     }
     const raw = localStorage.getItem('logossophia_accounts_v2');
-    if (raw) return JSON.parse(raw);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (!parsed['usr-teologo-04'] && ACCOUNTS_DATABASE['usr-teologo-04']) {
+        parsed['usr-teologo-04'] = JSON.parse(JSON.stringify(ACCOUNTS_DATABASE['usr-teologo-04']));
+        saveStoredAccounts(parsed);
+      }
+      return parsed;
+    }
   } catch (e) {
     console.warn("Falha ao ler localStorage:", e);
   }
@@ -2279,6 +2320,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Mapeamento Inteligente de Curso -> Disciplina da Ágora
   const getDisciplineForCourse = (courseStr) => {
     const c = (courseStr || '').toLowerCase();
+    if (c.includes('teolog') || c.includes('bíbli') || c.includes('divindade') || c.includes('pastor') || c.includes('religi')) return 'theology';
     if (c.includes('direito') || c.includes('oab') || c.includes('magistratura') || c.includes('jurídic')) return 'law';
     if (c.includes('medicin') || c.includes('saúde') || c.includes('clínic') || c.includes('cirurg')) return 'med';
     if (c.includes('computa') || c.includes('software') || c.includes('engenh') || c.includes('sistemas')) return 'cs';
