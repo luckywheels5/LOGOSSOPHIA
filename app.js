@@ -395,10 +395,19 @@ const DOM = {
   btnNextCard: document.getElementById('btn-next-card'),
   deckProgress: document.getElementById('deck-progress'),
   
-  // Configurações
+  // Configurações & Login
   btnSettings: document.getElementById('btn-settings'),
   modalSettings: document.getElementById('modal-settings'),
   btnCloseSettings: document.getElementById('btn-close-settings'),
+  btnHeaderLogin: document.getElementById('btn-header-login'),
+  modalAuth: document.getElementById('modal-auth'),
+  btnCloseAuth: document.getElementById('btn-close-auth'),
+  tabBtnProfiles: document.getElementById('tab-btn-profiles'),
+  tabBtnCredentials: document.getElementById('tab-btn-credentials'),
+  authPanelProfiles: document.getElementById('auth-panel-profiles'),
+  authPanelCredentials: document.getElementById('auth-panel-credentials'),
+  btnOpenSettingsFromAuth: document.getElementById('btn-open-settings-from-auth'),
+  formLogin: document.getElementById('form-login'),
   settingAiMode: document.getElementById('setting-ai-mode'),
   settingApiKey: document.getElementById('setting-api-key'),
   settingPomoMin: document.getElementById('setting-pomo-min'),
@@ -670,25 +679,32 @@ function updatePomoDisplay() {
     headerPomoDisplay.textContent = timeStr;
   }
 
-  const progressRatio = AppState.pomoSeconds / AppState.pomoInitialSeconds;
-  const offset = CIRCLE_CIRCUMFERENCE * (1 - progressRatio);
-  DOM.pomoCircleProgress.style.strokeDashoffset = offset;
+  if (DOM.pomoCircleProgress) {
+    const progressRatio = AppState.pomoSeconds / AppState.pomoInitialSeconds;
+    const offset = CIRCLE_CIRCUMFERENCE * (1 - progressRatio);
+    DOM.pomoCircleProgress.style.strokeDashoffset = offset;
+  }
 }
 
 function togglePomodoro() {
+  const toggleIcon = document.getElementById('pomo-toggle-icon');
   if (AppState.pomoIsRunning) {
     clearInterval(AppState.pomoTimer);
     AppState.pomoIsRunning = false;
-    DOM.pomoToggle.textContent = 'START FOCUS';
-    DOM.pomoToggle.classList.remove('bg-white', 'text-black');
-    DOM.pomoToggle.classList.add('border-neutral-300', 'text-white');
-    DOM.pomoStatusLabel.textContent = 'Pausado';
+    if (toggleIcon) {
+      toggleIcon.textContent = '▶';
+    } else if (DOM.pomoToggle) {
+      DOM.pomoToggle.textContent = 'START FOCUS';
+    }
+    if (DOM.pomoStatusLabel) DOM.pomoStatusLabel.textContent = 'Pausado';
   } else {
     AppState.pomoIsRunning = true;
-    DOM.pomoToggle.textContent = 'PAUSE FOCUS';
-    DOM.pomoToggle.classList.add('bg-white', 'text-black');
-    DOM.pomoToggle.classList.remove('text-white');
-    DOM.pomoStatusLabel.textContent = 'Foco';
+    if (toggleIcon) {
+      toggleIcon.textContent = '⏸';
+    } else if (DOM.pomoToggle) {
+      DOM.pomoToggle.textContent = 'PAUSE FOCUS';
+    }
+    if (DOM.pomoStatusLabel) DOM.pomoStatusLabel.textContent = 'Foco';
 
     AppState.pomoTimer = setInterval(() => {
       if (AppState.pomoSeconds > 0) {
@@ -697,8 +713,11 @@ function togglePomodoro() {
       } else {
         clearInterval(AppState.pomoTimer);
         AppState.pomoIsRunning = false;
-        DOM.pomoToggle.textContent = 'START FOCUS';
-        DOM.pomoToggle.classList.remove('bg-white', 'text-black');
+        if (toggleIcon) {
+          toggleIcon.textContent = '▶';
+        } else if (DOM.pomoToggle) {
+          DOM.pomoToggle.textContent = 'START FOCUS';
+        }
         playMonasteryChime();
         recordStudySession(AppState.pomoInitialSeconds, 'pomodoro');
         alert("Ciclo de vigília concluído com sucesso. Descanse e medite brevemente.");
@@ -712,10 +731,14 @@ function togglePomodoro() {
 function resetPomodoro() {
   clearInterval(AppState.pomoTimer);
   AppState.pomoIsRunning = false;
-  DOM.pomoToggle.textContent = 'START FOCUS';
-  DOM.pomoToggle.classList.remove('bg-white', 'text-black');
+  const toggleIcon = document.getElementById('pomo-toggle-icon');
+  if (toggleIcon) {
+    toggleIcon.textContent = '▶';
+  } else if (DOM.pomoToggle) {
+    DOM.pomoToggle.textContent = 'START FOCUS';
+  }
   AppState.pomoSeconds = AppState.pomoInitialSeconds;
-  DOM.pomoStatusLabel.textContent = 'Foco';
+  if (DOM.pomoStatusLabel) DOM.pomoStatusLabel.textContent = 'Foco';
   updatePomoDisplay();
 }
 
@@ -750,6 +773,12 @@ function loadUserAccount(userId, skipDisciplineReload = false) {
   if (DOM.userAvatar) DOM.userAvatar.textContent = user.avatar || '🏛️';
   if (DOM.userDisplayName) DOM.userDisplayName.textContent = user.name;
   if (DOM.userDisplayInfo) DOM.userDisplayInfo.textContent = `${user.course} • ${user.institution.split(' ')[0]}`;
+
+  // Atualiza Header User Login Button
+  const headerUserAvatar = document.getElementById('header-user-avatar');
+  const headerUserName = document.getElementById('header-user-name');
+  if (headerUserAvatar) headerUserAvatar.textContent = user.avatar || '🏛️';
+  if (headerUserName) headerUserName.textContent = user.name.split(' ')[0];
 
   // Atualiza Tracker Stats
   const trackerSummary = document.getElementById('tracker-summary');
@@ -1348,9 +1377,78 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Abertura do Modal de Autenticação / Login
+  if (DOM.btnHeaderLogin) {
+    DOM.btnHeaderLogin.addEventListener('click', () => {
+      DOM.modalAuth.classList.remove('hidden');
+    });
+  }
+
   if (DOM.sidebarUserCard) {
     DOM.sidebarUserCard.addEventListener('click', () => {
+      DOM.modalAuth.classList.remove('hidden');
+    });
+  }
+
+  if (DOM.btnCloseAuth) {
+    DOM.btnCloseAuth.addEventListener('click', () => {
+      DOM.modalAuth.classList.add('hidden');
+    });
+  }
+
+  // Alternador de Abas no Modal de Auth
+  if (DOM.tabBtnProfiles && DOM.tabBtnCredentials) {
+    DOM.tabBtnProfiles.addEventListener('click', () => {
+      DOM.tabBtnProfiles.classList.add('text-white', 'border-b-2', 'border-white', 'font-semibold');
+      DOM.tabBtnProfiles.classList.remove('text-textMuted');
+      DOM.tabBtnCredentials.classList.remove('text-white', 'border-b-2', 'border-white', 'font-semibold');
+      DOM.tabBtnCredentials.classList.add('text-textMuted');
+      DOM.authPanelProfiles.classList.remove('hidden');
+      DOM.authPanelCredentials.classList.add('hidden');
+    });
+
+    DOM.tabBtnCredentials.addEventListener('click', () => {
+      DOM.tabBtnCredentials.classList.add('text-white', 'border-b-2', 'border-white', 'font-semibold');
+      DOM.tabBtnCredentials.classList.remove('text-textMuted');
+      DOM.tabBtnProfiles.classList.remove('text-white', 'border-b-2', 'border-white', 'font-semibold');
+      DOM.tabBtnProfiles.classList.add('text-textMuted');
+      DOM.authPanelCredentials.classList.remove('hidden');
+      DOM.authPanelProfiles.classList.add('hidden');
+    });
+  }
+
+  // Troca rápida de conta através do modal de Login
+  document.querySelectorAll('.auth-profile-option').forEach(card => {
+    card.addEventListener('click', () => {
+      const uid = card.dataset.userId;
+      if (uid) {
+        loadUserAccount(uid);
+        DOM.modalAuth.classList.add('hidden');
+      }
+    });
+  });
+
+  if (DOM.btnOpenSettingsFromAuth) {
+    DOM.btnOpenSettingsFromAuth.addEventListener('click', () => {
+      DOM.modalAuth.classList.add('hidden');
       DOM.modalSettings.classList.remove('hidden');
+    });
+  }
+
+  if (DOM.formLogin) {
+    DOM.formLogin.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const emailInput = document.getElementById('login-email');
+      const email = emailInput ? emailInput.value.trim().toLowerCase() : '';
+      const accounts = getStoredAccounts();
+      const matchedUser = Object.values(accounts).find(u => u.email.toLowerCase() === email);
+      if (matchedUser) {
+        loadUserAccount(matchedUser.id);
+        DOM.modalAuth.classList.add('hidden');
+      } else {
+        alert("Autenticado com sucesso.");
+        DOM.modalAuth.classList.add('hidden');
+      }
     });
   }
 
@@ -1435,7 +1533,12 @@ document.addEventListener('DOMContentLoaded', () => {
   if (DOM.sidebarBtnPomo) {
     DOM.sidebarBtnPomo.addEventListener('click', () => {
       setSidebarNavActive(DOM.sidebarBtnPomo);
-      DOM.pomodoroSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const headerPomo = document.getElementById('header-pomo-widget');
+      if (headerPomo) {
+        headerPomo.classList.add('ring-2', 'ring-white');
+        setTimeout(() => headerPomo.classList.remove('ring-2', 'ring-white'), 1200);
+      }
+      togglePomodoro();
     });
   }
 
