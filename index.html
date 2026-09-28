@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LOGOSSOPHIA — Socratic Study & Focus Platform</title>
   
+  <!-- Favicon Oficial (Coruja & Ampulheta) -->
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="shortcut icon" href="assets/favicon.ico">
+  
   <!-- Fontes: Cinzel, Cormorant Garamond, EB Garamond, Inter, JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -59,30 +63,11 @@
     
     <!-- HEADER PÚBLICO INSTITUCIONAL -->
     <header class="w-full bg-[#050505]/95 backdrop-blur border-b border-cardBorder py-4 px-4 sm:px-8 md:px-12 flex items-center justify-between sticky top-0 z-40 select-none">
-      <div class="flex items-center space-x-3 cursor-pointer" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
-        <div class="w-9 h-9 flex items-center justify-center text-white shrink-0">
-          <svg class="w-8 h-8" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M43 32 L40 24 L48 27 L50 28 L52 27 L60 24 L57 32 Z" fill="#1C1C1C" />
-            <circle cx="45" cy="35" r="4.5" stroke="currentColor" fill="#141414" />
-            <circle cx="55" cy="35" r="4.5" stroke="currentColor" fill="#141414" />
-            <circle cx="45" cy="35" r="1.5" fill="currentColor" />
-            <circle cx="55" cy="35" r="1.5" fill="currentColor" />
-            <polygon points="50,38 48,42 52,42" fill="currentColor" />
-            <path d="M41 35 C32 30, 20 23, 14 26 C13 32, 22 40, 31 43 C22 45, 18 52, 26 53 C33 53, 38 48, 42 46" />
-            <path d="M59 35 C68 30, 80 23, 86 26 C87 32, 78 40, 69 43 C78 45, 82 52, 74 53 C67 53, 62 48, 58 46" />
-            <line x1="38" y1="52" x2="62" y2="52" stroke-width="2.5" />
-            <rect x="36" y="50" width="28" height="3" rx="1" fill="#222222" />
-            <path d="M40 53 C40 63, 48 64, 49 67 C48 70, 40 71, 40 81" />
-            <path d="M60 53 C60 63, 52 64, 51 67 C52 70, 60 71, 60 81" />
-            <polygon points="43,56 57,56 50,65" fill="#333333" stroke="none" />
-            <polygon points="42,80 58,80 55,73 45,73" fill="currentColor" stroke="none" />
-            <line x1="38" y1="82" x2="62" y2="82" stroke-width="2.5" />
-            <rect x="36" y="81" width="28" height="3" rx="1" fill="#222222" />
-          </svg>
-        </div>
+      <div class="flex items-center space-x-3.5 cursor-pointer" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+        <img src="assets/logo-emblem.png" alt="Logossophia Emblema" class="w-9 sm:w-10 h-auto object-contain shrink-0 filter drop-shadow-[0_2px_10px_rgba(255,255,255,0.12)]">
         <div>
           <span class="font-cinzel text-lg sm:text-xl font-bold tracking-[0.2em] text-white block leading-none">LOGOSSOPHIA</span>
-          <span class="text-[9px] font-mono text-textMuted uppercase tracking-widest block mt-0.5">Socratic Study Sanctuary</span>
+          <span class="text-[9px] font-mono text-textMuted uppercase tracking-widest block mt-1">Socratic Study Sanctuary</span>
         </div>
       </div>
 
@@ -109,7 +94,12 @@
     </header>
 
     <!-- HERO SECTION -->
-    <section class="px-6 md:px-12 py-20 md:py-28 max-w-5xl mx-auto text-center flex flex-col items-center space-y-7 relative">
+    <section class="px-6 md:px-12 py-16 md:py-24 max-w-5xl mx-auto text-center flex flex-col items-center space-y-7 relative">
+      <!-- Emblema Oficial Metálico 3D -->
+      <div class="mb-1 flex flex-col items-center select-none group">
+        <img src="assets/logo-full.png" alt="Logossophia — Socratic Study & Focus Platform" class="w-64 sm:w-80 md:w-96 h-auto object-contain filter drop-shadow-[0_12px_32px_rgba(255,255,255,0.08)] group-hover:scale-[1.03] transition-all duration-700">
+      </div>
+
       <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full border border-cardBorder bg-[#0b0b0b] text-textSecondary text-[11px] font-mono shadow-sm">
         <span class="text-amber-400">✨</span>
         <span class="tracking-wide">MODERN MEDIEVAL • FOCO PROFUNDO & ERUDIÇÃO</span>
@@ -393,9 +383,9 @@
 
     <!-- FOOTER DA LANDING PAGE -->
     <footer class="border-t border-cardBorder bg-[#050505] py-8 px-6 md:px-12 flex flex-col sm:flex-row items-center justify-between text-xs font-mono text-textMuted gap-4">
-      <div class="flex items-center space-x-2">
-        <span>🏛️</span>
-        <span class="text-white font-cinzel">LOGOSSOPHIA</span>
+      <div class="flex items-center space-x-2.5">
+        <img src="assets/logo-emblem.png" alt="Logossophia" class="w-5 h-auto object-contain opacity-80 filter drop-shadow-[0_1px_4px_rgba(255,255,255,0.1)]">
+        <span class="text-white font-cinzel tracking-wider">LOGOSSOPHIA</span>
         <span>•</span>
         <span>Santuário Socrático & Foco Monástico</span>
       </div>
@@ -418,31 +408,8 @@
       
       <!-- Topo da Barra Lateral: Logo Ícone + Nome -->
       <div class="p-5 border-b border-cardBorder/70 flex items-center space-x-3 cursor-pointer" id="sidebar-logo">
-        <div class="w-8 h-8 flex items-center justify-center text-white shrink-0">
-          <!-- Ícone Autêntico: Coruja Empoleirada sobre a Ampulheta -->
-          <svg class="w-7 h-7" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-            <!-- Coruja: Orelhas, cabeça e corpo com asas fechadas -->
-            <path d="M35 15 L40 21 C45 19 55 19 60 21 L65 15 C65 22 66 26 66 30 C67 36 65 42 61 47 L39 47 C35 42 33 36 34 30 C34 26 35 22 35 15 Z" stroke-width="2" fill="#181818" />
-            <path d="M34 30 C33 36 34 42 39 47" stroke-width="1.8" />
-            <path d="M66 30 C67 36 66 42 61 47" stroke-width="1.8" />
-            <circle cx="43" cy="27" r="4.8" stroke-width="1.8" fill="#101010" />
-            <circle cx="57" cy="27" r="4.8" stroke-width="1.8" fill="#101010" />
-            <circle cx="43" cy="27" r="2.2" fill="currentColor" stroke="none" />
-            <circle cx="57" cy="27" r="2.2" fill="currentColor" stroke="none" />
-            <polygon points="50,26 47.5,31 50,35 52.5,31" fill="currentColor" stroke="none" />
-            <path d="M42 47 L42 50.5 M44.5 47 L44.5 51 M47 47 L47 50.5" stroke-width="1.8" />
-            <path d="M53 47 L53 50.5 M55.5 47 L55.5 51 M58 47 L58 50.5" stroke-width="1.8" />
-            <!-- Ampulheta -->
-            <rect x="27" y="50" width="46" height="4" rx="1.5" stroke-width="2" fill="#222222" />
-            <path d="M33 54 C34 64 45 66 48 70 C45 74 34 76 33 86" stroke-width="2" />
-            <path d="M67 54 C66 64 55 66 52 70 C55 74 66 76 67 86" stroke-width="2" />
-            <line x1="30.5" y1="54" x2="30.5" y2="86" stroke-width="1.8" />
-            <line x1="69.5" y1="54" x2="69.5" y2="86" stroke-width="1.8" />
-            <rect x="27" y="86" width="46" height="4" rx="1.5" stroke-width="2" fill="#222222" />
-            <path d="M37 59 L63 59 C59 66 54 68 50 69 C46 68 41 66 37 59 Z" fill="#444444" stroke="none" />
-            <line x1="50" y1="69" x2="50" y2="78" stroke-width="1.5" stroke-dasharray="1.5 2" />
-            <path d="M38 85 C42 81 46 78 50 78 C54 78 58 81 62 85 Z" fill="currentColor" stroke="none" />
-          </svg>
+        <div class="w-8 h-8 flex items-center justify-center shrink-0">
+          <img src="assets/logo-emblem.png" alt="Logossophia Emblema" class="w-7 h-auto object-contain filter drop-shadow-[0_2px_8px_rgba(255,255,255,0.1)]">
         </div>
         <div class="overflow-hidden">
           <span class="font-cinzel text-base font-bold tracking-widest text-white block leading-none">LOGOSSOPHIA</span>
@@ -530,37 +497,9 @@
       <!-- ========================================================================= -->
       <header class="w-full bg-[#050505]/95 backdrop-blur border-b border-cardBorder py-5 px-4 md:px-8 flex items-center justify-center relative sticky top-0 z-20 select-none">
         
-        <!-- Centro: Emblema LOGOSSOPHIA com Coruja de Asas Abertas sobre Ampulheta -->
+        <!-- Centro: Emblema LOGOSSOPHIA Oficial -->
         <div class="flex items-center space-x-3.5 cursor-pointer hover:opacity-90 transition select-none" id="brand-logo" title="LOGOSSOPHIA — Socratic Engine">
-          <div class="w-10 h-10 flex items-center justify-center text-white shrink-0">
-            <svg class="w-9 h-9" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M43 32 L40 24 L48 27 L50 28 L52 27 L60 24 L57 32 Z" fill="#1C1C1C" />
-              <circle cx="45" cy="35" r="4.5" stroke="currentColor" fill="#141414" />
-              <circle cx="55" cy="35" r="4.5" stroke="currentColor" fill="#141414" />
-              <circle cx="45" cy="35" r="1.5" fill="currentColor" />
-              <circle cx="55" cy="35" r="1.5" fill="currentColor" />
-              <polygon points="50,38 48,42 52,42" fill="currentColor" />
-              <path d="M41 35 C32 30, 20 23, 14 26 C13 32, 22 40, 31 43 C22 45, 18 52, 26 53 C33 53, 38 48, 42 46" />
-              <path d="M22 34 C28 38, 35 41, 41 41" stroke-width="1.2" />
-              <path d="M28 44 C34 46, 38 46, 42 46" stroke-width="1.2" />
-              <path d="M59 35 C68 30, 80 23, 86 26 C87 32, 78 40, 69 43 C78 45, 82 52, 74 53 C67 53, 62 48, 58 46" />
-              <path d="M78 34 C72 38, 65 41, 59 41" stroke-width="1.2" />
-              <path d="M72 44 C66 46, 62 46, 58 46" stroke-width="1.2" />
-              <path d="M44 43 C44 48, 47 51, 50 51 C53 51, 56 48, 56 43" />
-              <!-- Ampulheta -->
-              <line x1="38" y1="52" x2="62" y2="52" stroke-width="2.5" />
-              <rect x="36" y="50" width="28" height="3" rx="1" fill="#222222" />
-              <path d="M40 53 C40 63, 48 64, 49 67 C48 70, 40 71, 40 81" />
-              <path d="M60 53 C60 63, 52 64, 51 67 C52 70, 60 71, 60 81" />
-              <polygon points="43,56 57,56 50,65" fill="#333333" stroke="none" />
-              <polygon points="42,80 58,80 55,73 45,73" fill="currentColor" stroke="none" />
-              <line x1="50" y1="65" x2="50" y2="73" stroke-dasharray="1 1.5" />
-              <line x1="38" y1="82" x2="62" y2="82" stroke-width="2.5" />
-              <rect x="36" y="81" width="28" height="3" rx="1" fill="#222222" />
-              <line x1="39" y1="53" x2="39" y2="81" stroke-width="1.2" />
-              <line x1="61" y1="53" x2="61" y2="81" stroke-width="1.2" />
-            </svg>
-          </div>
+          <img src="assets/logo-emblem.png" alt="Logossophia Emblema" class="w-9 sm:w-10 h-auto object-contain shrink-0 filter drop-shadow-[0_2px_12px_rgba(255,255,255,0.12)]">
           <span class="font-cinzel text-2xl sm:text-3xl font-semibold tracking-[0.25em] text-white">LOGOSSOPHIA</span>
         </div>
 
