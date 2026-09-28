@@ -398,6 +398,7 @@ const DOM = {
   authPanelProfiles: document.getElementById('auth-panel-profiles'),
   authPanelCredentials: document.getElementById('auth-panel-credentials'),
   btnOpenSettingsFromAuth: document.getElementById('btn-open-settings-from-auth'),
+  btnGoogleLogin: document.getElementById('btn-google-login'),
   formLogin: document.getElementById('form-login'),
   settingAiMode: document.getElementById('setting-ai-mode'),
   settingApiKey: document.getElementById('setting-api-key'),
@@ -1480,6 +1481,58 @@ function createFlashcardFromAgora(synthesisText) {
   alert("Flashcard criado e arquivado para repetição espaçada.");
 }
 
+function handleGoogleLoginFlow() {
+  const email = prompt("Informe seu e-mail do Google (ex: seu.email@gmail.com):", AppState.currentUser?.email || "");
+  if (!email || !email.includes('@')) {
+    if (email !== null) alert("E-mail não fornecido ou inválido.");
+    return;
+  }
+
+  const defaultName = email.split('@')[0].replace(/[._-]/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+  const name = prompt("Nome completo para o perfil de estudo:", defaultName) || defaultName;
+
+  const accounts = getStoredAccounts();
+  const googleUserId = 'usr-google-' + email.replace(/[^a-zA-Z0-9]/g, '_');
+
+  if (!accounts[googleUserId]) {
+    accounts[googleUserId] = {
+      id: googleUserId,
+      name: name,
+      email: email,
+      avatar: '🌐',
+      institution: 'Conta Google',
+      course: 'Estudos Acadêmicos',
+      goal: 'Desenvolvimento Dialético & Socrático',
+      defaultCycle: 'superior',
+      activeDiscipline: 'law',
+      streakDays: 0,
+      totalHours: 0,
+      theme: localStorage.getItem('logossophia_theme') || 'dark',
+      pomoMin: 25,
+      aiMode: 'custom-api',
+      apiKey: '',
+      flashcards: [],
+      sessions: []
+    };
+  }
+
+  // Pergunta opcional para integrar a chave gratuita do Gemini
+  const askKey = confirm("Conta Google conectada com sucesso!\n\nDeseja vincular sua chave de API gratuita do Gemini agora para potencializar a Ágora?");
+  if (askKey) {
+    const key = prompt("Insira sua chave do Gemini (gerada no Google AI Studio - https://aistudio.google.com/app/apikey):", accounts[googleUserId].apiKey || "");
+    if (key && key.trim()) {
+      accounts[googleUserId].apiKey = key.trim();
+      accounts[googleUserId].aiMode = 'custom-api';
+    }
+  }
+
+  saveStoredAccounts(accounts);
+  loadUserAccount(googleUserId, false);
+
+  if (DOM.modalAuth) DOM.modalAuth.classList.add('hidden');
+  alert(`Bem-vindo, ${name}! Sua conta Google foi conectada ao Logossophia.`);
+}
+
 // ==========================================
 // 9. INICIALIZAÇÃO & EVENTOS
 // ==========================================
@@ -1801,6 +1854,10 @@ document.addEventListener('DOMContentLoaded', () => {
     DOM.btnCloseAuth.addEventListener('click', () => {
       DOM.modalAuth.classList.add('hidden');
     });
+  }
+
+  if (DOM.btnGoogleLogin) {
+    DOM.btnGoogleLogin.addEventListener('click', handleGoogleLoginFlow);
   }
 
   // Alternador de Abas no Modal de Auth
